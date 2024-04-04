@@ -21,7 +21,7 @@ class FontTest {
         )
         font.addProvider(
             FontProvider.BITMAP(
-                NamespacedKey("islandpractice", "foo"),
+                NamespacedKey("islandpractice", "foo.png"),
                 height = 8,
                 ascent = 7,
                 chars = listOf("\u3433")
@@ -41,7 +41,7 @@ class FontTest {
                         "oversample": 7.0
                     },
                     {
-                        "file": "islandpractice:foo",
+                        "file": "islandpractice:foo.png",
                         "height": 8,
                         "ascent": 7,
                         "chars": [
@@ -74,7 +74,7 @@ class FontTest {
         )
         font.addProvider(
             FontProvider.BITMAP(
-                NamespacedKey("islandpractice", "foo"),
+                NamespacedKey("islandpractice", "foo.png"),
                 height = 8,
                 ascent = 7,
                 chars = listOf("\u3433")
