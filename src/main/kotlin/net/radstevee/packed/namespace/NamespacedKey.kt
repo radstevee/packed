@@ -18,4 +18,11 @@ data class NamespacedKey(val namespace: String, val key: String) {
     fun createNamespace(pack: ResourcePack) {
         File(pack.outputDir, "assets/$namespace").mkdirs()
     }
+
+    companion object {
+        fun fromString(string: String): NamespacedKey {
+            val (namespace, key) = string.split(":")
+            return NamespacedKey(namespace, key)
+        }
+    }
 }
