@@ -61,5 +61,9 @@ sealed class FontProvider {
     }
 
     @Serializable
-    data object REFERENCE : FontProvider()
+    data object REFERENCE : FontProvider() {
+        init {
+            TODO("Space and reference font providers are not implemented yet.")
+        }
+    }
 }
