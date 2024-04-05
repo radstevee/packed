@@ -21,7 +21,8 @@ sealed class FontProvider {
         @SerialName("file") val spriteKey: NamespacedKey,
         val height: Int = 8,
         val ascent: Int = 7,
-        val chars: List<String>
+        val chars: List<String>,
+        val type: String = "bitmap"
     ) : FontProvider() {
         init {
             if (ascent > height) {
