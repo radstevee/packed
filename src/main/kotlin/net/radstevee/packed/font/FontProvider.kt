@@ -31,11 +31,7 @@ sealed class FontProvider {
     }
 
     @Serializable
-    data object SPACE : FontProvider() {
-        init {
-            TODO("Space and reference font providers are not implemented yet.")
-        }
-    }
+    data object SPACE : FontProvider()
 
     /**
      * A truetype font provider. Allows you to use a pre-forged truetype font.
@@ -61,9 +57,5 @@ sealed class FontProvider {
     }
 
     @Serializable
-    data object REFERENCE : FontProvider() {
-        init {
-            TODO("Space and reference font providers are not implemented yet.")
-        }
-    }
+    data object REFERENCE : FontProvider()
 }
