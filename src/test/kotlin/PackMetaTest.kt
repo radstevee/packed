@@ -12,7 +12,7 @@ internal class PackMetaTest {
             format = PackFormat.V1_20_2
             outputDir = File("/tmp/pack")
         }
-        pack.saveMeta()
+        pack.save()
 
         val expected = """
             {

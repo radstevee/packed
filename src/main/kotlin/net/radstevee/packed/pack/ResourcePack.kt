@@ -3,7 +3,6 @@ package net.radstevee.packed.pack
 import net.radstevee.packed.font.Font
 import java.io.File
 import java.io.IOException
-import kotlin.jvm.Throws
 
 /**
  * A resource pack.
@@ -15,16 +14,24 @@ class ResourcePack(
     val outputDir: File,
     val fonts: MutableList<Font> = mutableListOf()
 ) {
-    /**
-     * Saves the `pack.mcmeta` file.
-     * @throws IOException
-     */
     @Throws(IOException::class)
-    fun saveMeta() {
-        outputDir.mkdirs()
+    private fun saveMeta() {
         val metaFile = File(outputDir, "pack.mcmeta")
         metaFile.parentFile.mkdirs()
         metaFile.createNewFile()
         metaFile.writeText(meta.json())
+    }
+
+    /**
+     * Saves the entire pack. Should only be called after having added everything.
+     * @throws IOException
+     */
+    @Throws(IOException::class)
+    fun save() {
+        outputDir.mkdirs()
+        saveMeta()
+        fonts.forEach {
+            it.save(this)
+        }
     }
 }
