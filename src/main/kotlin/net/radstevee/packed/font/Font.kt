@@ -11,7 +11,6 @@ import net.radstevee.packed.namespace.NamespacedKey
 import net.radstevee.packed.pack.ResourcePack
 import java.io.File
 import java.io.IOException
-import kotlin.jvm.Throws
 
 /**
  * Represents a font
@@ -40,7 +39,8 @@ data class Font(@Transient val name: NamespacedKey = NamespacedKey("", "")) {
     @OptIn(ExperimentalSerializationApi::class)
     fun json(): String {
         @Suppress("JSON_FORMAT_REDUNDANT") return Json {
-            prettyPrint = true; explicitNulls = false; classDiscriminatorMode = ClassDiscriminatorMode.NONE;
+            prettyPrint = true; explicitNulls = false; classDiscriminatorMode =
+            ClassDiscriminatorMode.NONE; encodeDefaults = true
         }.encodeToString(this)
     }
 
