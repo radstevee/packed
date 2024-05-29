@@ -19,6 +19,7 @@ enum class PackFormat(val rev: Int) {
     V1_20_TO_1_20_1(15),
     V1_20_2(18),
     V1_20_3_TO_1_20_4(22),
+    V1_20_5_TO_1_20_6(32),
 
-    LATEST(V1_20_3_TO_1_20_4.rev)
+    LATEST(V1_20_5_TO_1_20_6.rev)
 }

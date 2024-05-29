@@ -1,6 +1,7 @@
 package net.radstevee.packed.pack
 
 import net.radstevee.packed.font.Font
+import net.radstevee.packed.util.FileUtil
 import java.io.File
 import java.io.IOException
 
@@ -27,8 +28,10 @@ class ResourcePack(
      * @throws IOException
      */
     @Throws(IOException::class)
-    fun save() {
+    fun save(deleteOld: Boolean = false) {
+        if(deleteOld) outputDir.deleteRecursively()
         outputDir.mkdirs()
+        FileUtil.copyResourceDirectory("assets", File(outputDir, "assets").path)
         saveMeta()
         fonts.forEach {
             it.save(this)

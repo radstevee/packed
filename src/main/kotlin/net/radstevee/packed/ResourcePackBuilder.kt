@@ -6,23 +6,39 @@ import net.radstevee.packed.pack.ResourcePackMeta
 import java.io.File
 
 class ResourcePackBuilder {
-    /**
-     * Description of a resource pack. Comes up in the selection screen.
-     */
-    var description: String = ""
+    inner class Meta {
+        /**
+         * Description of a resource pack. Comes up in the selection screen.
+         */
+        var description: String = ""
+
+        /**
+         * Pack format/version.
+         */
+        var format: PackFormat = PackFormat.LATEST
+
+        /**
+         * Output directory of the Resource pack. This is where it will be saved.
+         */
+        var outputDir: File = File("")
+    }
 
     /**
-     * Pack format/version.
+     * The Metadata for this resourcepack. Gets set by [meta]
      */
-    var format: PackFormat = PackFormat.LATEST
+    lateinit var meta: Meta
 
     /**
-     * Output directory of the Resource pack. This is where it will be saved.
+     * Metadata builder for this resourcepack.
+     * @param factory The builder.
      */
-    var outputDir: File = File("")
+    inline fun meta(factory: Meta.() -> Unit) {
+        meta = Meta().apply(factory)
+    }
 
-    private fun create(): ResourcePack {
-        return ResourcePack(ResourcePackMeta.init(format, description), outputDir)
+
+    fun create(): ResourcePack {
+        return ResourcePack(ResourcePackMeta.init(meta.format, meta.description), meta.outputDir)
     }
 
     companion object {
@@ -30,7 +46,7 @@ class ResourcePackBuilder {
          * Builds a resource pack.
          * @return the pack.
          */
-        fun buildResourcePack(block: ResourcePackBuilder.() -> Unit): ResourcePack {
+        inline fun resourcePack(block: ResourcePackBuilder.() -> Unit): ResourcePack {
             return ResourcePackBuilder().apply(block).create()
         }
     }

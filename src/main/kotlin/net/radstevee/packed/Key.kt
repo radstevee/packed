@@ -1,16 +1,17 @@
-package net.radstevee.packed.namespace
+package net.radstevee.packed
 
 import kotlinx.serialization.Serializable
+import net.radstevee.packed.namespace.KeyableSerializer
 import net.radstevee.packed.pack.ResourcePack
 import java.io.File
 
 /**
- * Represents a namespaced key. It will be serialized to `namespace:key`.
+ * Represents a key with a namespace. It will be serialized to `namespace:key`.
  * @param namespace The namespace. This can be minecraft, but can also be a custom one.
  * @param key The key. For example, `default` for the default font.
  */
-@Serializable(with = NamespacedKeySerializer::class)
-data class NamespacedKey(val namespace: String, val key: String) {
+@Serializable(with = KeyableSerializer::class)
+data class Key(override val namespace: String, override val key: String) : Keyable {
     override fun toString(): String {
         return "$namespace:$key"
     }
@@ -20,9 +21,17 @@ data class NamespacedKey(val namespace: String, val key: String) {
     }
 
     companion object {
-        fun fromString(string: String): NamespacedKey {
+        fun fromString(string: String): Key {
             val (namespace, key) = string.split(":")
-            return NamespacedKey(namespace, key)
+            return Key(namespace, key)
         }
     }
+}
+
+/**
+ * Represents something which can be a key with a namespace.
+ */
+interface Keyable {
+    val namespace: String
+    val key: String
 }

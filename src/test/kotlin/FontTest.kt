@@ -1,7 +1,6 @@
-import net.radstevee.packed.ResourcePackBuilder.Companion.buildResourcePack
-import net.radstevee.packed.font.Font
-import net.radstevee.packed.font.FontProvider
-import net.radstevee.packed.namespace.NamespacedKey
+import net.radstevee.packed.ResourcePackBuilder.Companion.resourcePack
+import net.radstevee.packed.font.Font.Companion.font
+import net.radstevee.packed.Key
 import net.radstevee.packed.pack.PackFormat
 import java.io.File
 import kotlin.test.Test
@@ -9,45 +8,44 @@ import kotlin.test.assertEquals
 
 class FontTest {
     @Test
-    fun fontTest() {
-        val font = Font(NamespacedKey("islandpractice", "love_bug"))
-        font.addProvider(
-            FontProvider.TRUETYPE(
-                NamespacedKey("islandpractice", "love_bug.ttf"),
-                shift = listOf(0.0, 1.5),
-                size = 8.0,
-                oversample = 7.0
-            )
-        )
-        font.addProvider(
-            FontProvider.BITMAP(
-                NamespacedKey("islandpractice", "foo.png"),
-                height = 8,
-                ascent = 7,
-                chars = listOf("\u3433")
-            )
-        )
+    fun `Font Test - includes Bitmaps and TTFs`() {
+        val font = font {
+            key = Key("packed", "example")
+            bitmap {
+                key = Key("packed", "pog.png")
+                height = 8
+                ascent = 7
+                chars = listOf("\uE000")
+            }
+
+            ttf {
+                key = Key("packed", "comicsans.ttf")
+                size = 16.0
+                oversample = 9.0
+                shift = listOf(0.0, -3.5)
+            }
+        }
         val expected = """
             {
                 "providers": [
                     {
-                        "file": "islandpractice:love_bug.ttf",
-                        "shift": [
-                            0.0,
-                            1.5
-                        ],
-                        "size": 8.0,
-                        "oversample": 7.0,
-                        "type": "ttf"
-                    },
-                    {
-                        "file": "islandpractice:foo.png",
+                        "file": "packed:pog.png",
                         "height": 8,
                         "ascent": 7,
                         "chars": [
-                            "㐳"
+                            ""
                         ],
                         "type": "bitmap"
+                    },
+                    {
+                        "file": "packed:comicsans.ttf",
+                        "shift": [
+                            0.0,
+                            -3.5
+                        ],
+                        "size": 16.0,
+                        "oversample": 9.0,
+                        "type": "ttf"
                     }
                 ]
             }
@@ -57,59 +55,60 @@ class FontTest {
     }
 
     @Test
-    fun packWithFontTest() {
-        val pack = buildResourcePack {
-            description = "IslandPractice resources"
-            format = PackFormat.V1_20_2
-            outputDir = File("/tmp/pack")
+    fun `Font test, integrated into a basic resource pack`() {
+        val pack = resourcePack {
+            meta {
+                description = "Packed test resources"
+                format = PackFormat.V1_20_2
+                outputDir = File("/tmp/pack")
+            }
         }
         val expectedMeta = """
             {
                 "pack": {
                     "pack_format": 18,
-                    "description": "IslandPractice resources"
+                    "description": "Packed test resources"
                 }
             }
         """.trimIndent()
-        val font = Font(NamespacedKey("islandpractice", "love_bug"))
-        font.addProvider(
-            FontProvider.TRUETYPE(
-                NamespacedKey("islandpractice", "love_bug.ttf"),
-                shift = listOf(0.0, 1.5),
-                size = 8.0,
-                oversample = 7.0
-            )
-        )
-        font.addProvider(
-            FontProvider.BITMAP(
-                NamespacedKey("islandpractice", "foo.png"),
-                height = 8,
-                ascent = 7,
-                chars = listOf("\u3433")
-            )
-        )
+        val font = font {
+            key = Key("packed", "example")
+            bitmap {
+                key = Key("packed", "pog.png")
+                height = 8
+                ascent = 7
+                chars = listOf("\uE000")
+            }
+
+            ttf {
+                key = Key("packed", "comicsans.ttf")
+                size = 16.0
+                oversample = 9.0
+                shift = listOf(0.0, -3.5)
+            }
+        }
         pack.fonts.add(font)
         val expected = """
             {
                 "providers": [
                     {
-                        "file": "islandpractice:love_bug.ttf",
-                        "shift": [
-                            0.0,
-                            1.5
-                        ],
-                        "size": 8.0,
-                        "oversample": 7.0,
-                        "type": "ttf"
-                    },
-                    {
-                        "file": "islandpractice:foo.png",
+                        "file": "packed:pog.png",
                         "height": 8,
                         "ascent": 7,
                         "chars": [
-                            "㐳"
+                            ""
                         ],
                         "type": "bitmap"
+                    },
+                    {
+                        "file": "packed:comicsans.ttf",
+                        "shift": [
+                            0.0,
+                            -3.5
+                        ],
+                        "size": 16.0,
+                        "oversample": 9.0,
+                        "type": "ttf"
                     }
                 ]
             }
@@ -117,6 +116,6 @@ class FontTest {
 
         pack.save()
         assertEquals(expectedMeta, File("/tmp/pack/pack.mcmeta").readText().trimIndent())
-        assertEquals(expected, File("/tmp/pack/assets/islandpractice/font/love_bug.json").readText().trimIndent())
+        assertEquals(expected, File("/tmp/pack/assets/packed/font/example.json").readText().trimIndent())
     }
 }

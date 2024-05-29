@@ -1,4 +1,4 @@
-import net.radstevee.packed.ResourcePackBuilder.Companion.buildResourcePack
+import net.radstevee.packed.ResourcePackBuilder.Companion.resourcePack
 import net.radstevee.packed.pack.PackFormat
 import java.io.File
 import kotlin.test.Test
@@ -7,10 +7,12 @@ import kotlin.test.assertEquals
 internal class PackMetaTest {
     @Test
     fun packMetaTest() {
-        val pack = buildResourcePack {
-            description = "Test"
-            format = PackFormat.V1_20_2
-            outputDir = File("/tmp/pack")
+        val pack = resourcePack {
+            meta {
+                description = "Test"
+                format = PackFormat.V1_20_2
+                outputDir = File("/tmp/pack")
+            }
         }
         pack.save()
 
