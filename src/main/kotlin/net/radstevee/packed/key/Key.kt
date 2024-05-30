@@ -1,7 +1,6 @@
-package net.radstevee.packed
+package net.radstevee.packed.key
 
 import kotlinx.serialization.Serializable
-import net.radstevee.packed.namespace.KeyableSerializer
 import net.radstevee.packed.pack.ResourcePack
 import java.io.File
 
@@ -10,8 +9,8 @@ import java.io.File
  * @param namespace The namespace. This can be minecraft, but can also be a custom one.
  * @param key The key. For example, `default` for the default font.
  */
-@Serializable(with = KeyableSerializer::class)
-data class Key(override val namespace: String, override val key: String) : Keyable {
+@Serializable(with = KeySerializer::class)
+data class Key(val namespace: String, val key: String) {
     override fun toString(): String {
         return "$namespace:$key"
     }
@@ -26,12 +25,4 @@ data class Key(override val namespace: String, override val key: String) : Keyab
             return Key(namespace, key)
         }
     }
-}
-
-/**
- * Represents something which can be a key with a namespace.
- */
-interface Keyable {
-    val namespace: String
-    val key: String
 }

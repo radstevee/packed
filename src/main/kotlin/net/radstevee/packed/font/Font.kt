@@ -9,7 +9,7 @@ import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
 import net.radstevee.packed.font.FontProvider.BITMAP
 import net.radstevee.packed.font.FontProvider.TRUETYPE
-import net.radstevee.packed.Key
+import net.radstevee.packed.key.Key
 import net.radstevee.packed.pack.ResourcePack
 import java.io.File
 import java.io.IOException

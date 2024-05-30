@@ -2,7 +2,7 @@ package net.radstevee.packed.font
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import net.radstevee.packed.Key
+import net.radstevee.packed.key.Key
 
 /**
  * A font provider. A font provider is specified in an array of them in a font file.
