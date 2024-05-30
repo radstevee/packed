@@ -1,8 +1,8 @@
 package net.radstevee.packed.example
 
-import net.radstevee.packed.Key
 import net.radstevee.packed.ResourcePackBuilder.Companion.resourcePack
 import net.radstevee.packed.font.Font.Companion.font
+import net.radstevee.packed.key.Key
 import net.radstevee.packed.pack.PackFormat
 import java.io.File
 

@@ -43,8 +43,8 @@ data class PackLanguage(val name: String, val region: String, val bidirectional:
  */
 @Serializable
 data class ResourcePackMeta(
-    val pack: Pack,
-    val language: PackLanguage?
+    val pack: Pack? = null,
+    val language: PackLanguage? = null
 ) {
     @OptIn(ExperimentalSerializationApi::class)
     fun json(): String {

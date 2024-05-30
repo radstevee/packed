@@ -36,7 +36,9 @@ class ResourcePackBuilder {
         meta = Meta().apply(factory)
     }
 
-
+    /**
+     * Initialises a resource pack from meta.
+     */
     fun create(): ResourcePack {
         return ResourcePack(ResourcePackMeta.init(meta.format, meta.description), meta.outputDir)
     }
