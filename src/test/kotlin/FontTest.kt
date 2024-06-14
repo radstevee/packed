@@ -1,7 +1,8 @@
-import net.radstevee.packed.ResourcePackBuilder.Companion.resourcePack
+import net.radstevee.packed.asset.impl.ResourceAssetResolutionStrategy
 import net.radstevee.packed.font.Font.Companion.font
 import net.radstevee.packed.key.Key
 import net.radstevee.packed.pack.PackFormat
+import net.radstevee.packed.pack.ResourcePackBuilder.Companion.resourcePack
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -62,6 +63,7 @@ class FontTest {
                 format = PackFormat.V1_20_2
                 outputDir = File("/tmp/pack")
             }
+            assetResolutionStrategy = ResourceAssetResolutionStrategy()
         }
         val expectedMeta = """
             {
@@ -71,7 +73,7 @@ class FontTest {
                 }
             }
         """.trimIndent()
-        val font = font {
+        pack.addFont {
             key = Key("packed", "example")
             bitmap {
                 key = Key("packed", "pog.png")
@@ -87,7 +89,6 @@ class FontTest {
                 shift = listOf(0.0, -3.5)
             }
         }
-        pack.fonts.add(font)
         val expected = """
             {
                 "providers": [

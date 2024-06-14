@@ -1,5 +1,5 @@
-import net.radstevee.packed.ResourcePackBuilder.Companion.resourcePack
 import net.radstevee.packed.pack.PackFormat
+import net.radstevee.packed.pack.ResourcePackBuilder.Companion.resourcePack
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -15,6 +15,8 @@ repositories {
 dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("com.github.sya-ri:kgit:1.0.6")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 }
 
 tasks.test {

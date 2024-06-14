@@ -1,8 +1,6 @@
-package net.radstevee.packed
+package net.radstevee.packed.pack
 
-import net.radstevee.packed.pack.PackFormat
-import net.radstevee.packed.pack.ResourcePack
-import net.radstevee.packed.pack.ResourcePackMeta
+import net.radstevee.packed.asset.AssetResolutionStrategy
 import java.io.File
 
 class ResourcePackBuilder {
@@ -40,8 +38,17 @@ class ResourcePackBuilder {
      * Initialises a resource pack from meta.
      */
     fun create(): ResourcePack {
-        return ResourcePack(ResourcePackMeta.init(meta.format, meta.description), meta.outputDir)
+        return ResourcePack(
+            ResourcePackMeta.init(meta.format, meta.description),
+            meta.outputDir,
+            assetResolutionStrategy
+        )
     }
+
+    /**
+     * The strategy to resolve assets.
+     */
+    lateinit var assetResolutionStrategy: AssetResolutionStrategy
 
     companion object {
         /**
