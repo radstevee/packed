@@ -7,12 +7,16 @@ import kotlinx.serialization.Transient
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
+import net.radstevee.packed.LOGGER
 import net.radstevee.packed.font.FontProvider.BITMAP
 import net.radstevee.packed.font.FontProvider.TRUETYPE
+import net.radstevee.packed.fontAssetsNotFound
 import net.radstevee.packed.key.Key
 import net.radstevee.packed.pack.ResourcePack
 import java.io.File
 import java.io.IOException
+import java.nio.file.Path
+import kotlin.io.path.Path
 
 /**
  * Represents a font.
@@ -53,10 +57,34 @@ data class Font(@Transient var key: Key = Key("", "")) {
     @Throws(IOException::class)
     fun save(pack: ResourcePack) {
         key.createNamespace(pack)
+        val unresolvedAssets = mutableListOf<Path>()
+        providersList.forEach {
+            when (it) {
+                is BITMAP -> {
+                    pack.assetResolutionStrategy.getTexture(it.key)
+                        ?: unresolvedAssets.add(Path("assets/${it.key.namespace}/textures/${it.key.key}"))
+                }
+
+                is TRUETYPE -> {
+                    pack.assetResolutionStrategy.getFont(it.key)
+                        ?: unresolvedAssets.add(Path("assets/${it.key.namespace}/font/${it.key.key}"))
+                }
+
+                else -> {}
+            }
+        }
+        // If there's any errors about unresolved assets, log them
+        // but not actually quit, because it might still work. We blame the pack author!
+        if (unresolvedAssets.isNotEmpty()) {
+            fontAssetsNotFound(unresolvedAssets, this)
+            return
+        }
+
         val file = File(pack.outputDir, "assets/${key.namespace}/font/${key.key}.json")
         file.parentFile.mkdirs()
         file.createNewFile()
         file.writeText(json())
+        LOGGER.info("Font $key saved!")
     }
 
     /**

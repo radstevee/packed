@@ -1,15 +1,21 @@
 package net.radstevee.packed
 
-import mu.KotlinLogging
+import net.radstevee.packed.font.Font
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.nio.file.Path
 
-val LOGGER = KotlinLogging.logger("packed")
-
-fun assetsNotFound(assets: List<Path>) {
-    LOGGER.error("Some assets weren't found:")
-    assets.forEach(::assetNotFound)
+fun changeLogger(newLogger: Logger) {
+    LOGGER = newLogger
 }
 
-private fun assetNotFound(assetPath: Path) {
-    LOGGER.error("    $assetPath")
+internal var LOGGER = LoggerFactory.getLogger("packed")
+
+internal fun fontAssetsNotFound(assets: List<Path>, font: Font) {
+    LOGGER.error("Error whilst trying to process font ${font.key}: Some assets couldn't be found:")
+    assets.forEach {
+        LOGGER.error("    $it")
+    }
+    LOGGER.error("Verify that these assets actually exist with your asset resolution strategy.")
+    LOGGER.error("Continuing. This font will not be saved!")
 }

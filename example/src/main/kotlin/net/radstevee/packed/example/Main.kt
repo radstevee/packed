@@ -13,16 +13,32 @@ fun main() {
             format = PackFormat.LATEST
             outputDir = File("/tmp/packed-example")
         }
-        assetResolutionStrategy = ResourceAssetResolutionStrategy()
+        assetResolutionStrategy = ResourceAssetResolutionStrategy
     }
 
-    pack.addFont {
+    pack.addFont { // will NOT be saved
+        key = Key("packed", "invalid_example")
+        bitmap {
+            key = Key("packed", "font/invalid_bitmap.png") // logs an error!
+            height = 8
+            ascent = 7
+            chars = listOf("\uE000")
+        }
+        bitmap {
+            key = Key("packed", "font/bitmap.png")
+            height = 8
+            ascent = 7
+            chars = listOf("\uE001")
+        }
+    }
+
+    pack.addFont { // will be saved
         key = Key("packed", "example")
         bitmap {
             key = Key("packed", "font/bitmap.png")
             height = 8
             ascent = 7
-            chars = listOf("\uE000")
+            chars = listOf("\uE001")
         }
     }
 

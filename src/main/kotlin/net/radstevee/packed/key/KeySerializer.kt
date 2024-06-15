@@ -6,7 +6,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-internal object KeySerializer : KSerializer<Key> {
+object KeySerializer : KSerializer<Key> {
     override fun serialize(encoder: Encoder, value: Key) {
         encoder.encodeString("${value.namespace}:${value.key}")
     }

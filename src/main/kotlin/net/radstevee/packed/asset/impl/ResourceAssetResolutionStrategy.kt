@@ -8,7 +8,7 @@ import java.nio.file.Path
 /**
  * Asset resolution strategy for resources.
  */
-class ResourceAssetResolutionStrategy : AssetResolutionStrategy {
+object ResourceAssetResolutionStrategy : AssetResolutionStrategy {
     override fun getAsset(relativePath: Path): File? {
         return Thread.currentThread().contextClassLoader.getResource(relativePath.toString())?.file?.let { File(it) }
     }

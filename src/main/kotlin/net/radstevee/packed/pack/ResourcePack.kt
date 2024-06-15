@@ -1,13 +1,10 @@
 package net.radstevee.packed.pack
 
+import net.radstevee.packed.LOGGER
 import net.radstevee.packed.asset.AssetResolutionStrategy
-import net.radstevee.packed.assetsNotFound
 import net.radstevee.packed.font.Font
-import net.radstevee.packed.font.FontProvider
 import java.io.File
 import java.io.IOException
-import java.nio.file.Path
-import kotlin.io.path.Path
 
 /**
  * A resource pack.
@@ -31,25 +28,7 @@ data class ResourcePack(
      * @param font The font.
      */
     fun addFont(font: Font) {
-        val unresolvedAssets = mutableListOf<Path>()
-        font.providersList.forEach {
-            when (it) {
-                is FontProvider.BITMAP -> {
-                    assetResolutionStrategy.getTexture(it.key)
-                        ?: unresolvedAssets.add(Path("assets/${it.key.namespace}/textures/${it.key.key}"))
-                }
-
-                is FontProvider.TRUETYPE -> {
-                    assetResolutionStrategy.getFont(it.key)
-                        ?: unresolvedAssets.add(Path("assets/${it.key.namespace}/font/${it.key.key}"))
-                }
-
-                else -> {}
-            }
-        }
-        // If there's any errors about unresolved assets, log them
-        // but not actually quit, because it might still work. We blame the pack author!
-        if (unresolvedAssets.isNotEmpty()) assetsNotFound(unresolvedAssets)
+        mutableFonts.add(font)
     }
 
     /**
@@ -73,6 +52,7 @@ data class ResourcePack(
      * @param deleteOld Whether it should delete all old files.
      */
     fun save(deleteOld: Boolean = false) {
+        LOGGER.info("Building resource pack...")
         if (deleteOld) outputDir.deleteRecursively()
         outputDir.mkdirs()
         assetResolutionStrategy.copyAssets(outputDir)
@@ -81,5 +61,6 @@ data class ResourcePack(
         mutableFonts.forEach {
             it.save(this)
         }
+        LOGGER.info("Resource pack saved!")
     }
 }
