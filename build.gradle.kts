@@ -34,4 +34,16 @@ publishing {
             from(components["java"])
         }
     }
+
+    repositories {
+        maven {
+            name = "radPublic"
+            url = uri("https://maven.radsteve.net/public")
+
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("RAD_MAVEN_USER")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("RAD_MAVEN_TOKEN")
+            }
+        }
+    }
 }

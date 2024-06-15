@@ -8,6 +8,11 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenLocal()
     mavenCentral()
+
+    maven {
+        name = "rad-public"
+        url = uri("https://maven.radsteve.net/public")
+    }
 }
 
 dependencies {
