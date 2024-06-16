@@ -19,8 +19,8 @@ sealed class FontProvider {
     @Serializable
     data class BITMAP(
         @SerialName("file") var key: Key = Key("minecraft", "default"),
-        var height: Int = 8,
-        var ascent: Int = 7,
+        var height: Double = 8.0,
+        var ascent: Double = 7.0,
         var chars: List<String> = listOf(),
         val type: String = "bitmap"
     ) : FontProvider() {
