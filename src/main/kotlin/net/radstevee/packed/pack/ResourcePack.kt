@@ -27,17 +27,21 @@ data class ResourcePack(
     /**
      * Adds a font to the pack.
      * @param font The font.
+     * @return The added font.
      */
-    fun addFont(font: Font) {
+    fun addFont(font: Font): Font {
         mutableFonts.add(font)
+        return font
     }
 
     /**
      * Adds a font to the pack.
      * @param factory The font factory.
+     * @return The added font.
      */
-    inline fun addFont(factory: Font.() -> Unit) {
-        addFont(Font.font(factory))
+    inline fun addFont(factory: Font.() -> Unit): Font {
+        val font = Font.font(factory)
+        return addFont(font)
     }
 
     private fun saveMeta() {
