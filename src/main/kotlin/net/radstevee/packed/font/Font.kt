@@ -27,7 +27,8 @@ data class Font(@Transient var key: Key = Key("", "")) {
     /**
      * All font providers.
      */
-    @SerialName("providers") val providersList: MutableList<FontProvider> = mutableListOf()
+    @SerialName("providers")
+    val providersList: MutableList<FontProvider> = mutableListOf()
 
     /**
      * Adds a new font provider.
@@ -61,25 +62,24 @@ data class Font(@Transient var key: Key = Key("", "")) {
         providersList.forEach {
             when (it) {
                 is BITMAP -> {
-                    pack.assetResolutionStrategy.getTexture(it.key)
-                        ?: unresolvedAssets.add(Path("assets/${it.key.namespace}/textures/${it.key.key}"))
+                    val exists = pack.assetResolutionStrategy.getTexture(it.key)?.exists() ?: false
+                    if (!exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/textures/${it.key.key}"))
                 }
 
                 is TRUETYPE -> {
-                    pack.assetResolutionStrategy.getFont(it.key)
-                        ?: unresolvedAssets.add(Path("assets/${it.key.namespace}/font/${it.key.key}"))
+                    val exists = pack.assetResolutionStrategy.getFont(it.key)?.exists() ?: false
+                    if (!exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/font/${it.key.key}"))
                 }
 
                 else -> {}
             }
         }
         // If there's any errors about unresolved assets, log them
-        // but not actually quit, because it might still work. We blame the pack author!
+        // We refuse to actually save this font and blame the pack author!
         if (unresolvedAssets.isNotEmpty()) {
             fontAssetsNotFound(unresolvedAssets, this)
             return
         }
-
         val file = File(pack.outputDir, "assets/${key.namespace}/font/${key.key}.json")
         file.parentFile.mkdirs()
         file.createNewFile()

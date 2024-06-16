@@ -19,8 +19,9 @@ class GitAssetResolutionStrategy(repo: KGit) : AssetResolutionStrategy {
      * Sets the resolution strategy to use a subdirectory of the repo.
      * @param relativePath The relative path from the [directory].
      */
-    fun subDirectory(relativePath: Path) {
+    fun subDirectory(relativePath: Path): GitAssetResolutionStrategy {
         directory = File(directory, relativePath.toString())
+        return this
     }
 
     override fun getAsset(relativePath: Path) = File(directory, relativePath.toString())
