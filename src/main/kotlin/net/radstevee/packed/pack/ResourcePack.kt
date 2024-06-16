@@ -3,6 +3,7 @@ package net.radstevee.packed.pack
 import net.radstevee.packed.LOGGER
 import net.radstevee.packed.asset.AssetResolutionStrategy
 import net.radstevee.packed.font.Font
+import net.radstevee.packed.util.ZipUtil
 import java.io.File
 import java.io.IOException
 
@@ -62,5 +63,14 @@ data class ResourcePack(
             it.save(this)
         }
         LOGGER.info("Resource pack saved!")
+    }
+
+    /**
+     * Creates a zip of the output directory.
+     * @param outputFile The zip file.
+     */
+    fun createZip(outputFile: File) {
+        ZipUtil.zipDirectory(outputDir, outputFile)
+        LOGGER.info("Pack successfully zipped to $outputFile!")
     }
 }

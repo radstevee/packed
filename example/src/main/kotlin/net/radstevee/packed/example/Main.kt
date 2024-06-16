@@ -1,13 +1,10 @@
 package net.radstevee.packed.example
 
-import com.github.syari.kgit.KGit
-import net.radstevee.packed.asset.impl.GitAssetResolutionStrategy
+import net.radstevee.packed.asset.impl.ResourceAssetResolutionStrategy
 import net.radstevee.packed.key.Key
 import net.radstevee.packed.pack.PackFormat
 import net.radstevee.packed.pack.ResourcePackBuilder.Companion.resourcePack
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import java.io.File
-import kotlin.io.path.Path
 
 fun main() {
     val pack = resourcePack {
@@ -17,11 +14,11 @@ fun main() {
             outputDir = File("/tmp/packed-example")
         }
 
-        // assetResolutionStrategy = ResourceAssetResolutionStrategy
+        assetResolutionStrategy = ResourceAssetResolutionStrategy
 
         // clones the repo to /tmp/packed-test/resourcepacks with credentials
         // and uses the subdirectory "global" as asset source
-        assetResolutionStrategy = GitAssetResolutionStrategy(KGit.cloneRepository {
+        /* assetResolutionStrategy = GitAssetResolutionStrategy(KGit.cloneRepository {
             setURI("https://github.com/IslandPractice/resourcepacks")
 
             val username = System.getenv("GH_USER")
@@ -31,7 +28,7 @@ fun main() {
             val output = File("/tmp/packed-test/resourcepacks")
             output.deleteRecursively()
             setDirectory(output)
-        }).subDirectory(Path("global"))
+        }).subDirectory(Path("global")) */
     }
 
     pack.addFont { // will NOT be saved
@@ -61,4 +58,5 @@ fun main() {
     }
 
     pack.save(true)
+    pack.createZip(File(pack.outputDir, "pack.zip"))
 }

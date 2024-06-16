@@ -14,6 +14,6 @@ object ResourceAssetResolutionStrategy : AssetResolutionStrategy {
     }
 
     override fun copyAssets(targetFile: File) {
-        FileUtil.copyResourceDirectory("assets", targetFile.path)
+        FileUtil.copyResourceDirectory("assets", "${targetFile.path}${File.separator}assets")
     }
 }
