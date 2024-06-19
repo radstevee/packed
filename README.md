@@ -10,6 +10,7 @@ Packed is a library for creating on-the-fly resource packs / compiling resource 
 - [ ] Model generation via code
 - [ ] Shaders (?)
 - [ ] Dynamic generation of sounds
+- [ ] Translatables/Languages
 
 **This is not production-ready yet!**
 Although it's very close.
