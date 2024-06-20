@@ -1,9 +1,9 @@
 package net.radstevee.packed.example
 
-import net.radstevee.packed.asset.impl.ResourceAssetResolutionStrategy
-import net.radstevee.packed.key.Key
-import net.radstevee.packed.pack.PackFormat
-import net.radstevee.packed.pack.ResourcePackBuilder.Companion.resourcePack
+import net.radstevee.packed.core.asset.impl.ResourceAssetResolutionStrategy
+import net.radstevee.packed.core.key.Key
+import net.radstevee.packed.core.pack.PackFormat
+import net.radstevee.packed.core.pack.ResourcePackBuilder.Companion.resourcePack
 import java.io.File
 
 fun main() {
@@ -35,14 +35,14 @@ fun main() {
         key = Key("packed", "invalid_example")
         bitmap {
             key = Key("packed", "font/invalid_bitmap.png") // logs an error!
-            height = 8
-            ascent = 7
+            height = 8.0
+            ascent = 7.0
             chars = listOf("\uE000")
         }
         bitmap {
             key = Key("packed", "font/bitmap.png")
-            height = 8
-            ascent = 7
+            height = 8.0
+            ascent = 7.0
             chars = listOf("\uE001")
         }
     }
@@ -51,8 +51,8 @@ fun main() {
         key = Key("packed", "example")
         bitmap {
             key = Key("packed", "font/bitmap.png")
-            height = 8
-            ascent = 7
+            height = 8.0
+            ascent = 7.0
             chars = listOf("\uE001")
         }
     }

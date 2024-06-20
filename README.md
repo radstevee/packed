@@ -14,6 +14,8 @@ Packed is a library for creating on-the-fly resource packs / compiling resource 
 
 **This is not production-ready yet!**
 Although it's very close.
+Keep in mind that **everything is subject to change**.
+Nothing in the API is final.
 
 ## Examples
 

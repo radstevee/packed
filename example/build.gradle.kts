@@ -2,11 +2,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "net.radstevee.packed"
-version = "1.0-SNAPSHOT"
-
 repositories {
-    mavenLocal()
     mavenCentral()
 
     maven {
@@ -16,10 +12,10 @@ repositories {
 }
 
 dependencies {
-    implementation("net.radstevee:packed:1.0-SNAPSHOT")
-    testImplementation(kotlin("test"))
-    implementation("com.github.sya-ri:kgit:1.0.6")
-    implementation("org.slf4j:slf4j-log4j12:1.7.30")
+    api("net.radstevee.packed:packed-core:$version")
+    api(libs.kotlin.test)
+    api(libs.kgit)
+    api(libs.slf4j.log4j)
 }
 
 tasks.test {

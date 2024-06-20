@@ -3,3 +3,4 @@ plugins {
 }
 rootProject.name = "packed"
 include("example")
+include("packed-core")

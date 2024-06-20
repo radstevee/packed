@@ -1,50 +1,36 @@
+import com.diffplug.gradle.spotless.SpotlessPlugin
+
 plugins {
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
-    id("org.jetbrains.dokka") version "1.9.20"
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.dokka)
     `maven-publish`
 }
 
-group = "net.radstevee"
-version = "0.1.1"
-
-repositories {
-    mavenLocal()
-    mavenCentral()
+allprojects {
+    group = "net.radstevee.packed"
+    version = "0.2.0"
 }
 
-dependencies {
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-    implementation("com.github.sya-ri:kgit:1.0.6")
-    implementation("org.slf4j:slf4j-api:1.7.30")
-    implementation("org.slf4j:slf4j-log4j12:1.7.30")
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-
-kotlin {
-    jvmToolchain(17)
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-        }
-    }
+subprojects {
+    apply<SpotlessPlugin>()
+    apply(plugin = "kotlin")
 
     repositories {
+        mavenCentral()
+
         maven {
             name = "radPublic"
             url = uri("https://maven.radsteve.net/public")
 
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("RAD_MAVEN_USER")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("RAD_MAVEN_TOKEN")
+                username = System.getenv("RAD_MAVEN_USER")
+                password = System.getenv("RAD_MAVEN_TOKEN")
             }
         }
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }

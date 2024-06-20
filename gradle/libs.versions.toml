@@ -1,0 +1,22 @@
+[versions]
+kotlin = "2.0.0"
+kotlinx-serialization = "2.0.0"
+kotlinx-serialization-json = "1.6.3"
+dokka = "1.9.20"
+kgit = "1.0.6"
+slf4j-api = "1.7.30"
+slf4j-log4j = "1.7.30"
+spotless = "6.18.0"
+
+[plugins]
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[libraries]
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+kgit = { group = "com.github.sya-ri", name = "kgit", version.ref = "kgit" }
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
+slf4j-log4j = { group = "org.slf4j", name = "slf4j-log4j12", version.ref = "slf4j-log4j" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test" }
