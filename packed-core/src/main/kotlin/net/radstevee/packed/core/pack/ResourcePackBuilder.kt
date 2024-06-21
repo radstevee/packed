@@ -1,6 +1,7 @@
 package net.radstevee.packed.core.pack
 
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
+import net.radstevee.packed.core.plugin.PackedPlugin
 import java.io.File
 
 class ResourcePackBuilder {
@@ -27,11 +28,23 @@ class ResourcePackBuilder {
     lateinit var meta: Meta
 
     /**
+     * The list of plugins installed in the pack.
+     */
+    val plugins = mutableListOf<PackedPlugin>()
+
+    /**
      * Metadata builder for this resourcepack.
      * @param factory The builder.
      */
     inline fun meta(factory: Meta.() -> Unit) {
         meta = Meta().apply(factory)
+    }
+
+    /**
+     * Installs a plugin to the pack.
+     */
+    fun install(plugin: PackedPlugin) {
+        plugins.add(plugin)
     }
 
     /**
