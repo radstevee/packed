@@ -66,6 +66,6 @@ sealed class FontProvider {
      */
     @Serializable
     data class REFERENCE(
-        @SerialName("id") val provider: Key = Key("minecraft", "default")
+        @SerialName("id") var provider: Key = Key("minecraft", "default")
     ) : FontProvider()
 }
