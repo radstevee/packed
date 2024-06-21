@@ -1,5 +1,6 @@
 plugins {
-    kotlin("jvm")
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.kotlin)
 }
 
 repositories {

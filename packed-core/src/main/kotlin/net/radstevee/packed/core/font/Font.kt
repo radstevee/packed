@@ -44,8 +44,9 @@ data class Font(@Transient var key: Key = Key("", "")) {
     @OptIn(ExperimentalSerializationApi::class)
     fun json(): String {
         @Suppress("JSON_FORMAT_REDUNDANT") return Json {
-            prettyPrint = true; explicitNulls = false; classDiscriminatorMode =
-            ClassDiscriminatorMode.NONE; encodeDefaults = true
+            explicitNulls = false
+            classDiscriminatorMode = ClassDiscriminatorMode.NONE
+            encodeDefaults = true
         }.encodeToString(this)
     }
 
@@ -72,7 +73,7 @@ data class Font(@Transient var key: Key = Key("", "")) {
                 else -> {}
             }
         }
-        // If there's any errors about unresolved assets, log them
+        // If there's any errors about unresolved assets, log them.
         // We refuse to actually save this font and blame the pack author!
         if (unresolvedAssets.isNotEmpty()) {
             fontAssetsNotFound(unresolvedAssets, this)
@@ -93,7 +94,7 @@ data class Font(@Transient var key: Key = Key("", "")) {
     }
 
     /**
-     * Builds a truetype font and adds it.
+     * Builds a truetype font provider and adds it.
      */
     inline fun ttf(factory: FontProvider.TRUETYPE.() -> Unit) {
         addProvider(FontProvider.TRUETYPE().apply(factory))
@@ -104,6 +105,13 @@ data class Font(@Transient var key: Key = Key("", "")) {
      */
     inline fun reference(factory: FontProvider.REFERENCE.() -> Unit) {
         addProvider(FontProvider.REFERENCE().apply(factory))
+    }
+
+    /**
+     * Builds a space font provider and adds it.
+     */
+    inline fun space(factory: FontProvider.SPACE.() -> Unit) {
+        addProvider(FontProvider.SPACE().apply(factory))
     }
 
     companion object {

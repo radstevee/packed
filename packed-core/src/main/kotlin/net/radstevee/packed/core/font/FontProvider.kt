@@ -5,7 +5,9 @@ import kotlinx.serialization.Serializable
 import net.radstevee.packed.core.key.Key
 
 /**
- * A font provider. A font provider is specified in an array of them in a font file.
+ * Represents a provider within a font file.
+ *
+ * [See the Minecraft wiki for more information.](https://minecraft.wiki/w/Font#Providers)
  */
 @Serializable
 sealed class FontProvider {
@@ -33,8 +35,15 @@ sealed class FontProvider {
         }
     }
 
+    /**
+     * Defines the width of a character's glyph.
+     * @param advances The advances of each character.
+     */
     @Serializable
-    data object SPACE : FontProvider()
+    data class SPACE(
+        var advances: MutableMap<Char, Double> = mutableMapOf(),
+        @SerialName("type") val type: String = "space"
+    ) : FontProvider()
 
     /**
      * A truetype font provider. Allows you to use a pre-forged truetype font.
@@ -66,6 +75,7 @@ sealed class FontProvider {
      */
     @Serializable
     data class REFERENCE(
-        @SerialName("id") var provider: Key = Key("minecraft", "default")
+        @SerialName("id") var provider: Key = Key("minecraft", "default"),
+        @SerialName("type") val type: String = "reference"
     ) : FontProvider()
 }
