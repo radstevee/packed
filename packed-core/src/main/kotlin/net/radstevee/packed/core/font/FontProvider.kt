@@ -19,8 +19,7 @@ sealed class FontProvider {
     @Serializable
     data class BITMAP(
         @SerialName("file") var key: Key = Key(
-            "minecraft",
-            "default"
+            "minecraft", "default"
         ),
         var height: Double = 8.0,
         var ascent: Double = 7.0,
@@ -50,19 +49,23 @@ sealed class FontProvider {
     @Serializable
     data class TRUETYPE(
         @SerialName("file") var key: Key = Key(
-            "minecraft",
-            "default"
+            "minecraft", "default"
         ),
         var shift: List<Double> = listOf(),
         var size: Double = 0.0,
         var oversample: Double = 0.0,
         @SerialName("type") val type: String = "ttf"
-    ) : FontProvider() {
-        override fun toString(): String {
-            return super.toString()
-        }
-    }
+    ) : FontProvider()
 
+    /**
+     * A reference font provider.
+     * Includes a different provider. This allows you to include providers from other fonts or even resource packs.
+     *
+     * [See the Minecraft wiki](https://minecraft.wiki/w/Font#Reference_provider)
+     * @param provider The font provider.
+     */
     @Serializable
-    data object REFERENCE : FontProvider()
+    data class REFERENCE(
+        @SerialName("id") val provider: Key = Key("minecraft", "default")
+    ) : FontProvider()
 }

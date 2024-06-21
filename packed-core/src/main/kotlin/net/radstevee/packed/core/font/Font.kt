@@ -99,6 +99,13 @@ data class Font(@Transient var key: Key = Key("", "")) {
         addProvider(FontProvider.TRUETYPE().apply(factory))
     }
 
+    /**
+     * Builds a reference font provider and adds it.
+     */
+    inline fun reference(factory: FontProvider.REFERENCE.() -> Unit) {
+        addProvider(FontProvider.REFERENCE().apply(factory))
+    }
+
     companion object {
         /**
          * Builds a font and returns it.
