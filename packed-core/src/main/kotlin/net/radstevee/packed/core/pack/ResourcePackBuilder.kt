@@ -54,7 +54,8 @@ class ResourcePackBuilder {
         return ResourcePack(
             ResourcePackMeta.init(meta.format, meta.description),
             meta.outputDir,
-            assetResolutionStrategy
+            assetResolutionStrategy,
+            _plugins = plugins
         )
     }
 
