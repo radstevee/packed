@@ -42,10 +42,19 @@ class ProgressBar(
     }
 
     override fun draw(player: Player) {
-        val bar = BOSS_BARS[player.uniqueId] ?: bossBar(component, 0f, BossBar.Color.WHITE, BossBar.Overlay.PROGRESS)
-        if (!BOSS_BARS.containsValue(bar)) BOSS_BARS[player.uniqueId] = bar
-        if (player.activeBossBars().contains(bar)) player.hideBossBar(bar)
-        player.showBossBar(bar)
+        when (renderPosition.location) {
+            RenderPosition.Location.ACTION_BAR -> player.sendActionBar(component)
+            RenderPosition.Location.BOSS_BAR -> {
+                val existingBar = BOSS_BARS[player.uniqueId]
+                if (existingBar != null) {
+                    if (existingBar in player.activeBossBars()) existingBar.name(component)
+                    else player.showBossBar(existingBar)
+                } else {
+                    val bar = bossBar(component, 0f, BossBar.Color.WHITE, BossBar.Overlay.PROGRESS)
+                    player.showBossBar(bar)
+                }
+            }
+        }
     }
 
     val barCharacter = text().append(text("\uE000")).font(key(PACKED_UI_NAMESPACE, name)).build()
