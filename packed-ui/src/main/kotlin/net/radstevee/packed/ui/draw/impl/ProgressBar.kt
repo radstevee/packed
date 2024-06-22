@@ -8,8 +8,8 @@ import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.TextColor
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
-import net.radstevee.packed.ui.PackedUI
 import net.radstevee.packed.ui.PackedUI.PACKED_UI_NAMESPACE
+import net.radstevee.packed.ui.PackedUI.negativeSpace
 import net.radstevee.packed.ui.draw.Drawable
 import net.radstevee.packed.ui.draw.RenderPosition
 import org.bukkit.entity.Player
@@ -34,7 +34,7 @@ class ProgressBar(
             key = Key(PACKED_UI_NAMESPACE, "progress_bars/$name")
             bitmap {
                 key = Key(PACKED_UI_NAMESPACE, "progress_bars/block.png")
-                height = 256.0
+                height = 127.0
                 ascent = renderPosition.shift
                 chars = listOf("\uE000")
             }
@@ -47,28 +47,31 @@ class ProgressBar(
             RenderPosition.Location.BOSS_BAR -> {
                 val existingBar = BOSS_BARS[player.uniqueId]
                 if (existingBar != null) {
-                    if (existingBar in player.activeBossBars()) existingBar.name(component)
-                    else player.showBossBar(existingBar)
+                    existingBar.name(component)
                 } else {
                     val bar = bossBar(component, 0f, BossBar.Color.WHITE, BossBar.Overlay.PROGRESS)
                     player.showBossBar(bar)
+                    BOSS_BARS[player.uniqueId] = bar
                 }
             }
         }
     }
 
-    val barCharacter = text().append(text("\uE000")).font(key(PACKED_UI_NAMESPACE, name)).build()
+    val barCharacter = text().append(text("\uE000")).font(key(PACKED_UI_NAMESPACE, "progress_bars/$name")).build()
     val component
         get() = text().apply { builder ->
-            builder.append(PackedUI.negativeSpace(-width))
             repeat(width) {
                 builder.append(backgroundChar)
+                builder.append(negativeSpace(-1))
             }
-            repeat(percentageOne) {
+            builder.append(negativeSpace(-(width * 4)))
+            repeat((percentageOne * width) / 100) {
                 builder.append(barCharacter.color(colorOne))
+                builder.append(negativeSpace(-1))
             }
-            repeat(percentageTwo) {
+            repeat((percentageTwo * width) / 100) {
                 builder.append(barCharacter.color(colorTwo))
+                builder.append(negativeSpace(-1))
             }
         }.build()
 
