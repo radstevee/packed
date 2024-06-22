@@ -65,13 +65,15 @@ data class Font(@Transient var key: Key = Key("", "")) {
         providersList.forEach {
             when (it) {
                 is FontProvider.BITMAP -> {
-                    val exists = pack.assetResolutionStrategy.getTexture(it.key)?.exists() ?: false
-                    if (!exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/textures/${it.key.key}"))
+                    val assetExists = pack.assetResolutionStrategy.getTexture(it.key)?.exists() ?: false
+                    val exists = File(pack.outputDir, "assets/${it.key.namespace}/textures/${it.key.key}").exists()
+                    if (!assetExists && !exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/textures/${it.key.key}"))
                 }
 
                 is FontProvider.TRUETYPE -> {
-                    val exists = pack.assetResolutionStrategy.getFont(it.key)?.exists() ?: false
-                    if (!exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/font/${it.key.key}"))
+                    val assetExists = pack.assetResolutionStrategy.getFont(it.key)?.exists() ?: false
+                    val exists = File("assets/${it.key.namespace}/font/${it.key.key}").exists()
+                    if (!assetExists && !exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/font/${it.key.key}"))
                 }
 
                 else -> {}
