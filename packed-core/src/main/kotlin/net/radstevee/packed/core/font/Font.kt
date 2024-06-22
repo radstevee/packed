@@ -7,7 +7,7 @@ import kotlinx.serialization.Transient
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
-import net.radstevee.packed.core.LOGGER
+import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.fontAssetsNotFound
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
@@ -43,10 +43,14 @@ data class Font(@Transient var key: Key = Key("", "")) {
      */
     @OptIn(ExperimentalSerializationApi::class)
     fun json(): String {
-        @Suppress("JSON_FORMAT_REDUNDANT") return Json {
+        @Suppress("JSON_FORMAT_REDUNDANT")
+        return Json {
+            prettyPrint = true
+
             explicitNulls = false
             classDiscriminatorMode = ClassDiscriminatorMode.NONE
             encodeDefaults = true
+
         }.encodeToString(this)
     }
 
@@ -83,7 +87,7 @@ data class Font(@Transient var key: Key = Key("", "")) {
         file.parentFile.mkdirs()
         file.createNewFile()
         file.writeText(json())
-        LOGGER.info("Font $key saved!")
+        PACKED_LOGGER.info("Font $key saved!")
     }
 
     /**

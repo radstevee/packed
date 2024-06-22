@@ -4,6 +4,7 @@ import net.radstevee.packed.core.asset.impl.ResourceAssetResolutionStrategy
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.PackFormat
 import net.radstevee.packed.core.pack.ResourcePackBuilder.Companion.resourcePack
+import net.radstevee.packed.negativespaces.NegativeSpaces
 import java.io.File
 
 fun main() {
@@ -15,7 +16,8 @@ fun main() {
         }
 
         assetResolutionStrategy = ResourceAssetResolutionStrategy
-
+        val spaces = NegativeSpaces(fontKey = Key("packed-example", "space"))
+        install(spaces)
         // clones the repo to /tmp/packed-test/resourcepacks with credentials
         // and uses the subdirectory "global" as asset source
         /* assetResolutionStrategy = GitAssetResolutionStrategy(KGit.cloneRepository {

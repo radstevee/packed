@@ -1,6 +1,6 @@
 package net.radstevee.packed.core.pack
 
-import net.radstevee.packed.core.LOGGER
+import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
 import net.radstevee.packed.core.font.Font
 import net.radstevee.packed.core.plugin.PackedPlugin
@@ -65,19 +65,19 @@ data class ResourcePack(
      * @param deleteOld Whether it should delete all old files.
      */
     fun save(deleteOld: Boolean = false) {
-        LOGGER.info("Building resource pack...")
+        PACKED_LOGGER.info("Building resource pack...")
         if (deleteOld) outputDir.deleteRecursively()
         outputDir.mkdirs()
         assetResolutionStrategy.copyAssets(outputDir)
-        plugins.forEach { it.beforeSave(this) }
+        _plugins.forEach { it.beforeSave(this) }
 
         saveMeta()
         _fonts.forEach {
             it.save(this)
         }
 
-        plugins.forEach { it.afterSave(this) }
-        LOGGER.info("Resource pack saved!")
+        _plugins.forEach { it.afterSave(this) }
+        PACKED_LOGGER.info("Resource pack saved!")
     }
 
     /**
@@ -86,7 +86,7 @@ data class ResourcePack(
      */
     fun createZip(outputFile: File) {
         ZipUtil.zipDirectory(outputDir, outputFile)
-        LOGGER.info("Pack successfully zipped to $outputFile!")
+        PACKED_LOGGER.info("Pack successfully zipped to $outputFile!")
     }
 
     /**
