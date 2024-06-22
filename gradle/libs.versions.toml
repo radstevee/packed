@@ -7,6 +7,7 @@ kgit = "1.0.6"
 slf4j-api = "1.7.30"
 slf4j-log4j = "1.7.30"
 spotless = "6.18.0"
+paper-api = "1.20.6-R0.1-SNAPSHOT"
 
 [plugins]
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization" }
@@ -20,3 +21,4 @@ kgit = { group = "com.github.sya-ri", name = "kgit", version.ref = "kgit" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
 slf4j-log4j = { group = "org.slf4j", name = "slf4j-log4j12", version.ref = "slf4j-log4j" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test" }
+paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }

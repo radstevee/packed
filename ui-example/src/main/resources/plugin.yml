@@ -1,0 +1,3 @@
+main: net.radstevee.packed.ui.example.Example
+version: ${version}
+name: packed-ui-example

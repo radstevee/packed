@@ -11,13 +11,13 @@ import java.nio.file.Path
  * @param newLogger The new logger.
  */
 fun changeLogger(newLogger: Logger) {
-    LOGGER = newLogger
+    PACKED_LOGGER = newLogger
 }
 
 /**
  * The packed logger.
  */
-internal var LOGGER = LoggerFactory.getLogger("packed")
+internal var PACKED_LOGGER = LoggerFactory.getLogger("packed")
 
 /**
  * Called when font assets couldn't be resolved using the given asset resolution strategy.
@@ -25,10 +25,10 @@ internal var LOGGER = LoggerFactory.getLogger("packed")
  * @param font The font in which the error occurred in.
  */
 internal fun fontAssetsNotFound(assets: List<Path>, font: Font) {
-    LOGGER.error("Error whilst trying to process font ${font.key}: Some assets couldn't be found:")
+    PACKED_LOGGER.error("Error whilst trying to process font ${font.key}: Some assets couldn't be found:")
     assets.forEach {
-        LOGGER.error("    - $it")
+        PACKED_LOGGER.error("    - $it")
     }
-    LOGGER.error("Verify that these assets actually exist with your asset resolution strategy.")
-    LOGGER.error("Continuing. This font will not be saved!")
+    PACKED_LOGGER.error("Verify that these assets actually exist with your asset resolution strategy.")
+    PACKED_LOGGER.error("Continuing. This font will not be saved!")
 }
