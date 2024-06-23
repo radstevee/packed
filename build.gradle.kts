@@ -9,7 +9,7 @@ plugins {
 
 allprojects {
     group = "net.radstevee.packed"
-    version = "0.2.6"
+    version = "0.3.0"
 }
 
 subprojects {

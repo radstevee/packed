@@ -15,7 +15,7 @@ fun main() {
             outputDir = File("/tmp/packed-example")
         }
 
-        assetResolutionStrategy = ResourceAssetResolutionStrategy
+        assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java)
         val spaces = NegativeSpaces(fontKey = Key("packed-example", "space"))
         install(spaces)
         // clones the repo to /tmp/packed-test/resourcepacks with credentials
