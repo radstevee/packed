@@ -63,7 +63,7 @@ class FontTest {
                 format = PackFormat.V1_20_2
                 outputDir = File("/tmp/pack")
             }
-            assetResolutionStrategy = ResourceAssetResolutionStrategy
+            assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java)
         }
         val expectedMeta = """
             {

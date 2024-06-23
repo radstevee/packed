@@ -2,7 +2,6 @@ package net.radstevee.packed.ui.draw.impl
 
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.bossbar.BossBar.bossBar
-import net.kyori.adventure.key.Key.key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.TextColor
@@ -15,18 +14,21 @@ import net.radstevee.packed.ui.draw.RenderPosition
 import org.bukkit.entity.Player
 import java.util.UUID
 
-class ProgressBar(
-    val name: String,
-    val width: Int,
-    var colorOne: TextColor,
-    var colorTwo: TextColor,
-    var percentageOne: Int,
-    var percentageTwo: Int,
-    override val renderPosition: RenderPosition,
-    val backgroundChar: Component
-) : Drawable {
+abstract class ProgressBar : Drawable {
+    abstract val name: String
+    abstract var width: Int
+    abstract var colorOne: TextColor
+    abstract var colorTwo: TextColor
+    abstract override val renderPosition: RenderPosition
+    abstract var percentageOne: Int
+    abstract var percentageTwo: Int
+    abstract var backgroundChar: Component
+    abstract var barChar: Component
+
     init {
-        if (percentageOne + percentageTwo != 100) error("Percentage $percentageOne+$percentageTwo does not equal to 100.")
+        lazy {
+            if (percentageOne + percentageTwo != 100) error("Percentage $percentageOne+$percentageTwo does not equal to 100.")
+        }
     }
 
     override fun initFonts(pack: ResourcePack) {
@@ -35,13 +37,13 @@ class ProgressBar(
             bitmap {
                 key = Key(PACKED_UI_NAMESPACE, "progress_bars/block.png")
                 height = 127.0
-                ascent = renderPosition.shift
+                ascent = renderPosition.verticalShift
                 chars = listOf("\uE000")
             }
         }
     }
 
-    override fun draw(player: Player) {
+    override fun draw(player: Player, component: Component) {
         when (renderPosition.location) {
             RenderPosition.Location.ACTION_BAR -> player.sendActionBar(component)
             RenderPosition.Location.BOSS_BAR -> {
@@ -57,25 +59,35 @@ class ProgressBar(
         }
     }
 
-    val barCharacter = text().append(text("\uE000")).font(key(PACKED_UI_NAMESPACE, "progress_bars/$name")).build()
-    val component
-        get() = text().apply { builder ->
-            repeat(width) {
-                builder.append(backgroundChar)
-                builder.append(negativeSpace(-1))
-            }
-            builder.append(negativeSpace(-(width * 4)))
-            repeat((percentageOne * width) / 100) {
-                builder.append(barCharacter.color(colorOne))
-                builder.append(negativeSpace(-1))
-            }
-            repeat((percentageTwo * width) / 100) {
-                builder.append(barCharacter.color(colorTwo))
-                builder.append(negativeSpace(-1))
-            }
-        }.build()
+    override fun draw(player: Player) {
+        draw(player, component())
+    }
 
-    companion object {
+    fun component() = text().apply { builder ->
+        builder.append(negativeSpace(renderPosition.horizontalShift))
+        repeat(width) {
+            builder.append(backgroundChar)
+            builder.append(negativeSpace(-1))
+        }
+        builder.append(negativeSpace(-(width * 4)))
+        val valueOne = (percentageOne * width) / 100
+        val valueTwo = (percentageTwo * width) / 100
+        repeat(valueOne) {
+            builder.append(this.barChar.color(colorOne))
+            builder.append(negativeSpace(-1))
+        }
+        repeat(valueTwo) {
+            builder.append(this.barChar.color(colorTwo))
+            builder.append(negativeSpace(-1))
+        }
+    }.build()
+
+    override fun clear(player: Player) {
+        BOSS_BARS[player.uniqueId]?.removeViewer(player)
+        BOSS_BARS.remove(player.uniqueId)
+    }
+
+    private companion object {
         val BOSS_BARS = mutableMapOf<UUID, BossBar>()
     }
 }

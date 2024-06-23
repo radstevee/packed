@@ -8,27 +8,25 @@ class NegativeSpaces(
     val fontKey: Key = Key("minecraft", "default"),
     val range: IntRange = -8192 .. 8192
 ) : PackedPlugin {
-    fun getAdvances() = buildMap {
+    val advances = buildMap {
         range.forEachIndexed { i, it ->
-            put(START_UNICODE + i, it.toDouble())
+            put((START_UNICODE + i).toChar(), it.toDouble())
         }
-    }
+    }.toMutableMap()
 
     override fun beforeSave(pack: ResourcePack) {
-        val spaceAdvances = getAdvances().mapKeys { it.key.toChar() }.toMutableMap()
-
         pack.addFont {
             key = fontKey
 
             space {
-                advances = spaceAdvances
+                advances = this@NegativeSpaces.advances
             }
         }
     }
 
-    fun getChar(space: Int) = getAdvances().filterValues { it == space.toDouble() }.keys.first().toChar()
+    fun getChar(space: Int) = advances.filterValues { it == space.toDouble() }.keys.first()
 
     companion object {
-        var START_UNICODE = 0xD0000
+        var START_UNICODE = 0xCE000
     }
 }

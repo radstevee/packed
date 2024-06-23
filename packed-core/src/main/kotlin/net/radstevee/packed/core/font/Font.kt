@@ -58,7 +58,6 @@ data class Font(@Transient var key: Key = Key("", "")) {
      * Saves the resource pack.
      * @throws IOException
      */
-    @Throws(IOException::class)
     fun save(pack: ResourcePack) {
         key.createNamespace(pack)
         val unresolvedAssets = mutableListOf<Path>()
@@ -72,7 +71,7 @@ data class Font(@Transient var key: Key = Key("", "")) {
 
                 is FontProvider.TRUETYPE -> {
                     val assetExists = pack.assetResolutionStrategy.getFont(it.key)?.exists() ?: false
-                    val exists = File("assets/${it.key.namespace}/font/${it.key.key}").exists()
+                    val exists = File(pack.outputDir, "assets/${it.key.namespace}/font/${it.key.key}").exists()
                     if (!assetExists && !exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/font/${it.key.key}"))
                 }
 
