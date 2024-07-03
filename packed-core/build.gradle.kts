@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.dokka)
     `maven-publish`
 }
 
