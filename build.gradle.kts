@@ -15,6 +15,7 @@ allprojects {
 subprojects {
     apply<SpotlessPlugin>()
     apply(plugin = "kotlin")
+    apply(plugin = "org.jetbrains.dokka")
 
     repositories {
         mavenCentral()
