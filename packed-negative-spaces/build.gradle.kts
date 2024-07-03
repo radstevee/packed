@@ -1,3 +1,5 @@
+apply(plugin = "org.jetbrains.dokka")
+
 plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.kotlinx.serialization)

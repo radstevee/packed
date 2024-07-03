@@ -12,7 +12,7 @@ allprojects {
     version = "0.3.0"
 }
 
-subprojects {
+allprojects {
     apply<SpotlessPlugin>()
     apply(plugin = "kotlin")
     apply(plugin = "org.jetbrains.dokka")
