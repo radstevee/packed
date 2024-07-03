@@ -19,14 +19,19 @@ dependencies {
     api("net.radstevee.packed:packed-negative-spaces:$version")
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks.register<Jar>("sourcesJar") {
+    from(sourceSets.main.get().allSource)
+    archiveClassifier.set("sources")
 }
 
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
+
+            artifact(tasks["sourcesJar"]) {
+                classifier = "sources"
+            }
         }
     }
 
@@ -36,8 +41,8 @@ publishing {
             url = uri("https://maven.radsteve.net/public")
 
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("RAD_MAVEN_USER")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("RAD_MAVEN_TOKEN")
+                username = System.getenv("RAD_MAVEN_USER")
+                password = System.getenv("RAD_MAVEN_TOKEN")
             }
         }
     }
