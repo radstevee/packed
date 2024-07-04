@@ -4,7 +4,7 @@ import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
 import net.radstevee.packed.core.font.Font
 import net.radstevee.packed.core.plugin.PackedPlugin
-import net.radstevee.packed.core.util.ZipUtil
+import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 import java.io.IOException
 
@@ -85,7 +85,7 @@ data class ResourcePack(
      * @param outputFile The zip file.
      */
     fun createZip(outputFile: File) {
-        ZipUtil.zipDirectory(outputDir, outputFile)
+        ZipUtil.pack(outputDir, outputFile)
         PACKED_LOGGER.info("Pack successfully zipped to $outputFile!")
     }
 

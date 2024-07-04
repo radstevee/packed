@@ -16,6 +16,7 @@ dependencies {
     api(libs.kgit)
     api(libs.slf4j.api)
     api(libs.slf4j.log4j)
+    api(libs.zip)
 }
 
 tasks.test {
