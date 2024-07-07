@@ -1,4 +1,5 @@
 import com.diffplug.gradle.spotless.SpotlessPlugin
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
 plugins {
     alias(libs.plugins.spotless)
@@ -29,6 +30,10 @@ allprojects {
                 password = System.getenv("RAD_MAVEN_TOKEN")
             }
         }
+    }
+
+    tasks.withType<DokkaTaskPartial>().configureEach {
+        outputDirectory.set(File(layout.projectDirectory.asFile.parentFile, "build/docs"))
     }
 }
 
