@@ -45,3 +45,6 @@ bin/
 .kotlin/
 
 **/run/*
+
+**/kls_database.db
+
