@@ -4,6 +4,4 @@ plugins {
 rootProject.name = "packed"
 include("example")
 include("packed-core")
-include("packed-ui")
-include("ui-example")
 include("packed-negative-spaces")
