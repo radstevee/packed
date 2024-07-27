@@ -22,7 +22,7 @@ import kotlinx.serialization.json.Json
 data class Pack(
     val pack_format: Int,
     val supported_formats: SupportedFormats?,
-    val description: String
+    val description: String,
 )
 
 /**
@@ -30,13 +30,20 @@ data class Pack(
  * Supported formats/versions for the resource pack.
  */
 @Serializable
-data class SupportedFormats(val min_inclusive: Int, val max_inclusive: Int)
+data class SupportedFormats(
+    val min_inclusive: Int,
+    val max_inclusive: Int,
+)
 
 /**
  * Represents a pack language.
  */
 @Serializable
-data class PackLanguage(val name: String, val region: String, val bidirectional: Boolean)
+data class PackLanguage(
+    val name: String,
+    val region: String,
+    val bidirectional: Boolean,
+)
 
 /**
  * Represents the `pack.mcmeta` file.
@@ -44,19 +51,25 @@ data class PackLanguage(val name: String, val region: String, val bidirectional:
 @Serializable
 data class ResourcePackMeta(
     val pack: Pack? = null,
-    val language: PackLanguage? = null
+    val language: PackLanguage? = null,
 ) {
     @OptIn(ExperimentalSerializationApi::class)
     fun json(): String {
         @Suppress("JSON_FORMAT_REDUNDANT")
-        return Json { prettyPrint = true; explicitNulls = false }.encodeToString(this)
+        return Json {
+            prettyPrint = true
+            explicitNulls = false
+        }.encodeToString(this)
     }
 
     companion object {
-        fun init(format: PackFormat, description: String): ResourcePackMeta {
-            return ResourcePackMeta(
-                Pack(format.rev, null, description), null
+        fun init(
+            format: PackFormat,
+            description: String,
+        ): ResourcePackMeta =
+            ResourcePackMeta(
+                Pack(format.rev, null, description),
+                null,
             )
-        }
     }
 }

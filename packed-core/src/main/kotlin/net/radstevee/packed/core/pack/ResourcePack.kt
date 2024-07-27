@@ -12,20 +12,20 @@ import java.io.IOException
  * A resource pack.
  * @param meta The resource pack meta.
  * @param outputDir Output directory of the resource pack. This is where it will be saved.
- * @param _fonts Mutable list of fonts.
+ * @param _elements Mutable list of elements in this resource pack.
  * @param _plugins Mutable list of packed plugins.
  */
 data class ResourcePack(
     val meta: ResourcePackMeta,
     val outputDir: File,
     val assetResolutionStrategy: AssetResolutionStrategy,
-    private val _fonts: MutableList<Font> = mutableListOf(),
-    private val _plugins: MutableList<PackedPlugin> = mutableListOf()
+    private val _elements: MutableList<ResourcePackElement> = mutableListOf(),
+    private val _plugins: MutableList<PackedPlugin> = mutableListOf(),
 ) {
     /**
      * The fonts in the pack.
      */
-    val fonts get() = _fonts.toList()
+    val elements get() = _elements.toList()
 
     /**
      * The plugins in the pack.
@@ -38,7 +38,7 @@ data class ResourcePack(
      * @return The added font.
      */
     fun addFont(font: Font): Font {
-        _fonts.add(font)
+        _elements.add(font)
         return font
     }
 
@@ -72,8 +72,15 @@ data class ResourcePack(
         _plugins.forEach { it.beforeSave(this) }
 
         saveMeta()
-        _fonts.forEach {
-            it.save(this)
+        _elements.forEach {
+            val validationResult = it.validate(this)
+            validationResult.onFailure { exception ->
+                val error = exception as ResourcePackValidationException
+                error.errorMessage.lines().forEach(PACKED_LOGGER::error)
+            }
+            validationResult.onSuccess { _ ->
+                it.save(this)
+            }
         }
 
         _plugins.forEach { it.afterSave(this) }

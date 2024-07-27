@@ -8,32 +8,34 @@ import net.radstevee.packed.negativespaces.NegativeSpaces
 import java.io.File
 
 fun main() {
-    val pack = resourcePack {
-        meta {
-            description = "Packed Example"
-            format = PackFormat.LATEST
-            outputDir = File("/tmp/packed-example")
+    val pack =
+        resourcePack {
+            meta {
+                description = "Packed Example"
+                format = PackFormat.LATEST
+                outputDir = File("/tmp/packed-example")
+            }
+
+            assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java)
+            val spaces = NegativeSpaces(fontKey = Key("packed", "space"))
+            install(spaces)
+            // clones the repo to /tmp/packed-test/resourcepacks with credentials
+            // and uses the subdirectory "global" as asset source
+            /* assetResolutionStrategy = GitAssetResolutionStrategy(KGit.cloneRepository {
+                setURI("https://github.com/me/my-packs")
+
+                val username = System.getenv("GH_USER")
+                val token = System.getenv("GH_TOKEN")
+                setCredentialsProvider(UsernamePasswordCredentialsProvider(username, token))
+
+                val output = File("/tmp/packed-test/resourcepacks")
+                output.deleteRecursively()
+                setDirectory(output)
+            }).subDirectory(Path("global")) */
         }
 
-        assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java)
-        val spaces = NegativeSpaces(fontKey = Key("packed-example", "space"))
-        install(spaces)
-        // clones the repo to /tmp/packed-test/resourcepacks with credentials
-        // and uses the subdirectory "global" as asset source
-        /* assetResolutionStrategy = GitAssetResolutionStrategy(KGit.cloneRepository {
-            setURI("https://github.com/IslandPractice/resourcepacks")
-
-            val username = System.getenv("GH_USER")
-            val token = System.getenv("GH_TOKEN")
-            setCredentialsProvider(UsernamePasswordCredentialsProvider(username, token))
-
-            val output = File("/tmp/packed-test/resourcepacks")
-            output.deleteRecursively()
-            setDirectory(output)
-        }).subDirectory(Path("global")) */
-    }
-
-    pack.addFont { // will NOT be saved
+    pack.addFont {
+        // will NOT be saved
         key = Key("packed", "invalid_example")
         bitmap {
             key = Key("packed", "font/invalid_bitmap.png") // logs an error!
@@ -49,7 +51,8 @@ fun main() {
         }
     }
 
-    pack.addFont { // will be saved
+    pack.addFont {
+        // will be saved
         key = Key("packed", "example")
         bitmap {
             key = Key("packed", "font/bitmap.png")

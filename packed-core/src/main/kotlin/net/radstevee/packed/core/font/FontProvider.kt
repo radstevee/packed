@@ -20,13 +20,15 @@ sealed class FontProvider {
      */
     @Serializable
     data class BITMAP(
-        @SerialName("file") var key: Key = Key(
-            "minecraft", "default"
-        ),
+        @SerialName("file") var key: Key =
+            Key(
+                "minecraft",
+                "default",
+            ),
         var height: Double = 8.0,
         var ascent: Double = 7.0,
         var chars: List<String> = listOf(),
-        val type: String = "bitmap"
+        val type: String = "bitmap",
     ) : FontProvider() {
         init {
             if (ascent > height) {
@@ -42,7 +44,7 @@ sealed class FontProvider {
     @Serializable
     data class SPACE(
         var advances: MutableMap<Char, Double> = mutableMapOf(),
-        @SerialName("type") val type: String = "space"
+        @SerialName("type") val type: String = "space",
     ) : FontProvider()
 
     /**
@@ -57,13 +59,15 @@ sealed class FontProvider {
      */
     @Serializable
     data class TRUETYPE(
-        @SerialName("file") var key: Key = Key(
-            "minecraft", "default"
-        ),
+        @SerialName("file") var key: Key =
+            Key(
+                "minecraft",
+                "default",
+            ),
         var shift: List<Double> = listOf(),
         var size: Double = 0.0,
         var oversample: Double = 0.0,
-        @SerialName("type") val type: String = "ttf"
+        @SerialName("type") val type: String = "ttf",
     ) : FontProvider()
 
     /**
@@ -76,6 +80,6 @@ sealed class FontProvider {
     @Serializable
     data class REFERENCE(
         @SerialName("id") var provider: Key = Key("minecraft", "default"),
-        @SerialName("type") val type: String = "reference"
+        @SerialName("type") val type: String = "reference",
     ) : FontProvider()
 }

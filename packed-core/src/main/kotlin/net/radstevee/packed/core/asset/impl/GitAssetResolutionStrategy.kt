@@ -9,7 +9,9 @@ import java.nio.file.Path
  * A resolution strategy for git repositories.
  * @param repo The KGit repo.
  */
-class GitAssetResolutionStrategy(repo: KGit) : AssetResolutionStrategy {
+class GitAssetResolutionStrategy(
+    repo: KGit,
+) : AssetResolutionStrategy {
     /**
      * The repo worktree directory.
      */

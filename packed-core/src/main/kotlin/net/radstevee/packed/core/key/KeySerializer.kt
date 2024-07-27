@@ -7,7 +7,10 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 object KeySerializer : KSerializer<Key> {
-    override fun serialize(encoder: Encoder, value: Key) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Key,
+    ) {
         encoder.encodeString("${value.namespace}:${value.key}")
     }
 

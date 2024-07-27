@@ -26,4 +26,3 @@ enum class PackFormat(
 
     LATEST(V1_21.rev),
 }
-

@@ -1,11 +1,14 @@
 package net.radstevee.packed.core.util
 
 import java.net.JarURLConnection
+import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.SimpleFileVisitor
 import java.nio.file.StandardCopyOption
-import java.util.jar.JarFile
+import java.nio.file.attribute.BasicFileAttributes
+import kotlin.io.path.Path
 
 object FileUtil {
     /**
@@ -14,17 +17,34 @@ object FileUtil {
      * @param sourceDir The relative path within the `resources` directory.
      * @param targetDir Full path to the target location.
      */
-    fun copyResourceDirectory(clazz: Class<*>, sourceDir: String, targetDir: String) {
+    fun copyResourceDirectory(
+        clazz: Class<*>,
+        sourceDir: String,
+        targetDir: String,
+    ) {
         val resourceUrl = clazz.getResource(sourceDir) ?: error("Resource not found: $sourceDir")
         val resourcePath = Paths.get(resourceUrl.toURI())
-        Files.walk(resourcePath).forEach { source ->
-            val target = Paths.get(targetDir, source.toString().substring(resourcePath.toString().length))
-            if (Files.isDirectory(source)) {
-                if (!Files.exists(target)) Files.createDirectories(target)
-            } else {
-                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING)
+        val outputDir = Path(targetDir)
+
+        Files.walkFileTree(resourcePath, object : SimpleFileVisitor<Path>() {
+            override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+                // Determine the target file path
+                val targetPath = outputDir.resolve(resourcePath.relativize(file).toString())
+                // Copy the file to the target path
+                Files.copy(file, targetPath, StandardCopyOption.REPLACE_EXISTING)
+                return FileVisitResult.CONTINUE
             }
-        }
+
+            override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
+                // Determine the target directory path
+                val targetPath = outputDir.resolve(resourcePath.relativize(dir).toString())
+                // Create the target directory if it doesn't exist
+                if (!Files.exists(targetPath)) {
+                    Files.createDirectories(targetPath)
+                }
+                return FileVisitResult.CONTINUE
+            }
+        })
     }
 
     /**
@@ -39,7 +59,10 @@ object FileUtil {
      * copyJarResourcesRecursively(Path("/tmp"), connection)
      * ```
      */
-    fun copyJarResourcesRecursively(destination: Path, jarConnection: JarURLConnection) {
+    fun copyJarResourcesRecursively(
+        destination: Path,
+        jarConnection: JarURLConnection,
+    ) {
         val jarFile = jarConnection.jarFile
         val iterator = jarFile.entries().asIterator()
         while (iterator.hasNext()) {

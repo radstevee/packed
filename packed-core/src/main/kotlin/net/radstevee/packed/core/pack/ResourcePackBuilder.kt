@@ -50,14 +50,13 @@ class ResourcePackBuilder {
     /**
      * Initialises a resource pack from meta.
      */
-    fun create(): ResourcePack {
-        return ResourcePack(
+    fun create(): ResourcePack =
+        ResourcePack(
             ResourcePackMeta.init(meta.format, meta.description),
             meta.outputDir,
             assetResolutionStrategy,
-            _plugins = plugins
+            _plugins = plugins,
         )
-    }
 
     /**
      * The strategy to resolve assets.
@@ -69,8 +68,6 @@ class ResourcePackBuilder {
          * Builds a resource pack.
          * @return the pack.
          */
-        inline fun resourcePack(block: ResourcePackBuilder.() -> Unit): ResourcePack {
-            return ResourcePackBuilder().apply(block).create()
-        }
+        inline fun resourcePack(block: ResourcePackBuilder.() -> Unit): ResourcePack = ResourcePackBuilder().apply(block).create()
     }
 }

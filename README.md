@@ -1,21 +1,24 @@
 # packed
-Packed is a library for creating on-the-fly resource packs / compiling resource packs using Kotlin.
+Packed is a standalone library for compiling minecraft resource packs using Kotlin.
+
+This means that we do not have any dependencies on any Minecraft server implementations.
 
 ## TODO
 
 - [x] Copy asset files from resources
-- [x] Dynamic generation of fonts
-- [x] Dynamic generation of pack metas
+- [x] Generation of fonts
+- [x] Generation of pack metas
 - [x] Different asset resolution strategies
-- [ ] Model generation via code
-- [ ] Shaders (?)
-- [ ] Dynamic generation of sounds
-- [ ] Translatables/Languages
+- [ ] Generation of Models
+- [ ] Core Shader DSL (probably not happening)
+- [ ] Generation of sounds
+- [ ] Generation of Translatables/Languages
+- [ ] Generation of Block states
+- [ ] Generation of Core shader JSON files
+- [ ] Generation of Colormaps
+- [ ] Generation of animated textures
 
-**This is not production-ready yet!**
-Although it's very close.
-Keep in mind that **everything is subject to change**.
-Nothing in the API is final.
+**All Pull requests and Issues are welcome!**
 
 ## Examples
 

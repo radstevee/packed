@@ -10,10 +10,11 @@ import java.io.File
  * @param key The key. For example, `default` for the default font.
  */
 @Serializable(with = KeySerializer::class)
-data class Key(val namespace: String, val key: String) {
-    override fun toString(): String {
-        return "$namespace:$key"
-    }
+data class Key(
+    val namespace: String,
+    val key: String,
+) {
+    override fun toString(): String = "$namespace:$key"
 
     fun createNamespace(pack: ResourcePack) {
         File(pack.outputDir, "assets/$namespace").mkdirs()

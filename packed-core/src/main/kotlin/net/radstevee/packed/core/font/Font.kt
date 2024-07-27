@@ -8,11 +8,10 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
 import net.radstevee.packed.core.PACKED_LOGGER
-import net.radstevee.packed.core.fontAssetsNotFound
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
+import net.radstevee.packed.core.pack.ResourcePackElement
 import java.io.File
-import java.io.IOException
 import java.nio.file.Path
 import kotlin.io.path.Path
 
@@ -21,7 +20,9 @@ import kotlin.io.path.Path
  * @param key The name of the font.
  */
 @Serializable
-data class Font(@Transient var key: Key = Key("", "")) {
+data class Font(
+    @Transient var key: Key = Key("", ""),
+) : ResourcePackElement {
     /**
      * All font providers.
      */
@@ -50,16 +51,10 @@ data class Font(@Transient var key: Key = Key("", "")) {
             explicitNulls = false
             classDiscriminatorMode = ClassDiscriminatorMode.NONE
             encodeDefaults = true
-
         }.encodeToString(this)
     }
 
-    /**
-     * Saves the resource pack.
-     * @throws IOException
-     */
-    fun save(pack: ResourcePack) {
-        key.createNamespace(pack)
+    override fun validate(pack: ResourcePack): Result<Unit> {
         val unresolvedAssets = mutableListOf<Path>()
         providersList.forEach {
             when (it) {
@@ -81,9 +76,14 @@ data class Font(@Transient var key: Key = Key("", "")) {
         // If there's any errors about unresolved assets, log them.
         // We refuse to actually save this font and blame the pack author!
         if (unresolvedAssets.isNotEmpty()) {
-            fontAssetsNotFound(unresolvedAssets, this)
-            return
+            return Result.failure(FontAssetValidationException(this, unresolvedAssets))
         }
+
+        return Result.success(Unit)
+    }
+
+    override fun save(pack: ResourcePack) {
+        key.createNamespace(pack)
         val file = File(pack.outputDir, "assets/${key.namespace}/font/${key.key}.json")
         file.parentFile.mkdirs()
         file.createNewFile()
@@ -123,8 +123,6 @@ data class Font(@Transient var key: Key = Key("", "")) {
         /**
          * Builds a font and returns it.
          */
-        inline fun font(factory: Font.() -> Unit): Font {
-            return Font().apply(factory)
-        }
+        inline fun font(factory: Font.() -> Unit): Font = Font().apply(factory)
     }
 }
