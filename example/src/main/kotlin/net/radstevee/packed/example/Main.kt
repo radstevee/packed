@@ -2,10 +2,44 @@ package net.radstevee.packed.example
 
 import net.radstevee.packed.core.asset.impl.ResourceAssetResolutionStrategy
 import net.radstevee.packed.core.key.Key
+import net.radstevee.packed.core.model.ItemModel
 import net.radstevee.packed.core.pack.PackFormat
+import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackBuilder.Companion.resourcePack
 import net.radstevee.packed.negativespaces.NegativeSpaces
 import java.io.File
+
+val customItems = mutableListOf<Pair<Int, ItemModel>>()
+
+fun create2dItem(
+    pack: ResourcePack,
+    texture: Key,
+) {
+    val key = Key("packed", "item/${texture.key.split("/").last().removeSuffix(".png")}")
+    val customModelData = (customItems.lastOrNull()?.first ?: 0) + 1
+
+    customItems.add(
+        customModelData to
+            pack.addItem(key) {
+                parent = "item/generated"
+                layerTexture(0, texture)
+            },
+    )
+}
+
+fun register2dItems(pack: ResourcePack) {
+    pack.addItem(Key("minecraft", "popped_chorus_fruit")) {
+        parent = "item/generated"
+        layerTexture(0, Key("minecraft", "item/popped_chorus_fruit"))
+
+        customItems.forEach { (customModelData, model) ->
+            override {
+                this.model = model.key
+                customModelData(customModelData)
+            }
+        }
+    }
+}
 
 fun main() {
     val pack =
@@ -61,6 +95,11 @@ fun main() {
             chars = listOf("\uE001")
         }
     }
+
+    create2dItem(pack, Key("packed", "font/bitmap.png"))
+    create2dItem(pack, Key("packed", "font/bitmap2.png"))
+
+    register2dItems(pack)
 
     pack.save(true)
     pack.createZip(File(pack.outputDir, "pack.zip"))

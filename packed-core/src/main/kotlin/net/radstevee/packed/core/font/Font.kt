@@ -43,16 +43,14 @@ data class Font(
      * @return the JSON
      */
     @OptIn(ExperimentalSerializationApi::class)
-    fun json(): String {
-        @Suppress("JSON_FORMAT_REDUNDANT")
-        return Json {
+    fun json() =
+        Json {
             prettyPrint = true
 
             explicitNulls = false
             classDiscriminatorMode = ClassDiscriminatorMode.NONE
             encodeDefaults = true
         }.encodeToString(this)
-    }
 
     override fun validate(pack: ResourcePack): Result<Unit> {
         val unresolvedAssets = mutableListOf<Path>()

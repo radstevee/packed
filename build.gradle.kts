@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "net.radstevee.packed"
-    version = "0.3.4"
+    version = "0.4.0"
 }
 
 allprojects {
@@ -40,4 +40,3 @@ allprojects {
 kotlin {
     jvmToolchain(17)
 }
-

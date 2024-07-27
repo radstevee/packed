@@ -3,6 +3,9 @@ package net.radstevee.packed.core.pack
 import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
 import net.radstevee.packed.core.font.Font
+import net.radstevee.packed.core.key.Key
+import net.radstevee.packed.core.model.ItemModel
+import net.radstevee.packed.core.model.item
 import net.radstevee.packed.core.plugin.PackedPlugin
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
@@ -52,6 +55,32 @@ data class ResourcePack(
         return addFont(font)
     }
 
+    /**
+     * Adds an item model to this resource pack.
+     * @param model The item model.
+     * @return The added model.
+     */
+    fun addItem(model: ItemModel): ItemModel {
+        _elements.add(model)
+        return model
+    }
+
+    /**
+     * Adds an item model to this resouce pack.
+     * @param key The model key.
+     * @return The added model.
+     */
+    inline fun addItem(
+        key: Key,
+        block: ItemModel.Builder.() -> Unit,
+    ): ItemModel {
+        val model = item(key, block)
+        return addItem(model)
+    }
+
+    /**
+     * Saves the resource pack meta.
+     */
     private fun saveMeta() {
         val metaFile = File(outputDir, "pack.mcmeta")
         metaFile.parentFile.mkdirs()
