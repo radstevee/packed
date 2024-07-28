@@ -9,7 +9,8 @@ This means that we do not have any dependencies on any Minecraft server implemen
 - [x] Generation of fonts
 - [x] Generation of pack metas
 - [x] Different asset resolution strategies
-- [ ] Generation of Models
+- [x] Generation of (Item) Models
+- [ ] Generation of (Block) Models
 - [ ] Core Shader DSL (probably not happening)
 - [ ] Generation of sounds
 - [ ] Generation of Translatables/Languages
