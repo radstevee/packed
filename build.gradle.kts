@@ -11,9 +11,7 @@ plugins {
 allprojects {
     group = "net.radstevee.packed"
     version = "0.4.0"
-}
 
-allprojects {
     apply<SpotlessPlugin>()
     apply(plugin = "kotlin")
     apply(plugin = "org.jetbrains.dokka")
