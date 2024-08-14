@@ -8,6 +8,7 @@ Packed is a library for compiling minecraft resource packs using Kotlin.
 - [x] Generation of pack metas
 - [x] Different asset resolution strategies
 - [x] Generation of (Item) Models
+- [ ] Fallback assets
 - [ ] Generation of (Block) Models
 - [ ] Generation of sounds
 - [ ] Generation of Translatables/Languages

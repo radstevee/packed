@@ -7,4 +7,5 @@ package net.radstevee.packed.core.pack
  */
 abstract class ResourcePackValidationException(
     val errorMessage: String,
+    val warnMessage: String? = null,
 ) : Exception()

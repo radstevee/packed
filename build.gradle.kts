@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "net.radstevee.packed"
-    version = "0.4.0"
+    version = "0.5.0"
 
     apply<SpotlessPlugin>()
     apply(plugin = "kotlin")
@@ -36,5 +36,5 @@ allprojects {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }

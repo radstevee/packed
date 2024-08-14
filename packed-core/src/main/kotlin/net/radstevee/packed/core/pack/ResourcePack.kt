@@ -103,13 +103,20 @@ data class ResourcePack(
         saveMeta()
         _elements.forEach {
             val validationResult = it.validate(this)
-            validationResult.onFailure { exception ->
-                val error = exception as ResourcePackValidationException
-                error.errorMessage.lines().forEach(PACKED_LOGGER::error)
+            val exception = validationResult.exceptionOrNull() as ResourcePackValidationException?
+            exception?.let { error ->
+                if (error.errorMessage.isBlank() && error.warnMessage?.isNotBlank() != false) {
+                    error.warnMessage?.lines()?.forEach(PACKED_LOGGER::warn)
+                    it.save(this)
+
+                    return@forEach
+                }
+
+                if (error.errorMessage.isNotBlank()) error.errorMessage.lines().forEach(PACKED_LOGGER::error)
+                error.warnMessage?.lines()?.forEach(PACKED_LOGGER::warn)
             }
-            validationResult.onSuccess { _ ->
-                it.save(this)
-            }
+
+            if (exception == null) it.save(this)
         }
 
         _plugins.forEach { it.afterSave(this) }

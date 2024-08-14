@@ -14,6 +14,7 @@ import net.radstevee.packed.core.pack.ResourcePackElement
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.Path
+import kotlin.io.path.copyTo
 
 /**
  * Represents a font.
@@ -23,6 +24,20 @@ import kotlin.io.path.Path
 data class Font(
     @Transient var key: Key = Key("", ""),
 ) : ResourcePackElement {
+    /**
+     * The asset fallback strategy for when an asset could not be found.
+     */
+    @Transient
+    private var fallbackStrategy: (FontProvider) -> Key? = { null }
+
+    /**
+     * Sets the asset fallback strategy.
+     * @param block The strategy.
+     */
+    fun fallback(block: (FontProvider) -> Key?) {
+        fallbackStrategy = block
+    }
+
     /**
      * All font providers.
      */
@@ -54,18 +69,44 @@ data class Font(
 
     override fun validate(pack: ResourcePack): Result<Unit> {
         val unresolvedAssets = mutableListOf<Path>()
+        val fallbackAssets = mutableListOf<Pair<Path, Path>>()
+
         providersList.forEach {
             when (it) {
                 is FontProvider.BITMAP -> {
                     val assetExists = pack.assetResolutionStrategy.getTexture(it.key)?.exists() ?: false
-                    val exists = File(pack.outputDir, "assets/${it.key.namespace}/textures/${it.key.key}").exists()
-                    if (!assetExists && !exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/textures/${it.key.key}"))
+                    val file = File(pack.outputDir, "assets/${it.key.namespace}/textures/${it.key.key}")
+                    val exists = file.exists()
+                    val unresolved = !assetExists && !exists
+                    val fallback = fallbackStrategy(it)
+
+                    if (unresolved && fallback != null) {
+                        val fallbackPath =
+                            File(pack.outputDir, "assets/${fallback.namespace}/textures/${fallback.key}").toPath()
+                        fallbackPath.copyTo(file.toPath())
+                        fallbackAssets.add(file.toPath() to fallbackPath)
+                        return@forEach
+                    }
+
+                    if (unresolved) unresolvedAssets.add(file.toPath())
                 }
 
                 is FontProvider.TRUETYPE -> {
                     val assetExists = pack.assetResolutionStrategy.getFont(it.key)?.exists() ?: false
-                    val exists = File(pack.outputDir, "assets/${it.key.namespace}/font/${it.key.key}").exists()
-                    if (!assetExists && !exists) unresolvedAssets.add(Path("assets/${it.key.namespace}/font/${it.key.key}"))
+                    val file = File(pack.outputDir, "assets/${it.key.namespace}/font/${it.key.key}")
+                    val exists = file.exists()
+                    val unresolved = !assetExists && !exists
+                    val fallback = fallbackStrategy(it)
+
+                    if (unresolved && fallback != null) {
+                        val fallbackPath =
+                            File(pack.outputDir, "assets/${fallback.namespace}/font/${fallback.key}").toPath()
+                        fallbackPath.copyTo(file.toPath())
+                        fallbackAssets.add(file.toPath() to fallbackPath)
+                        return@forEach
+                    }
+
+                    if (unresolved) unresolvedAssets.add(file.toPath())
                 }
 
                 else -> {}
@@ -73,8 +114,8 @@ data class Font(
         }
         // If there's any errors about unresolved assets, log them.
         // We refuse to actually save this font and blame the pack author!
-        if (unresolvedAssets.isNotEmpty()) {
-            return Result.failure(FontAssetValidationException(this, unresolvedAssets))
+        if (unresolvedAssets.isNotEmpty() || fallbackAssets.isNotEmpty()) {
+            return Result.failure(FontAssetValidationException(this, unresolvedAssets, fallbackAssets))
         }
 
         return Result.success(Unit)

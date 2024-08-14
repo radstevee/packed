@@ -1,6 +1,7 @@
 package net.radstevee.packed.example
 
 import net.radstevee.packed.core.asset.impl.ResourceAssetResolutionStrategy
+import net.radstevee.packed.core.font.FontProvider
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.model.ItemModel
 import net.radstevee.packed.core.pack.PackFormat
@@ -69,10 +70,18 @@ fun main() {
         }
 
     pack.addFont {
-        // will NOT be saved
-        key = Key("packed", "invalid_example")
+        fallback {
+            if (it is FontProvider.BITMAP) {
+                if (!it.key.key.contains("invalid")) return@fallback null
+                return@fallback Key("packed", "font/fallback_bitmap.png")
+            }
+
+            null
+        }
+
+        key = Key("packed", "fallback_example")
         bitmap {
-            key = Key("packed", "font/invalid_bitmap.png") // logs an error!
+            key = Key("packed", "font/invalid_bitmap.png") // logs a warning and falls back to fallback_bitmap.png!
             height = 8.0
             ascent = 7.0
             chars = listOf("\uE000")
@@ -86,7 +95,6 @@ fun main() {
     }
 
     pack.addFont {
-        // will be saved
         key = Key("packed", "example")
         bitmap {
             key = Key("packed", "font/bitmap.png")
@@ -96,8 +104,8 @@ fun main() {
         }
     }
 
-    create2dItem(pack, Key("packed", "font/bitmap.png"))
-    create2dItem(pack, Key("packed", "font/bitmap2.png"))
+    create2dItem(pack, Key("packed", "item/bitmap.png"))
+    create2dItem(pack, Key("packed", "item/bitmap2.png"))
 
     register2dItems(pack)
 

@@ -11,13 +11,25 @@ import java.nio.file.Path
 class FontAssetValidationException(
     val font: Font,
     val unresolvedAssets: List<Path>,
+    val fallbackAssets: List<Pair<Path, Path>>,
 ) : ResourcePackValidationException(
         buildString {
-            append("Error whilst trying to process font ${font.key}: Some assets couldn't be found:\n")
+            if (unresolvedAssets.isEmpty()) return@buildString
+            append("Following assets could not be resolved for font ${font.key}:\n")
             unresolvedAssets.forEach {
                 append("    - $it\n")
             }
             append("Verify that these assets actually exist with your asset resolution strategy.\n")
             append("Continuing. This font will not be saved!")
+        },
+        if (fallbackAssets.isNotEmpty()) {
+            buildString {
+                append("Following assets could not be resolved for font ${font.key} but were fallen back to:\n")
+                fallbackAssets.forEach {
+                    append("    - ${it.first} -> ${it.second}")
+                }
+            }
+        } else {
+            null
         },
     )
