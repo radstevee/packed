@@ -1,5 +1,5 @@
 # packed
-Packed is a library for compiling minecraft resource packs using Kotlin.
+Packed is a library for compiling Minecraft resource packs using Kotlin.
 
 ## TODO
 

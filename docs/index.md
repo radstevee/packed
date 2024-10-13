@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Packed"
-  text: "A minecraft resource pack compiler library for Kotlin"
+  text: "A Minecraft resource pack compiler library for Kotlin"
   tagline:
   actions:
     - theme: brand
