@@ -1,5 +1,6 @@
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import org.jetbrains.kotlin.js.translate.context.Namer.kotlin
 
 plugins {
     alias(libs.plugins.spotless)
@@ -20,7 +21,7 @@ allprojects {
         mavenCentral()
 
         maven {
-            name = "radPublic"
+            name = "rad_public"
             url = uri("https://maven.radsteve.net/public")
 
             credentials {
@@ -31,7 +32,7 @@ allprojects {
     }
 
     tasks.withType<DokkaTaskPartial>().configureEach {
-        outputDirectory.set(File(layout.projectDirectory.asFile.parentFile, "build/docs"))
+        outputDirectory.set(File(layout.projectDirectory.asFile.parentFile, "build/docs/$name"))
     }
 }
 
