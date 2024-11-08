@@ -110,7 +110,7 @@ data class ItemModel(
 
     override fun save(pack: ResourcePack) {
         key.createNamespace(pack)
-        val file = File(pack.outputDir, "assets/${key.namespace}/model/${key.key}.json")
+        val file = File(pack.outputDir, "assets/${key.namespace}/models/${key.key}.json")
         file.parentFile.mkdirs()
         file.createNewFile()
         file.writeText(json())
