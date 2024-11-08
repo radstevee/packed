@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    api("net.radstevee.packed:packed-core:$version")
+    api(project(":packed-core"))
     api("org.apache.commons:commons-text:1.12.0")
 }
 
