@@ -18,29 +18,29 @@ import java.io.IOException
  * @param _elements Mutable list of elements in this resource pack.
  * @param _plugins Mutable list of packed plugins.
  */
-data class ResourcePack(
-    val meta: ResourcePackMeta,
-    val outputDir: File,
-    val assetResolutionStrategy: AssetResolutionStrategy,
+public class ResourcePack(
+    public val meta: ResourcePackMeta,
+    public val outputDir: File,
+    public val assetResolutionStrategy: AssetResolutionStrategy,
     private val _elements: MutableList<ResourcePackElement> = mutableListOf(),
     private val _plugins: MutableList<PackedPlugin> = mutableListOf(),
 ) {
     /**
      * The fonts in the pack.
      */
-    val elements get() = _elements.toList()
+    public val elements: List<ResourcePackElement> get() = _elements.toList()
 
     /**
      * The plugins in the pack.
      */
-    val plugins get() = _plugins.toList()
+    public val plugins: List<PackedPlugin> get() = _plugins.toList()
 
     /**
      * Adds a font to the pack.
      * @param font The font.
      * @return The added font.
      */
-    fun addFont(font: Font): Font {
+    public fun addFont(font: Font): Font {
         _elements.add(font)
         return font
     }
@@ -50,7 +50,7 @@ data class ResourcePack(
      * @param factory The font factory.
      * @return The added font.
      */
-    inline fun addFont(factory: Font.() -> Unit): Font {
+    public inline fun addFont(factory: Font.() -> Unit): Font {
         val font = Font.font(factory)
         return addFont(font)
     }
@@ -60,7 +60,7 @@ data class ResourcePack(
      * @param model The item model.
      * @return The added model.
      */
-    fun addItem(model: ItemModel): ItemModel {
+    public fun addItem(model: ItemModel): ItemModel {
         _elements.add(model)
         return model
     }
@@ -70,7 +70,7 @@ data class ResourcePack(
      * @param key The model key.
      * @return The added model.
      */
-    inline fun addItem(
+    public inline fun addItem(
         key: Key,
         block: ItemModel.Builder.() -> Unit,
     ): ItemModel {
@@ -90,10 +90,9 @@ data class ResourcePack(
 
     /**
      * Saves the entire pack. Should only be called after having added everything.
-     * @throws IOException
      * @param deleteOld Whether it should delete all old files.
      */
-    fun save(deleteOld: Boolean = false) {
+    public fun save(deleteOld: Boolean = false) {
         PACKED_LOGGER.info("Building resource pack...")
         if (deleteOld) outputDir.deleteRecursively()
         outputDir.mkdirs()
@@ -101,25 +100,29 @@ data class ResourcePack(
         _plugins.forEach { it.beforeSave(this) }
 
         saveMeta()
-        _elements.forEach {
-            val validationResult = it.validate(this)
+        _elements.forEach { element ->
+            val validationResult = element.validate(this)
             val exception = validationResult.exceptionOrNull() as ResourcePackValidationException?
-            exception?.let { error ->
-                if (error.errorMessage.isBlank() && error.warnMessage?.isNotBlank() != false) {
-                    error.warnMessage?.lines()?.forEach(PACKED_LOGGER::warn)
-                    it.save(this)
+            if (exception != null) {
+                // Non-critical warnings
+                if (exception.errorMessage == null && exception.warnMessage != null) {
+                    exception.warnMessage.lines()?.forEach(PACKED_LOGGER::warn)
+                    element.save(this)
 
                     return@forEach
                 }
 
-                if (error.errorMessage.isNotBlank()) error.errorMessage.lines().forEach(PACKED_LOGGER::error)
-                error.warnMessage?.lines()?.forEach(PACKED_LOGGER::warn)
+                // Critical error message and potentially non-critical warnings
+                if (exception.errorMessage != null) {
+                    exception.errorMessage.lines().forEach(PACKED_LOGGER::error)
+                    exception.warnMessage?.lines()?.forEach(PACKED_LOGGER::warn)
+                }
+            } else {
+                element.save(this)
             }
-
-            if (exception == null) it.save(this)
         }
 
-        _plugins.forEach { it.afterSave(this) }
+        _plugins.forEach { plugin -> plugin.afterSave(this) }
         PACKED_LOGGER.info("Resource pack saved!")
     }
 
@@ -127,7 +130,7 @@ data class ResourcePack(
      * Creates a zip of the output directory.
      * @param outputFile The zip file.
      */
-    fun createZip(outputFile: File) {
+    public fun createZip(outputFile: File) {
         ZipUtil.pack(outputDir, outputFile)
         PACKED_LOGGER.info("Pack successfully zipped to $outputFile!")
     }
@@ -136,7 +139,7 @@ data class ResourcePack(
      * Installs a plugin.
      * @param plugin The plugin.
      */
-    fun install(plugin: PackedPlugin) {
+    public fun install(plugin: PackedPlugin) {
         _plugins.add(plugin)
     }
 }

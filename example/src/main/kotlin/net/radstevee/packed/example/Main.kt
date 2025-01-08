@@ -71,7 +71,7 @@ fun main() {
 
     pack.addFont {
         fallback {
-            if (it is FontProvider.BITMAP) {
+            if (it is FontProvider.Bitmap) {
                 if (!it.key.key.contains("invalid")) return@fallback null
                 return@fallback Key("packed", "font/fallback_bitmap.png")
             }

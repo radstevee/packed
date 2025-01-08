@@ -1,19 +1,15 @@
 package net.radstevee.packed.core.font
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.ClassDiscriminatorMode
-import kotlinx.serialization.json.Json
+import net.radstevee.packed.core.JSON
 import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackElement
 import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.Path
 import kotlin.io.path.copyTo
 
 /**
@@ -21,8 +17,9 @@ import kotlin.io.path.copyTo
  * @param key The name of the font.
  */
 @Serializable
-data class Font(
-    @Transient var key: Key = Key("", ""),
+public class Font(
+    @Transient
+    public var key: Key = Key("", ""),
 ) : ResourcePackElement {
     /**
      * The asset fallback strategy for when an asset could not be found.
@@ -34,7 +31,7 @@ data class Font(
      * Sets the asset fallback strategy.
      * @param block The strategy.
      */
-    fun fallback(block: (FontProvider) -> Key?) {
+    public fun fallback(block: (FontProvider) -> Key?) {
         fallbackStrategy = block
     }
 
@@ -42,14 +39,14 @@ data class Font(
      * All font providers.
      */
     @SerialName("providers")
-    val providersList: MutableList<FontProvider> = mutableListOf()
+    public val providersList: MutableList<FontProvider> = mutableListOf()
 
     /**
      * Adds a new font provider.
      * @param provider The font provider.
      * @see net.radstevee.packed.core.font.FontProvider
      */
-    fun <P : FontProvider> addProvider(provider: P) {
+    public fun <P : FontProvider> addProvider(provider: P) {
         providersList.add(provider)
     }
 
@@ -57,15 +54,7 @@ data class Font(
      * Serializes the font down to JSON, ready to export to a font file.
      * @return the JSON
      */
-    @OptIn(ExperimentalSerializationApi::class)
-    fun json() =
-        Json {
-            prettyPrint = true
-
-            explicitNulls = false
-            classDiscriminatorMode = ClassDiscriminatorMode.NONE
-            encodeDefaults = true
-        }.encodeToString(this)
+    public fun json(): String = JSON.encodeToString(this)
 
     override fun validate(pack: ResourcePack): Result<Unit> {
         val unresolvedAssets = mutableListOf<Path>()
@@ -73,7 +62,7 @@ data class Font(
 
         providersList.forEach {
             when (it) {
-                is FontProvider.BITMAP -> {
+                is FontProvider.Bitmap -> {
                     val assetExists = pack.assetResolutionStrategy.getTexture(it.key)?.exists() ?: false
                     val file = File(pack.outputDir, "assets/${it.key.namespace}/textures/${it.key.key}")
                     val exists = file.exists()
@@ -91,7 +80,7 @@ data class Font(
                     if (unresolved) unresolvedAssets.add(file.toPath())
                 }
 
-                is FontProvider.TRUETYPE -> {
+                is FontProvider.Truetype -> {
                     val assetExists = pack.assetResolutionStrategy.getFont(it.key)?.exists() ?: false
                     val file = File(pack.outputDir, "assets/${it.key.namespace}/font/${it.key.key}")
                     val exists = file.exists()
@@ -133,35 +122,35 @@ data class Font(
     /**
      * Builds a bitmap font provider and adds it.
      */
-    inline fun bitmap(factory: FontProvider.BITMAP.() -> Unit) {
-        addProvider(FontProvider.BITMAP().apply(factory))
+    public inline fun bitmap(block: FontProvider.Bitmap.() -> Unit) {
+        addProvider(FontProvider.Bitmap().apply(block))
     }
 
     /**
      * Builds a truetype font provider and adds it.
      */
-    inline fun ttf(factory: FontProvider.TRUETYPE.() -> Unit) {
-        addProvider(FontProvider.TRUETYPE().apply(factory))
+    public inline fun ttf(block: FontProvider.Truetype.() -> Unit) {
+        addProvider(FontProvider.Truetype().apply(block))
     }
 
     /**
      * Builds a reference font provider and adds it.
      */
-    inline fun reference(factory: FontProvider.REFERENCE.() -> Unit) {
-        addProvider(FontProvider.REFERENCE().apply(factory))
+    public inline fun reference(block: FontProvider.Reference.() -> Unit) {
+        addProvider(FontProvider.Reference().apply(block))
     }
 
     /**
      * Builds a space font provider and adds it.
      */
-    inline fun space(factory: FontProvider.SPACE.() -> Unit) {
-        addProvider(FontProvider.SPACE().apply(factory))
+    public inline fun space(block: FontProvider.Space.() -> Unit) {
+        addProvider(FontProvider.Space().apply(block))
     }
 
-    companion object {
+    public companion object {
         /**
          * Builds a font and returns it.
          */
-        inline fun font(factory: Font.() -> Unit): Font = Font().apply(factory)
+        public inline fun font(block: Font.() -> Unit): Font = Font().apply(block)
     }
 }

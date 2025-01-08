@@ -10,7 +10,7 @@ import net.radstevee.packed.core.key.Key
  * [See the Minecraft wiki for more information.](https://minecraft.wiki/w/Font#Providers)
  */
 @Serializable
-sealed class FontProvider {
+public sealed class FontProvider {
     /**
      * A bitmap font provider. Allows you to add a coloured image to a font.
      * @param key The key to the bitmap in the textures. E.g. `example:custom/foo.png` would correspond to `assets/example/textures/custom/foo.png`. Needs to end with `.png`.
@@ -19,16 +19,13 @@ sealed class FontProvider {
      * @param chars A list of characters for this bitmap to be used.
      */
     @Serializable
-    data class BITMAP(
-        @SerialName("file") var key: Key =
-            Key(
-                "minecraft",
-                "default",
-            ),
-        var height: Double = 8.0,
-        var ascent: Double = 7.0,
-        var chars: List<String> = listOf(),
-        val type: String = "bitmap",
+    public data class Bitmap(
+        @SerialName("file")
+        public var key: Key = Key("minecraft", "default"),
+        public var height: Double = 8.0,
+        public var ascent: Double = 7.0,
+        public var chars: List<String> = listOf(),
+        public val type: String = "bitmap",
     ) : FontProvider() {
         init {
             if (ascent > height) {
@@ -42,9 +39,9 @@ sealed class FontProvider {
      * @param advances The advances of each character.
      */
     @Serializable
-    data class SPACE(
-        var advances: MutableMap<Char, Double> = mutableMapOf(),
-        @SerialName("type") val type: String = "space",
+    public data class Space(
+        public var advances: MutableMap<Char, Double> = mutableMapOf(),
+        public val type: String = "space",
     ) : FontProvider()
 
     /**
@@ -55,19 +52,16 @@ sealed class FontProvider {
      *              For shifting a font to the left, use e.g. `[10.0, 0.0]`. For shifting to the right, use e.g. `[-10.0, 0.0]`.
      * @param size The scale of the font.
      * @param oversample Resolution to render the font at.
-     * @see net.radstevee.packed.core.font.FontProvider.BITMAP.height
+     * @see net.radstevee.packed.core.font.FontProvider.Bitmap.height
      */
     @Serializable
-    data class TRUETYPE(
-        @SerialName("file") var key: Key =
-            Key(
-                "minecraft",
-                "default",
-            ),
-        var shift: List<Double> = listOf(),
-        var size: Double = 0.0,
-        var oversample: Double = 0.0,
-        @SerialName("type") val type: String = "ttf",
+    public data class Truetype(
+        @SerialName("file")
+        public var key: Key = Key("minecraft", "default"),
+        public var shift: List<Double> = listOf(),
+        public var size: Double = 0.0,
+        public var oversample: Double = 0.0,
+        public val type: String = "ttf",
     ) : FontProvider()
 
     /**
@@ -78,8 +72,9 @@ sealed class FontProvider {
      * @param provider The font provider.
      */
     @Serializable
-    data class REFERENCE(
-        @SerialName("id") var provider: Key = Key("minecraft", "default"),
-        @SerialName("type") val type: String = "reference",
+    public data class Reference(
+        @SerialName("id")
+        public var provider: Key = Key("minecraft", "default"),
+        public val type: String = "reference",
     ) : FontProvider()
 }

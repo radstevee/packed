@@ -1,6 +1,6 @@
+import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessPlugin
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
-import org.jetbrains.kotlin.js.translate.context.Namer.kotlin
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 plugins {
     alias(libs.plugins.spotless)
@@ -31,8 +31,15 @@ allprojects {
         }
     }
 
-    tasks.withType<DokkaTaskPartial>().configureEach {
-        outputDirectory.set(File(layout.projectDirectory.asFile.parentFile, "build/docs/$name"))
+    configure<KotlinJvmProjectExtension> {
+        jvmToolchain(21)
+        explicitApi()
+    }
+
+    configure<SpotlessExtension> {
+        kotlin {
+            ktlint("1.5.0")
+        }
     }
 }
 

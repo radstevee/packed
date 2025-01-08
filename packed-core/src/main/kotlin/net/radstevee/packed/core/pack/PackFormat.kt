@@ -4,8 +4,8 @@ package net.radstevee.packed.core.pack
  * Represents a pack format/version.
  */
 @Suppress("unused")
-enum class PackFormat(
-    val rev: Int,
+public enum class PackFormat(
+    public val rev: Int,
 ) {
     V1_6_1_TO_1_8_9(1),
     V1_9_TO_1_10_2(2),
@@ -23,6 +23,8 @@ enum class PackFormat(
     V1_20_3_TO_1_20_4(22),
     V1_20_5_TO_1_20_6(32),
     V1_21(34),
+    V1_21_3(42),
+    V1_21_4(46),
 
-    LATEST(V1_21.rev),
+    LATEST(V1_21_4.rev),
 }

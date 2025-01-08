@@ -8,16 +8,16 @@ import java.nio.file.Path
  * @param font The font.
  * @param unresolvedAssets The assets which couldn't be resolved.
  */
-class FontAssetValidationException(
-    val font: Font,
-    val unresolvedAssets: List<Path>,
-    val fallbackAssets: List<Pair<Path, Path>>,
+public class FontAssetValidationException(
+    public val font: Font,
+    public val unresolvedAssets: List<Path>,
+    public val fallbackAssets: List<Pair<Path, Path>>,
 ) : ResourcePackValidationException(
         buildString {
             if (unresolvedAssets.isEmpty()) return@buildString
             append("Following assets could not be resolved for font ${font.key}:\n")
-            unresolvedAssets.forEach {
-                append("    - $it\n")
+            unresolvedAssets.forEach { path ->
+                append("    - $path\n")
             }
             append("Verify that these assets actually exist with your asset resolution strategy.\n")
             append("Continuing. This font will not be saved!")
@@ -25,8 +25,8 @@ class FontAssetValidationException(
         if (fallbackAssets.isNotEmpty()) {
             buildString {
                 append("Following assets could not be resolved for font ${font.key} but were fallen back to:\n")
-                fallbackAssets.forEach {
-                    append("    - ${it.first} -> ${it.second}")
+                fallbackAssets.forEach { (original, fallback) ->
+                    append("    - $original -> $fallback")
                 }
             }
         } else {
