@@ -2,10 +2,8 @@
 
 package net.radstevee.packed.core.pack
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import net.radstevee.packed.core.JSON
 
 /**
  * Represents the `pack` part in a `pack.mcmeta`.
@@ -19,10 +17,10 @@ import kotlinx.serialization.json.Json
  * ```
  */
 @Serializable
-data class Pack(
+public data class Pack(
     val pack_format: Int,
     val supported_formats: SupportedFormats?,
-    val description: String,
+    val description: String?,
 )
 
 /**
@@ -30,7 +28,7 @@ data class Pack(
  * Supported formats/versions for the resource pack.
  */
 @Serializable
-data class SupportedFormats(
+public data class SupportedFormats(
     val min_inclusive: Int,
     val max_inclusive: Int,
 )
@@ -39,7 +37,7 @@ data class SupportedFormats(
  * Represents a pack language.
  */
 @Serializable
-data class PackLanguage(
+public data class PackLanguage(
     val name: String,
     val region: String,
     val bidirectional: Boolean,
@@ -49,27 +47,22 @@ data class PackLanguage(
  * Represents the `pack.mcmeta` file.
  */
 @Serializable
-data class ResourcePackMeta(
+public data class ResourcePackMeta(
     val pack: Pack? = null,
     val language: PackLanguage? = null,
 ) {
-    @OptIn(ExperimentalSerializationApi::class)
-    fun json(): String {
-        @Suppress("JSON_FORMAT_REDUNDANT")
-        return Json {
-            prettyPrint = true
-            explicitNulls = false
-        }.encodeToString(this)
-    }
+    public fun json(): String = JSON.encodeToString(this)
 
-    companion object {
-        fun init(
+    public companion object {
+        /**
+         * Creates a default resource pack meta from a format and description
+         */
+        public fun create(
             format: PackFormat,
-            description: String,
-        ): ResourcePackMeta =
-            ResourcePackMeta(
-                Pack(format.rev, null, description),
-                null,
-            )
+            description: String?,
+        ): ResourcePackMeta = ResourcePackMeta(
+            Pack(format.rev, null, description),
+            null,
+        )
     }
 }

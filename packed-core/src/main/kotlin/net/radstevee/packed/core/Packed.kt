@@ -18,9 +18,10 @@ public fun changeLogger(newLogger: Logger) {
 /**
  * The packed logger.
  */
-internal var PACKED_LOGGER = LoggerFactory.getLogger("packed")
+internal var PACKED_LOGGER: Logger = LoggerFactory.getLogger("packed")
+
 @OptIn(ExperimentalSerializationApi::class)
-internal val JSON = Json {
+internal val JSON: Json = Json {
     prettyPrint = true
 
     explicitNulls = false

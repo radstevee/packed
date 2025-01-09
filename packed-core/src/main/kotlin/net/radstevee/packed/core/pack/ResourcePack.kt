@@ -4,26 +4,25 @@ import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
 import net.radstevee.packed.core.font.Font
 import net.radstevee.packed.core.key.Key
-import net.radstevee.packed.core.model.ItemModel
-import net.radstevee.packed.core.model.item
-import net.radstevee.packed.core.plugin.PackedPlugin
+import net.radstevee.packed.core.item.ItemModel
+import net.radstevee.packed.core.item.itemModel
+import net.radstevee.packed.core.hook.PackedHook
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
-import java.io.IOException
 
 /**
  * A resource pack.
  * @param meta The resource pack meta.
  * @param outputDir Output directory of the resource pack. This is where it will be saved.
  * @param _elements Mutable list of elements in this resource pack.
- * @param _plugins Mutable list of packed plugins.
+ * @param _hooks Mutable list of packed hooks.
  */
 public class ResourcePack(
     public val meta: ResourcePackMeta,
     public val outputDir: File,
     public val assetResolutionStrategy: AssetResolutionStrategy,
     private val _elements: MutableList<ResourcePackElement> = mutableListOf(),
-    private val _plugins: MutableList<PackedPlugin> = mutableListOf(),
+    private val _hooks: MutableList<PackedHook> = mutableListOf(),
 ) {
     /**
      * The fonts in the pack.
@@ -31,52 +30,50 @@ public class ResourcePack(
     public val elements: List<ResourcePackElement> get() = _elements.toList()
 
     /**
-     * The plugins in the pack.
+     * The hooks in the pack.
      */
-    public val plugins: List<PackedPlugin> get() = _plugins.toList()
+    public val hooks: List<PackedHook> get() = _hooks.toList()
+
+    /**
+     * Adds a resource pack element to this pack.
+     * @param element The element.
+     * @return The added element.
+     */
+    public fun <T : ResourcePackElement> addElement(element: T): T {
+        _elements.add(element)
+        return element
+    }
 
     /**
      * Adds a font to the pack.
      * @param font The font.
      * @return The added font.
      */
-    public fun addFont(font: Font): Font {
-        _elements.add(font)
-        return font
-    }
+    public fun addFont(font: Font): Font = addElement(font)
 
     /**
      * Adds a font to the pack.
-     * @param factory The font factory.
+     * @param block The font block.
      * @return The added font.
      */
-    public inline fun addFont(factory: Font.() -> Unit): Font {
-        val font = Font.font(factory)
-        return addFont(font)
-    }
+    public inline fun addFont(block: Font.() -> Unit): Font = addFont(Font.font(block))
 
     /**
      * Adds an item model to this resource pack.
      * @param model The item model.
      * @return The added model.
      */
-    public fun addItem(model: ItemModel): ItemModel {
-        _elements.add(model)
-        return model
-    }
+    public fun addItemModel(model: ItemModel): ItemModel = addElement(model)
 
     /**
      * Adds an item model to this resouce pack.
      * @param key The model key.
      * @return The added model.
      */
-    public inline fun addItem(
+    public inline fun addItemModel(
         key: Key,
         block: ItemModel.Builder.() -> Unit,
-    ): ItemModel {
-        val model = item(key, block)
-        return addItem(model)
-    }
+    ): ItemModel = addItemModel(itemModel(key, block))
 
     /**
      * Saves the resource pack meta.
@@ -94,10 +91,12 @@ public class ResourcePack(
      */
     public fun save(deleteOld: Boolean = false) {
         PACKED_LOGGER.info("Building resource pack...")
-        if (deleteOld) outputDir.deleteRecursively()
+        if (deleteOld) {
+            outputDir.deleteRecursively()
+        }
         outputDir.mkdirs()
         assetResolutionStrategy.copyAssets(outputDir)
-        _plugins.forEach { it.beforeSave(this) }
+        _hooks.forEach { hook -> hook.beforeSave(this) }
 
         saveMeta()
         _elements.forEach { element ->
@@ -106,7 +105,7 @@ public class ResourcePack(
             if (exception != null) {
                 // Non-critical warnings
                 if (exception.errorMessage == null && exception.warnMessage != null) {
-                    exception.warnMessage.lines()?.forEach(PACKED_LOGGER::warn)
+                    exception.warnMessage.lines().forEach(PACKED_LOGGER::warn)
                     element.save(this)
 
                     return@forEach
@@ -122,7 +121,7 @@ public class ResourcePack(
             }
         }
 
-        _plugins.forEach { plugin -> plugin.afterSave(this) }
+        _hooks.forEach { hook -> hook.afterSave(this) }
         PACKED_LOGGER.info("Resource pack saved!")
     }
 
@@ -136,10 +135,10 @@ public class ResourcePack(
     }
 
     /**
-     * Installs a plugin.
-     * @param plugin The plugin.
+     * Installs a hook.
+     * @param hook The hook.
      */
-    public fun install(plugin: PackedPlugin) {
-        _plugins.add(plugin)
+    public fun install(hook: PackedHook) {
+        _hooks.add(hook)
     }
 }

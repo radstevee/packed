@@ -7,21 +7,21 @@ import java.io.File
 /**
  * Represents a key with a namespace. It will be serialized to `namespace:key`.
  * @param namespace The namespace. This can be minecraft, but can also be a custom one.
- * @param key The key. For example, `default` for the default font.
+ * @param value The key. For example, `default` for the default font.
  */
 @Serializable(with = KeySerializer::class)
-data class Key(
+public data class Key(
     val namespace: String,
-    val key: String,
+    val value: String,
 ) {
-    override fun toString(): String = "$namespace:$key"
+    override fun toString(): String = "$namespace:$value"
 
-    fun createNamespace(pack: ResourcePack) {
+    public fun createNamespace(pack: ResourcePack) {
         File(pack.outputDir, "assets/$namespace").mkdirs()
     }
 
-    companion object {
-        fun fromString(string: String): Key {
+    public companion object {
+        public fun of(string: String): Key {
             val (namespace, key) = string.split(":")
             return Key(namespace, key)
         }

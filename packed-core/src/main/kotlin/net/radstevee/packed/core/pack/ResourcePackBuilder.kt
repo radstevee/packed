@@ -1,73 +1,72 @@
 package net.radstevee.packed.core.pack
 
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
-import net.radstevee.packed.core.plugin.PackedPlugin
+import net.radstevee.packed.core.hook.PackedHook
 import java.io.File
 
-class ResourcePackBuilder {
-    inner class Meta {
+public class ResourcePackBuilder {
+    public inner class Meta {
         /**
          * Description of a resource pack. Comes up in the selection screen.
          */
-        var description: String = ""
+        public var description: String? = null
 
         /**
          * Pack format/version.
          */
-        var format: PackFormat = PackFormat.LATEST
+        public var format: PackFormat = PackFormat.LATEST
 
         /**
          * Output directory of the Resource pack. This is where it will be saved.
          */
-        var outputDir: File = File("")
+        public var outputDir: File = File("")
     }
 
     /**
      * The Metadata for this resourcepack. Gets set by [meta]
      */
-    lateinit var meta: Meta
+    public lateinit var meta: Meta
 
     /**
-     * The list of plugins installed in the pack.
+     * The list of hooks installed in the pack.
      */
-    val plugins = mutableListOf<PackedPlugin>()
+    public val hooks: MutableList<PackedHook> = mutableListOf<PackedHook>()
 
     /**
      * Metadata builder for this resourcepack.
-     * @param factory The builder.
+     * @param block The builder.
      */
-    inline fun meta(factory: Meta.() -> Unit) {
-        meta = Meta().apply(factory)
+    public inline fun meta(block: Meta.() -> Unit) {
+        meta = Meta().apply(block)
     }
 
     /**
-     * Installs a plugin to the pack.
+     * Installs a hook to the pack.
      */
-    fun install(plugin: PackedPlugin) {
-        plugins.add(plugin)
+    public fun install(hook: PackedHook) {
+        hooks.add(hook)
     }
 
     /**
      * Initialises a resource pack from meta.
      */
-    fun create(): ResourcePack =
-        ResourcePack(
-            ResourcePackMeta.init(meta.format, meta.description),
-            meta.outputDir,
-            assetResolutionStrategy,
-            _plugins = plugins,
-        )
+    public fun create(): ResourcePack = ResourcePack(
+        ResourcePackMeta.create(meta.format, meta.description),
+        meta.outputDir,
+        assetResolutionStrategy,
+        _hooks = hooks,
+    )
 
     /**
      * The strategy to resolve assets.
      */
-    lateinit var assetResolutionStrategy: AssetResolutionStrategy
+    public lateinit var assetResolutionStrategy: AssetResolutionStrategy
 
-    companion object {
+    public companion object {
         /**
          * Builds a resource pack.
          * @return the pack.
          */
-        inline fun resourcePack(block: ResourcePackBuilder.() -> Unit): ResourcePack = ResourcePackBuilder().apply(block).create()
+        public inline fun resourcePack(block: ResourcePackBuilder.() -> Unit): ResourcePack = ResourcePackBuilder().apply(block).create()
     }
 }

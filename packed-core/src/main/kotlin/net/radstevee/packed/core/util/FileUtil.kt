@@ -8,8 +8,11 @@ import java.nio.file.SimpleFileVisitor
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.BasicFileAttributes
 import kotlin.io.path.Path
+import kotlin.io.path.copyTo
+import kotlin.io.path.createDirectories
+import kotlin.io.path.notExists
 
-object FileUtil {
+internal object FileUtil {
     /**
      * Recursively copies resources directory to a target path.
      * @param clazz The class where the resources should be loaded from.
@@ -32,10 +35,8 @@ object FileUtil {
                     file: Path,
                     attrs: BasicFileAttributes,
                 ): FileVisitResult {
-                    // Determine the target file path
                     val targetPath = outputDir.resolve(resourcePath.relativize(file).toString())
-                    // Copy the file to the target path
-                    Files.copy(file, targetPath, StandardCopyOption.REPLACE_EXISTING)
+                    file.copyTo(targetPath, overwrite = true)
                     return FileVisitResult.CONTINUE
                 }
 
@@ -43,11 +44,9 @@ object FileUtil {
                     dir: Path,
                     attrs: BasicFileAttributes,
                 ): FileVisitResult {
-                    // Determine the target directory path
                     val targetPath = outputDir.resolve(resourcePath.relativize(dir).toString())
-                    // Create the target directory if it doesn't exist
-                    if (!Files.exists(targetPath)) {
-                        Files.createDirectories(targetPath)
+                    if (targetPath.notExists()) {
+                        targetPath.createDirectories()
                     }
                     return FileVisitResult.CONTINUE
                 }

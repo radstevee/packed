@@ -9,11 +9,11 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-private val intArray = IntArraySerializer()
-private val doubleArray = DoubleArraySerializer()
+private val intArraySerializer = IntArraySerializer()
+private val doubleArraySerializer = DoubleArraySerializer()
 
 @Serializable(with = Vec3iSerializer::class)
-data class Vec3i(
+public data class Vec3i(
     val x: Int,
     val y: Int,
     val z: Int,
@@ -23,7 +23,7 @@ private object Vec3iSerializer : KSerializer<Vec3i> {
     override val descriptor = PrimitiveSerialDescriptor("Vec3i", PrimitiveKind.INT)
 
     override fun deserialize(decoder: Decoder): Vec3i {
-        val list = decoder.decodeSerializableValue(intArray)
+        val list = decoder.decodeSerializableValue(intArraySerializer)
         return Vec3i(list[0], list[1], list[2])
     }
 
@@ -38,12 +38,12 @@ private object Vec3iSerializer : KSerializer<Vec3i> {
                 value.z,
             )
 
-        encoder.encodeSerializableValue(intArray, data)
+        encoder.encodeSerializableValue(intArraySerializer, data)
     }
 }
 
 @Serializable(with = Vec3dSerializer::class)
-data class Vec3d(
+public data class Vec3d(
     val x: Double,
     val y: Double,
     val z: Double,
@@ -53,7 +53,7 @@ private object Vec3dSerializer : KSerializer<Vec3d> {
     override val descriptor = PrimitiveSerialDescriptor("Vec3d", PrimitiveKind.DOUBLE)
 
     override fun deserialize(decoder: Decoder): Vec3d {
-        val list = decoder.decodeSerializableValue(doubleArray)
+        val list = decoder.decodeSerializableValue(doubleArraySerializer)
         return Vec3d(list[0], list[1], list[2])
     }
 
@@ -68,12 +68,12 @@ private object Vec3dSerializer : KSerializer<Vec3d> {
                 value.z,
             )
 
-        encoder.encodeSerializableValue(doubleArray, data)
+        encoder.encodeSerializableValue(doubleArraySerializer, data)
     }
 }
 
 @Serializable(with = Mat2x2iSerializer::class)
-data class Mat2x2i(
+public data class Mat2x2i(
     val x1: Int,
     val y1: Int,
     val x2: Int,
@@ -84,7 +84,7 @@ private object Mat2x2iSerializer : KSerializer<Mat2x2i> {
     override val descriptor = PrimitiveSerialDescriptor("Mat2x2i", PrimitiveKind.INT)
 
     override fun deserialize(decoder: Decoder): Mat2x2i {
-        val list = decoder.decodeSerializableValue(intArray)
+        val list = decoder.decodeSerializableValue(intArraySerializer)
         return Mat2x2i(list[0], list[1], list[2], list[3])
     }
 
@@ -100,25 +100,34 @@ private object Mat2x2iSerializer : KSerializer<Mat2x2i> {
                 value.y2,
             )
 
-        encoder.encodeSerializableValue(intArray, data)
+        encoder.encodeSerializableValue(intArraySerializer, data)
     }
 }
 
-fun vec(
+/**
+ * Constructs a 3-dimensional integer vector.
+ */
+public fun vec(
     x: Int,
     y: Int,
     z: Int,
-) = Vec3i(x, y, z)
+): Vec3i = Vec3i(x, y, z)
 
-fun vec(
+/**
+ * Constructs a 3-dimensional double vector.
+ */
+public fun vec(
     x: Double,
     y: Double,
     z: Double,
-) = Vec3d(x, y, z)
+): Vec3d = Vec3d(x, y, z)
 
-fun mat(
+/**
+ * Constructs a 2x2-dimensional integer matrix.
+ */
+public fun mat(
     x1: Int,
     y1: Int,
     x2: Int,
     y2: Int,
-) = Mat2x2i(x1, y1, x2, y2)
+): Mat2x2i = Mat2x2i(x1, y1, x2, y2)

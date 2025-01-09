@@ -13,23 +13,26 @@ public class FontAssetValidationException(
     public val unresolvedAssets: List<Path>,
     public val fallbackAssets: List<Pair<Path, Path>>,
 ) : ResourcePackValidationException(
+    if (unresolvedAssets.isNotEmpty()) {
         buildString {
-            if (unresolvedAssets.isEmpty()) return@buildString
             append("Following assets could not be resolved for font ${font.key}:\n")
             unresolvedAssets.forEach { path ->
                 append("    - $path\n")
             }
             append("Verify that these assets actually exist with your asset resolution strategy.\n")
             append("Continuing. This font will not be saved!")
-        },
-        if (fallbackAssets.isNotEmpty()) {
-            buildString {
-                append("Following assets could not be resolved for font ${font.key} but were fallen back to:\n")
-                fallbackAssets.forEach { (original, fallback) ->
-                    append("    - $original -> $fallback")
-                }
+        }
+    } else {
+        null
+    },
+    if (fallbackAssets.isNotEmpty()) {
+        buildString {
+            append("Following assets could not be resolved for font ${font.key} but were fallen back to:\n")
+            fallbackAssets.forEach { (original, fallback) ->
+                append("    - $original -> $fallback")
             }
-        } else {
-            null
-        },
-    )
+        }
+    } else {
+        null
+    },
+)

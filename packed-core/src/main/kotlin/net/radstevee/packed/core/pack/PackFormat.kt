@@ -3,7 +3,6 @@ package net.radstevee.packed.core.pack
 /**
  * Represents a pack format/version.
  */
-@Suppress("unused")
 public enum class PackFormat(
     public val rev: Int,
 ) {

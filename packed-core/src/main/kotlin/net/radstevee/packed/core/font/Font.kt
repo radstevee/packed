@@ -22,17 +22,17 @@ public class Font(
     public var key: Key = Key("", ""),
 ) : ResourcePackElement {
     /**
-     * The asset fallback strategy for when an asset could not be found.
+     * The asset fallback provider for when an asset could not be found.
      */
     @Transient
-    private var fallbackStrategy: (FontProvider) -> Key? = { null }
+    private var fallbackProvider: (FontProvider) -> Key? = { null }
 
     /**
-     * Sets the asset fallback strategy.
-     * @param block The strategy.
+     * Sets the asset fallback provider.
+     * @param provider The provider.
      */
-    public fun fallback(block: (FontProvider) -> Key?) {
-        fallbackStrategy = block
+    public fun fallback(provider: (FontProvider) -> Key?) {
+        fallbackProvider = provider
     }
 
     /**
@@ -60,42 +60,47 @@ public class Font(
         val unresolvedAssets = mutableListOf<Path>()
         val fallbackAssets = mutableListOf<Pair<Path, Path>>()
 
-        providersList.forEach {
-            when (it) {
+        providersList.forEach { provider ->
+            when (provider) {
                 is FontProvider.Bitmap -> {
-                    val assetExists = pack.assetResolutionStrategy.getTexture(it.key)?.exists() ?: false
-                    val file = File(pack.outputDir, "assets/${it.key.namespace}/textures/${it.key.key}")
+                    val assetExists = pack.assetResolutionStrategy.getTexture(provider.key)?.exists() ?: false
+                    val file = File(pack.outputDir, "assets/${provider.key.namespace}/textures/${provider.key.value}")
+                    val path = file.toPath()
                     val exists = file.exists()
                     val unresolved = !assetExists && !exists
-                    val fallback = fallbackStrategy(it)
+                    val fallback = fallbackProvider(provider)
 
                     if (unresolved && fallback != null) {
-                        val fallbackPath =
-                            File(pack.outputDir, "assets/${fallback.namespace}/textures/${fallback.key}").toPath()
-                        fallbackPath.copyTo(file.toPath())
-                        fallbackAssets.add(file.toPath() to fallbackPath)
+                        val fallbackPath = File(pack.outputDir, "assets/${fallback.namespace}/textures/${fallback.value}").toPath()
+                        fallbackPath.copyTo(path)
+                        fallbackAssets.add(path to fallbackPath)
+
                         return@forEach
                     }
 
-                    if (unresolved) unresolvedAssets.add(file.toPath())
+                    if (unresolved) {
+                        unresolvedAssets.add(path)
+                    }
                 }
 
                 is FontProvider.Truetype -> {
-                    val assetExists = pack.assetResolutionStrategy.getFont(it.key)?.exists() ?: false
-                    val file = File(pack.outputDir, "assets/${it.key.namespace}/font/${it.key.key}")
+                    val assetExists = pack.assetResolutionStrategy.getFont(provider.key)?.exists() ?: false
+                    val file = File(pack.outputDir, "assets/${provider.key.namespace}/font/${provider.key.value}")
+                    val path = file.toPath()
                     val exists = file.exists()
                     val unresolved = !assetExists && !exists
-                    val fallback = fallbackStrategy(it)
+                    val fallback = fallbackProvider(provider)
 
                     if (unresolved && fallback != null) {
-                        val fallbackPath =
-                            File(pack.outputDir, "assets/${fallback.namespace}/font/${fallback.key}").toPath()
-                        fallbackPath.copyTo(file.toPath())
-                        fallbackAssets.add(file.toPath() to fallbackPath)
+                        val fallbackPath = File(pack.outputDir, "assets/${fallback.namespace}/font/${fallback.value}").toPath()
+                        fallbackPath.copyTo(path)
+                        fallbackAssets.add(path to fallbackPath)
                         return@forEach
                     }
 
-                    if (unresolved) unresolvedAssets.add(file.toPath())
+                    if (unresolved) {
+                        unresolvedAssets.add(path)
+                    }
                 }
 
                 else -> {}
@@ -112,7 +117,7 @@ public class Font(
 
     override fun save(pack: ResourcePack) {
         key.createNamespace(pack)
-        val file = File(pack.outputDir, "assets/${key.namespace}/font/${key.key}.json")
+        val file = File(pack.outputDir, "assets/${key.namespace}/font/${key.value}.json")
         file.parentFile.mkdirs()
         file.createNewFile()
         file.writeText(json())
