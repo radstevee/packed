@@ -5,7 +5,7 @@
 
 ```kts [build.gradle.kts]
 repositories {
-    maven("https://maven.radsteve.net")
+    maven("https://maven.radsteve.net/public")
 }
 
 dependencies {
@@ -19,7 +19,7 @@ dependencies {
 ```groovy [build.gradle]
 repositories {
     maven {
-        url "https://maven.radsteve.net"
+        url "https://maven.radsteve.net/public"
     }
 }
 
@@ -35,7 +35,7 @@ dependencies {
 <repositories>
     <repository>
         <id>rad-public</id>
-        <url>https://maven.radsteve.net</url>
+        <url>https://maven.radsteve.net/public</url>
     </repository>
 </repositories>
 
