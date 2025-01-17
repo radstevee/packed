@@ -2,6 +2,7 @@ package net.radstevee.packed.core.item.definition
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.codec.encodeJson
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
@@ -22,6 +23,7 @@ public class ItemDefinition private constructor(public val type: ItemDefinitionT
         val json = CODEC.encodeJson(this) ?: error("failed encoding item model")
         file.parentFile.mkdirs()
         file.writeText(json)
+        PACKED_LOGGER.info("Item definition $key saved!")
     }
 
     public companion object {

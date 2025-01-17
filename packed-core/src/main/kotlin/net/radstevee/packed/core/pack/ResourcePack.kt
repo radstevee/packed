@@ -8,6 +8,7 @@ import net.radstevee.packed.core.item.ItemModel
 import net.radstevee.packed.core.item.itemModel
 import net.radstevee.packed.core.hook.PackedHook
 import net.radstevee.packed.core.item.definition.ItemDefinition
+import net.radstevee.packed.core.lang.Language
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 
@@ -82,6 +83,43 @@ public class ResourcePack(
      * @return The added definition.
      */
     public fun addItemDefinition(definition: ItemDefinition): ItemDefinition = addElement(definition)
+
+    /**
+     * Adds a language to this resource pack.
+     * @param language The language.
+     * @return The added language.
+     */
+    public fun addLanguage(language: Language): Language = addElement(language)
+
+    /**
+     * Adds a translation to a specified language of this resource pack.
+     * @param languageKey The key of the wanted language.
+     * @param key The translation key.
+     * @param value The translation value.
+     * @return The modified language.
+     */
+    public fun addTranslation(languageKey: Key, key: String, value: String): Language {
+        val language = elements
+            .filterIsInstance<Language>()
+            .find { lang -> lang.key == languageKey }
+            ?: Language(languageKey, mapOf(key to value)).also(::addLanguage)
+
+        if (key !in language.translations) {
+            language.translations = language.translations.plus(key to value)
+        }
+
+        return language
+    }
+
+    /**
+     * Adds a translation to each Minecraft language.
+     * @param key The translation key.
+     * @param value The translation value.
+     * @return The modified languages.
+     */
+    public fun addGlobalTranslation(key: String, value: String): List<Language> {
+        return Language.LANGUAGE_LIST.map { lang -> addTranslation(lang, key, value) }
+    }
 
     /**
      * Saves the resource pack meta.

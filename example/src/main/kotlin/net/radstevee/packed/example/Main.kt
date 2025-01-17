@@ -115,6 +115,8 @@ public fun main() {
 
     register2dItems(pack)
 
+    pack.addGlobalTranslation("poop", "fart")
+
     pack.save(true)
     pack.createZip(File(pack.outputDir, "pack.zip"))
 }
