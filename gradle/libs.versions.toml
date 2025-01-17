@@ -8,6 +8,7 @@ slf4j-api = "2.0.16"
 slf4j-reload4j = "2.0.16"
 spotless = "7.0.1"
 zip = "1.17"
+dfu = "8.0.16"
 
 [plugins]
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization" }
@@ -22,3 +23,4 @@ slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api"
 slf4j-log4j = { group = "org.slf4j", name = "slf4j-reload4j", version.ref = "slf4j-reload4j" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test" }
 zip = { group = "org.zeroturnaround", name = "zt-zip", version.ref = "zip" }
+dfu = { group = "com.mojang", name = "datafixerupper", version.ref = "dfu" }

@@ -7,6 +7,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+@Deprecated("Switch to DFU")
 public object KeySerializer : KSerializer<Key> {
     override fun serialize(
         encoder: Encoder,

@@ -1,5 +1,6 @@
 package net.radstevee.packed.core.util
 
+import com.mojang.serialization.Codec
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.DoubleArraySerializer
@@ -8,6 +9,7 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import net.radstevee.packed.core.codec.fixedSize
 
 private val intArraySerializer = IntArraySerializer()
 private val doubleArraySerializer = DoubleArraySerializer()
@@ -19,6 +21,7 @@ public data class Vec3i(
     val z: Int,
 )
 
+@Deprecated("Switch to DFU")
 private object Vec3iSerializer : KSerializer<Vec3i> {
     override val descriptor = PrimitiveSerialDescriptor("Vec3i", PrimitiveKind.INT)
 
@@ -49,6 +52,7 @@ public data class Vec3d(
     val z: Double,
 )
 
+@Deprecated("Switch to DFU")
 private object Vec3dSerializer : KSerializer<Vec3d> {
     override val descriptor = PrimitiveSerialDescriptor("Vec3d", PrimitiveKind.DOUBLE)
 
@@ -72,6 +76,21 @@ private object Vec3dSerializer : KSerializer<Vec3d> {
     }
 }
 
+public data class Vec3f(
+    public val x: Float,
+    public val y: Float,
+    public val z: Float
+) {
+    public companion object {
+        public val CODEC: Codec<Vec3f> = Codec.FLOAT.listOf().comapFlatMap(
+            { floats ->
+                fixedSize(floats, 3).map { floats -> Vec3f(floats[0], floats[1], floats[2]) }
+            },
+            { vec -> listOf(vec.x, vec.y, vec.z) }
+        )
+    }
+}
+
 @Serializable(with = Mat2x2iSerializer::class)
 public data class Mat2x2i(
     val x1: Int,
@@ -80,6 +99,7 @@ public data class Mat2x2i(
     val y2: Int,
 )
 
+@Deprecated("Switch to DFU")
 private object Mat2x2iSerializer : KSerializer<Mat2x2i> {
     override val descriptor = PrimitiveSerialDescriptor("Mat2x2i", PrimitiveKind.INT)
 
@@ -121,6 +141,15 @@ public fun vec(
     y: Double,
     z: Double,
 ): Vec3d = Vec3d(x, y, z)
+
+/**
+ * Constructs a 3-dimensional float vector.
+ */
+public fun vec(
+    x: Float,
+    y: Float,
+    z: Float
+): Vec3f = Vec3f(x, y, z)
 
 /**
  * Constructs a 2x2-dimensional integer matrix.

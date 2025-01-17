@@ -7,6 +7,7 @@ import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.item.ItemModel
 import net.radstevee.packed.core.item.itemModel
 import net.radstevee.packed.core.hook.PackedHook
+import net.radstevee.packed.core.item.definition.ItemDefinition
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 
@@ -74,6 +75,13 @@ public class ResourcePack(
         key: Key,
         block: ItemModel.Builder.() -> Unit,
     ): ItemModel = addItemModel(itemModel(key, block))
+
+    /**
+     * Adds an item definition to this resource pack.
+     * @param definition The definition.
+     * @return The added definition.
+     */
+    public fun addItemDefinition(definition: ItemDefinition): ItemDefinition = addElement(definition)
 
     /**
      * Saves the resource pack meta.

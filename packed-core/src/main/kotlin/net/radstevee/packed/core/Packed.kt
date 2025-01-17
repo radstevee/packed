@@ -20,6 +20,7 @@ public fun changeLogger(newLogger: Logger) {
  */
 internal var PACKED_LOGGER: Logger = LoggerFactory.getLogger("packed")
 
+@Deprecated("Switch to DFU")
 @OptIn(ExperimentalSerializationApi::class)
 internal val JSON: Json = Json {
     prettyPrint = true

@@ -12,7 +12,7 @@ plugins {
 
 allprojects {
     group = "net.radstevee.packed"
-    version = "1.0.0-SNAPSHOT.1"
+    version = "1.0.0-SNAPSHOT.2"
 
     apply(plugin = "kotlin")
     apply(plugin = "maven-publish")
@@ -21,7 +21,7 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven("https://maven.radsteve.net/public")
+        maven("https://libraries.minecraft.net")
     }
 
     configure<KotlinJvmProjectExtension> {

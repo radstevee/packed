@@ -3,6 +3,8 @@ package net.radstevee.packed.example
 import net.radstevee.packed.core.asset.impl.ResourceAssetResolutionStrategy
 import net.radstevee.packed.core.font.FontProvider
 import net.radstevee.packed.core.item.ItemModel
+import net.radstevee.packed.core.item.definition.BasicItem
+import net.radstevee.packed.core.item.definition.ItemDefinition
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.PackFormat
 import net.radstevee.packed.core.pack.ResourcePack
@@ -26,6 +28,8 @@ public fun create2dItem(
                     layerTexture(0, texture)
                 },
     )
+
+    pack.addItemDefinition(ItemDefinition(key, BasicItem(key)))
 }
 
 public fun register2dItems(pack: ResourcePack) {
