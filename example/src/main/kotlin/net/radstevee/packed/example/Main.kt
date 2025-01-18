@@ -2,7 +2,6 @@ package net.radstevee.packed.example
 
 import net.radstevee.packed.core.asset.impl.ResourceAssetResolutionStrategy
 import net.radstevee.packed.core.font.FontProvider
-import net.radstevee.packed.core.item.ItemModel
 import net.radstevee.packed.core.item.definition.BasicItem
 import net.radstevee.packed.core.item.definition.ItemDefinition
 import net.radstevee.packed.core.key.Key
@@ -12,38 +11,17 @@ import net.radstevee.packed.core.pack.ResourcePackBuilder.Companion.resourcePack
 import net.radstevee.packed.negativespaces.NegativeSpaces
 import java.io.File
 
-public val customItems: MutableList<Pair<Int, ItemModel>> = mutableListOf()
-
 public fun create2dItem(
     pack: ResourcePack,
     texture: Key,
 ) {
     val key = Key("packed", "item/${texture.value.split("/").last().removeSuffix(".png")}")
-    val customModelData = (customItems.lastOrNull()?.first ?: 0) + 1
 
-    customItems.add(
-        customModelData to
-                pack.addItemModel(key) {
-                    parent = "item/generated"
-                    layerTexture(0, texture)
-                },
-    )
-
-    pack.addItemDefinition(ItemDefinition(key, BasicItem(key)))
-}
-
-public fun register2dItems(pack: ResourcePack) {
-    pack.addItemModel(Key("minecraft", "popped_chorus_fruit")) {
+    pack.addItemModel(key) {
         parent = "item/generated"
-        layerTexture(0, Key("minecraft", "item/popped_chorus_fruit"))
-
-        customItems.forEach { (customModelData, model) ->
-            override {
-                this.model = model.key
-                customModelData(customModelData)
-            }
-        }
+        layerTexture(0, texture)
     }
+    pack.addItemDefinition(ItemDefinition(key, BasicItem(key)))
 }
 
 public fun main() {
@@ -57,9 +35,7 @@ public fun main() {
         assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java)
         val spaces = NegativeSpaces(fontKey = Key("packed", "space"))
         install(spaces)
-
         // clones the repo to /tmp/packed-test/resourcepacks with credentials and uses the subdirectory "global" as asset source
-
         /* assetResolutionStrategy = GitAssetResolutionStrategy(KGit.cloneRepository {
             setURI("https://github.com/me/my-packs")
 
@@ -112,8 +88,6 @@ public fun main() {
 
     create2dItem(pack, Key("packed", "item/bitmap.png"))
     create2dItem(pack, Key("packed", "item/bitmap2.png"))
-
-    register2dItems(pack)
 
     pack.addGlobalTranslation("poop", "fart")
 

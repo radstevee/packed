@@ -5,9 +5,9 @@ import net.radstevee.packed.core.asset.AssetResolutionStrategy
 import net.radstevee.packed.core.font.Font
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.item.ItemModel
-import net.radstevee.packed.core.item.itemModel
 import net.radstevee.packed.core.hook.PackedHook
 import net.radstevee.packed.core.item.definition.ItemDefinition
+import net.radstevee.packed.core.item.itemModel
 import net.radstevee.packed.core.lang.Language
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
@@ -128,7 +128,7 @@ public class ResourcePack(
         val metaFile = File(outputDir, "pack.mcmeta")
         metaFile.parentFile.mkdirs()
         metaFile.createNewFile()
-        metaFile.writeText(meta.json())
+        metaFile.writeText(meta.json() ?: error("failed encoding pack meta"))
     }
 
     /**

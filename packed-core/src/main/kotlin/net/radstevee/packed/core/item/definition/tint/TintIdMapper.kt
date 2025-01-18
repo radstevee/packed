@@ -2,11 +2,11 @@ package net.radstevee.packed.core.item.definition.tint
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
-import net.radstevee.packed.core.codec.LateBoundIdMapper
+import net.radstevee.packed.core.codec.IdMapper
 import net.radstevee.packed.core.key.Key
 
 public object TintIdMapper {
-    private val ID_MAPPER: LateBoundIdMapper<Key, MapCodec<out Tint>> = LateBoundIdMapper()
+    private val ID_MAPPER: IdMapper<Key, MapCodec<out Tint>> = IdMapper()
     public val CODEC: Codec<Tint> = ID_MAPPER.codec(Key.CODEC).dispatch(Tint::codec) { it }
 
     private fun add(key: String, codec: MapCodec<out Tint>) {

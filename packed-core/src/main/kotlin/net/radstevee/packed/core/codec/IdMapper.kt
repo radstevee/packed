@@ -4,7 +4,7 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.mojang.serialization.Codec
 
-internal class LateBoundIdMapper<I, V> {
+internal class IdMapper<I, V> {
     private val idToValue: BiMap<I, V> = HashBiMap.create()
 
     internal fun codec(idCodec: Codec<I>): Codec<V> {

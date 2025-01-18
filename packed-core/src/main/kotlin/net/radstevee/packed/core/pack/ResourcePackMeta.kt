@@ -1,9 +1,9 @@
-@file:Suppress("PropertyName")
-
 package net.radstevee.packed.core.pack
 
-import kotlinx.serialization.Serializable
-import net.radstevee.packed.core.JSON
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.radstevee.packed.core.codec.encodeJson
+import net.radstevee.packed.core.codec.nullableFieldOf
 
 /**
  * Represents the `pack` part in a `pack.mcmeta`.
@@ -16,44 +16,92 @@ import net.radstevee.packed.core.JSON
  * }
  * ```
  */
-@Serializable
 public data class Pack(
-    val pack_format: Int,
-    val supported_formats: SupportedFormats?,
+    val packFormat: Int,
+    val supportedFormats: SupportedFormats?,
     val description: String?,
-)
+) {
+    public companion object {
+        public val CODEC: Codec<Pack> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.INT
+                    .fieldOf("pack_format")
+                    .forGetter(Pack::packFormat),
+                SupportedFormats.CODEC
+                    .nullableFieldOf("supported_formats")
+                    .forGetter(Pack::supportedFormats),
+                Codec.STRING
+                    .nullableFieldOf("description")
+                    .forGetter(Pack::description)
+            ).apply(instance, ::Pack)
+        }
+    }
+}
 
 /**
- * Represents the `supported_formats` part in a `pack.mcmeta´.
+ * Represents the `supported_formats` part in a `pack.mcmeta`.
  * Supported formats/versions for the resource pack.
  */
-@Serializable
 public data class SupportedFormats(
-    val min_inclusive: Int,
-    val max_inclusive: Int,
-)
+    val minInclusive: Int,
+    val maxInclusive: Int,
+) {
+    public companion object {
+        public val CODEC: Codec<SupportedFormats> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.INT
+                    .fieldOf("min_inclusive")
+                    .forGetter(SupportedFormats::minInclusive),
+                Codec.INT
+                    .fieldOf("max_inclusive")
+                    .forGetter(SupportedFormats::maxInclusive)
+            ).apply(instance, ::SupportedFormats)
+        }
+    }
+}
 
 /**
  * Represents a pack language.
  */
-@Serializable
 public data class PackLanguage(
     val name: String,
     val region: String,
     val bidirectional: Boolean,
-)
+) {
+    public companion object {
+        public val CODEC: Codec<PackLanguage> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.STRING
+                    .fieldOf("name")
+                    .forGetter(PackLanguage::name),
+                Codec.STRING
+                    .fieldOf("region")
+                    .forGetter(PackLanguage::region),
+                Codec.BOOL
+                    .fieldOf("bidirectional")
+                    .forGetter(PackLanguage::bidirectional)
+            ).apply(instance, ::PackLanguage)
+        }
+    }
+}
 
 /**
  * Represents the `pack.mcmeta` file.
  */
-@Serializable
 public data class ResourcePackMeta(
     val pack: Pack? = null,
     val language: PackLanguage? = null,
 ) {
-    public fun json(): String = JSON.encodeToString(this)
+    public fun json(): String? = CODEC.encodeJson(this)
 
     public companion object {
+        public val CODEC: Codec<ResourcePackMeta> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Pack.CODEC.nullableFieldOf("pack").forGetter(ResourcePackMeta::pack),
+                PackLanguage.CODEC.nullableFieldOf("language").forGetter(ResourcePackMeta::language)
+            ).apply(instance, ::ResourcePackMeta)
+        }
+
         /**
          * Creates a default resource pack meta from a format and description
          */

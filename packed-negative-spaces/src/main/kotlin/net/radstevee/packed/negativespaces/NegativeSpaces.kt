@@ -18,18 +18,18 @@ public class NegativeSpaces(
     /**
      * The space advances.
      */
-    public val advances: MutableMap<Char, Double> = buildMap {
+    public val advances: Map<Char, Double> = buildMap {
         range.forEachIndexed { idx, width ->
             put((startUnicode + idx).toChar(), width.toDouble())
         }
-    }.toMutableMap()
+    }
 
     override fun beforeSave(pack: ResourcePack) {
         pack.addFont {
             key = fontKey
 
             space {
-                advances = this@NegativeSpaces.advances
+                advances = this@NegativeSpaces.advances.mapKeys { (key) -> key.toString() }
             }
         }
     }

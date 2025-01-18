@@ -1,7 +1,5 @@
 [versions]
 kotlin = "2.1.0"
-kotlinx-serialization = "2.1.0"
-kotlinx-serialization-json = "1.8.0"
 dokka = "2.0.0"
 kgit = "1.1.0"
 slf4j-api = "2.0.16"
@@ -11,13 +9,11 @@ zip = "1.17"
 dfu = "8.0.16"
 
 [plugins]
-kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
 [libraries]
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 kgit = { group = "com.github.sya-ri", name = "kgit", version.ref = "kgit" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
 slf4j-log4j = { group = "org.slf4j", name = "slf4j-reload4j", version.ref = "slf4j-reload4j" }

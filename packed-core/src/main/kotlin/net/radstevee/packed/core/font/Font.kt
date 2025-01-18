@@ -1,30 +1,41 @@
 package net.radstevee.packed.core.font
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import net.radstevee.packed.core.JSON
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.radstevee.packed.core.PACKED_LOGGER
+import net.radstevee.packed.core.codec.encodeJson
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackElement
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.copyTo
+import kotlin.properties.Delegates
 
 /**
- * Represents a font.
- * @param key The name of the font.
+ * Represents a font inside of a resource pack, consisting of multiple font providers.
  */
-@Serializable
-public class Font(
-    @Transient
-    public var key: Key = Key("", ""),
+public class Font private constructor(
+    private val _providers: MutableList<FontProvider>,
 ) : ResourcePackElement {
+    /**
+     * Creates a font with the given key.
+     * @param key The key.
+     */
+    public constructor(key: Key) : this(mutableListOf()) {
+        this.key = key
+    }
+
+    /**
+     * Creates a font with the minecraft:default key.
+     */
+    public constructor() : this(Key.minecraft("default"))
+
+    public var key: Key by Delegates.notNull()
+
     /**
      * The asset fallback provider for when an asset could not be found.
      */
-    @Transient
     private var fallbackProvider: (FontProvider) -> Key? = { null }
 
     /**
@@ -38,8 +49,7 @@ public class Font(
     /**
      * All font providers.
      */
-    @SerialName("providers")
-    public val providersList: MutableList<FontProvider> = mutableListOf()
+    public val providersList: List<FontProvider> = _providers.toList()
 
     /**
      * Adds a new font provider.
@@ -47,14 +57,14 @@ public class Font(
      * @see net.radstevee.packed.core.font.FontProvider
      */
     public fun <P : FontProvider> addProvider(provider: P) {
-        providersList.add(provider)
+        _providers.add(provider)
     }
 
     /**
      * Serializes the font down to JSON, ready to export to a font file.
      * @return the JSON
      */
-    public fun json(): String = JSON.encodeToString(this)
+    public fun json(): String? = CODEC.encodeJson(this)
 
     override fun validate(pack: ResourcePack): Result<Unit> {
         val unresolvedAssets = mutableListOf<Path>()
@@ -120,7 +130,7 @@ public class Font(
         val file = File(pack.outputDir, "assets/${key.namespace}/font/${key.value}.json")
         file.parentFile.mkdirs()
         file.createNewFile()
-        file.writeText(json())
+        file.writeText(json() ?: error("failed encoding font"))
         PACKED_LOGGER.info("Font $key saved!")
     }
 
@@ -153,6 +163,15 @@ public class Font(
     }
 
     public companion object {
+        public val CODEC: Codec<Font> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                FontProviders.PROVIDER_CODEC
+                    .listOf()
+                    .fieldOf("providers")
+                    .forGetter(Font::_providers)
+            ).apply(instance, ::Font)
+        }
+
         /**
          * Builds a font and returns it.
          */

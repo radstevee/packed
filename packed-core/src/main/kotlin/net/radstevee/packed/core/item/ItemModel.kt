@@ -1,10 +1,10 @@
 package net.radstevee.packed.core.item
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import net.radstevee.packed.core.JSON
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.radstevee.packed.core.PACKED_LOGGER
+import net.radstevee.packed.core.codec.encodeJson
+import net.radstevee.packed.core.codec.nullableFieldOf
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackElement
@@ -12,32 +12,79 @@ import net.radstevee.packed.core.util.Mat2x2i
 import net.radstevee.packed.core.util.Vec3d
 import net.radstevee.packed.core.util.Vec3i
 import java.io.File
+import kotlin.properties.Delegates
 
 /**
  * Builds an item model.
  * @param key The key of the item model.
+ * @return The built item model.
  */
 public inline fun itemModel(
     key: Key,
     block: ItemModel.Builder.() -> Unit,
 ): ItemModel = ItemModel.Builder(key).apply(block).build()
 
-/**
- * Represents an item model within a resource pack.
- * For more info, visit [the minecraft wiki](https://minecraft.wiki/w/Model).
- *
- * TODO: implement validation
- */
-@Serializable
-public data class ItemModel(
-    @Transient public val key: Key = Key("", ""),
-    public val parent: String? = null,
-    public val display: ItemModelDisplay? = null,
-    public val textures: Map<String, Key>? = null,
-    @SerialName("gui_light") public val guiLight: String? = null,
-    @SerialName("elements") public val cubes: List<Cube>? = null,
-    public val overrides: List<OverrideCase>? = null,
+public class ItemModel private constructor(
+    public val parent: String?,
+    public val display: ItemModelDisplay?,
+    public val textures: Map<String, Key>?,
+    public val guiLight: String?,
+    public val cubes: List<Cube>?,
+    public val overrides: List<OverrideCase>?
 ) : ResourcePackElement {
+    public constructor(
+        key: Key,
+        parent: String?,
+        display: ItemModelDisplay?,
+        textures: Map<String, Key>?,
+        guiLight: String?,
+        cubes: List<Cube>?,
+        overrides: List<OverrideCase>?
+    ) : this(parent, display, textures, guiLight, cubes, overrides) {
+        this.key = key
+    }
+
+    public var key: Key by Delegates.notNull()
+
+    public companion object {
+        public val CODEC: Codec<ItemModel> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.STRING
+                    .nullableFieldOf("parent")
+                    .forGetter(ItemModel::parent),
+                ItemModelDisplay.CODEC
+                    .nullableFieldOf("display")
+                    .forGetter(ItemModel::display),
+                Codec
+                    .unboundedMap(Codec.STRING, Key.CODEC)
+                    .nullableFieldOf("textures")
+                    .forGetter(ItemModel::textures),
+                Codec.STRING
+                    .nullableFieldOf("gui_light")
+                    .forGetter(ItemModel::guiLight),
+                Cube.CODEC
+                    .listOf()
+                    .nullableFieldOf("elements")
+                    .forGetter(ItemModel::cubes),
+                OverrideCase.CODEC
+                    .listOf()
+                    .nullableFieldOf("overrides")
+                    .forGetter(ItemModel::overrides)
+            ).apply(instance, ::ItemModel)
+        }
+    }
+
+    public fun json(): String? = CODEC.encodeJson(this)
+
+    override fun save(pack: ResourcePack) {
+        key.createNamespace(pack)
+        val file = File(pack.outputDir, "assets/${key.namespace}/models/${key.value}.json")
+        file.parentFile.mkdirs()
+        file.createNewFile()
+        file.writeText(json() ?: error("failed encoding item model"))
+        PACKED_LOGGER.info("Item model $key saved!")
+    }
+
     public class Builder(
         public val key: Key,
     ) {
@@ -100,30 +147,49 @@ public data class ItemModel(
 
         public fun build(): ItemModel = ItemModel(key, parent, display, textures, guiLight, cubes, overrides)
     }
-
-    public fun json(): String = JSON.encodeToString(this)
-
-    public override fun save(pack: ResourcePack) {
-        key.createNamespace(pack)
-        val file = File(pack.outputDir, "assets/${key.namespace}/models/${key.value}.json")
-        file.parentFile.mkdirs()
-        file.createNewFile()
-        file.writeText(json())
-        PACKED_LOGGER.info("Item model $key saved!")
-    }
 }
 
-@Serializable
 public data class ItemModelDisplay(
-    @SerialName("thirdperson_righthand") public val thirdPersonRightHand: ItemModelDisplayPosition? = null,
-    @SerialName("thirdperson_lefthand") public val thirdPersonLeftHand: ItemModelDisplayPosition? = null,
-    @SerialName("firstperson_righthand") public val firstPersonRightHand: ItemModelDisplayPosition? = null,
-    @SerialName("firstperson_lefthand") public val firstPersonLeftHand: ItemModelDisplayPosition? = null,
-    public val gui: ItemModelDisplayPosition? = null,
-    public val head: ItemModelDisplayPosition? = null,
-    public val ground: ItemModelDisplayPosition? = null,
-    public val fixed: ItemModelDisplayPosition? = null,
+    public val thirdPersonRightHand: ItemModelDisplayPosition?,
+    public val thirdPersonLeftHand: ItemModelDisplayPosition?,
+    public val firstPersonRightHand: ItemModelDisplayPosition?,
+    public val firstPersonLeftHand: ItemModelDisplayPosition?,
+    public val gui: ItemModelDisplayPosition?,
+    public val head: ItemModelDisplayPosition?,
+    public val ground: ItemModelDisplayPosition?,
+    public val fixed: ItemModelDisplayPosition?
 ) {
+    public companion object {
+        public val CODEC: Codec<ItemModelDisplay> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                ItemModelDisplayPosition.CODEC
+                    .nullableFieldOf("thirdperson_righthand")
+                    .forGetter(ItemModelDisplay::thirdPersonRightHand),
+                ItemModelDisplayPosition.CODEC
+                    .nullableFieldOf("thirdperson_lefthand")
+                    .forGetter(ItemModelDisplay::thirdPersonLeftHand),
+                ItemModelDisplayPosition.CODEC
+                    .nullableFieldOf("firstperson_righthand")
+                    .forGetter(ItemModelDisplay::firstPersonRightHand),
+                ItemModelDisplayPosition.CODEC
+                    .nullableFieldOf("firstperson_lefthand")
+                    .forGetter(ItemModelDisplay::firstPersonLeftHand),
+                ItemModelDisplayPosition.CODEC
+                    .nullableFieldOf("gui")
+                    .forGetter(ItemModelDisplay::gui),
+                ItemModelDisplayPosition.CODEC
+                    .nullableFieldOf("head")
+                    .forGetter(ItemModelDisplay::head),
+                ItemModelDisplayPosition.CODEC
+                    .nullableFieldOf("ground")
+                    .forGetter(ItemModelDisplay::ground),
+                ItemModelDisplayPosition.CODEC
+                    .nullableFieldOf("fixed")
+                    .forGetter(ItemModelDisplay::fixed)
+            ).apply(instance, ::ItemModelDisplay)
+        }
+    }
+
     public class Builder {
         public var thirdPersonRightHand: ItemModelDisplayPosition? = null
         public var thirdPersonLeftHand: ItemModelDisplayPosition? = null
@@ -171,12 +237,27 @@ public data class ItemModelDisplay(
     }
 }
 
-@Serializable
 public data class ItemModelDisplayPosition(
-    public val rotation: Vec3d? = null,
-    public val translation: Vec3d? = null,
-    public val scale: Vec3d? = null,
+    public val rotation: Vec3d?,
+    public val translation: Vec3d?,
+    public val scale: Vec3d?
 ) {
+    public companion object {
+        public val CODEC: Codec<ItemModelDisplayPosition> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Vec3d.CODEC
+                    .nullableFieldOf("rotation")
+                    .forGetter(ItemModelDisplayPosition::rotation),
+                Vec3d.CODEC
+                    .nullableFieldOf("translation")
+                    .forGetter(ItemModelDisplayPosition::translation),
+                Vec3d.CODEC
+                    .nullableFieldOf("scale")
+                    .forGetter(ItemModelDisplayPosition::scale)
+            ).apply(instance, ::ItemModelDisplayPosition)
+        }
+    }
+
     public class Builder {
         public var rotation: Vec3d? = null
         public var translation: Vec3d? = null
@@ -190,14 +271,35 @@ public data class ItemModelDisplayPosition(
     }
 }
 
-@Serializable
 public data class Cube(
     public val from: Vec3i,
     public val to: Vec3i,
-    public val rotation: CubeRotation? = null,
-    public val shade: Boolean = true,
-    public val faces: CubeFaces? = null,
+    public val rotation: CubeRotation?,
+    public val shade: Boolean,
+    public val faces: CubeFaces?
 ) {
+    public companion object {
+        public val CODEC: Codec<Cube> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Vec3i.CODEC
+                    .fieldOf("from")
+                    .forGetter(Cube::from),
+                Vec3i.CODEC
+                    .fieldOf("to")
+                    .forGetter(Cube::to),
+                CubeRotation.CODEC
+                    .nullableFieldOf("rotation")
+                    .forGetter(Cube::rotation),
+                Codec.BOOL
+                    .fieldOf("shade")
+                    .forGetter(Cube::shade),
+                CubeFaces.CODEC
+                    .nullableFieldOf("faces")
+                    .forGetter(Cube::faces)
+            ).apply(instance, ::Cube)
+        }
+    }
+
     public class Builder {
         public var from: Vec3i? = null
         public var to: Vec3i? = null
@@ -213,15 +315,39 @@ public data class Cube(
     }
 }
 
-@Serializable
 public data class CubeFaces(
-    public val down: CubeFace? = null,
-    public val up: CubeFace? = null,
-    public val north: CubeFace? = null,
-    public val south: CubeFace? = null,
-    public val east: CubeFace? = null,
-    public val west: CubeFace? = null,
+    public val down: CubeFace?,
+    public val up: CubeFace?,
+    public val north: CubeFace?,
+    public val south: CubeFace?,
+    public val east: CubeFace?,
+    public val west: CubeFace?
 ) {
+    public companion object {
+        public val CODEC: Codec<CubeFaces> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                CubeFace.CODEC
+                    .nullableFieldOf("down")
+                    .forGetter(CubeFaces::down),
+                CubeFace.CODEC
+                    .nullableFieldOf("up")
+                    .forGetter(CubeFaces::up),
+                CubeFace.CODEC
+                    .nullableFieldOf("north")
+                    .forGetter(CubeFaces::north),
+                CubeFace.CODEC
+                    .nullableFieldOf("south")
+                    .forGetter(CubeFaces::south),
+                CubeFace.CODEC
+                    .nullableFieldOf("east")
+                    .forGetter(CubeFaces::east),
+                CubeFace.CODEC
+                    .nullableFieldOf("west")
+                    .forGetter(CubeFaces::west)
+            ).apply(instance, ::CubeFaces)
+        }
+    }
+
     public class Builder {
         public var down: CubeFace? = null
         public var up: CubeFace? = null
@@ -258,14 +384,35 @@ public data class CubeFaces(
     }
 }
 
-@Serializable
 public data class CubeFace(
-    public val uv: Mat2x2i? = null,
-    public val texture: String? = null,
-    @SerialName("cullface") public val cullFace: String? = null,
-    public val rotation: Int? = null,
-    @SerialName("tintindex") public val tintIndex: Int? = null,
+    public val uv: Mat2x2i?,
+    public val texture: String?,
+    public val cullFace: String?,
+    public val rotation: Int?,
+    public val tintIndex: Int?
 ) {
+    public companion object {
+        public val CODEC: Codec<CubeFace> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Mat2x2i.CODEC
+                    .nullableFieldOf("uv")
+                    .forGetter(CubeFace::uv),
+                Codec.STRING
+                    .nullableFieldOf("texture")
+                    .forGetter(CubeFace::texture),
+                Codec.STRING
+                    .nullableFieldOf("cullface")
+                    .forGetter(CubeFace::cullFace),
+                Codec.INT
+                    .nullableFieldOf("rotation")
+                    .forGetter(CubeFace::rotation),
+                Codec.INT
+                    .nullableFieldOf("tintindex")
+                    .forGetter(CubeFace::tintIndex)
+            ).apply(instance, ::CubeFace)
+        }
+    }
+
     public class Builder {
         public var uv: Mat2x2i? = null
         public var texture: String? = null
@@ -283,13 +430,31 @@ public data class CubeFace(
     }
 }
 
-@Serializable
 public data class CubeRotation(
-    public val origin: Vec3d? = null,
-    public val axis: String? = null,
-    public val angle: Float? = null,
-    public val rescale: Boolean? = null,
+    public val origin: Vec3d?,
+    public val axis: String?,
+    public val angle: Float?,
+    public val rescale: Boolean?
 ) {
+    public companion object {
+        public val CODEC: Codec<CubeRotation> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Vec3d.CODEC
+                    .nullableFieldOf("origin")
+                    .forGetter(CubeRotation::origin),
+                Codec.STRING
+                    .nullableFieldOf("axis")
+                    .forGetter(CubeRotation::axis),
+                Codec.FLOAT
+                    .nullableFieldOf("angle")
+                    .forGetter(CubeRotation::angle),
+                Codec.BOOL
+                    .nullableFieldOf("rescale")
+                    .forGetter(CubeRotation::rescale)
+            ).apply(instance, ::CubeRotation)
+        }
+    }
+
     public class Builder {
         public var origin: Vec3d? = null
         public var axis: String? = null
@@ -305,11 +470,24 @@ public data class CubeRotation(
     }
 }
 
-@Serializable
 public data class OverrideCase(
     public val predicate: Map<String, Double>,
-    public val model: Key,
+    public val model: Key
 ) {
+    public companion object {
+        public val CODEC: Codec<OverrideCase> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec
+                    .unboundedMap(Codec.STRING, Codec.DOUBLE)
+                    .fieldOf("predicate")
+                    .forGetter(OverrideCase::predicate),
+                Key.CODEC
+                    .fieldOf("model")
+                    .forGetter(OverrideCase::model)
+            ).apply(instance, ::OverrideCase)
+        }
+    }
+
     public class Builder {
         public var predicate: MutableMap<String, Double>? = null
         public var model: Key? = null

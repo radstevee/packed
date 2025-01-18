@@ -1,7 +1,8 @@
 package net.radstevee.packed.core.font
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.radstevee.packed.core.key.Key
 
 /**
@@ -9,8 +10,8 @@ import net.radstevee.packed.core.key.Key
  *
  * [See the Minecraft wiki for more information.](https://minecraft.wiki/w/Font#Providers)
  */
-@Serializable
-public sealed class FontProvider {
+public interface FontProvider {
+    public val providerCodec: MapCodec<out FontProvider>
     /**
      * A bitmap font provider. Allows you to add a coloured image to a font.
      * @param key The key to the bitmap in the textures. E.g. `example:custom/foo.png` would correspond to `assets/example/textures/custom/foo.png`. Needs to end with `.png`.
@@ -18,51 +19,102 @@ public sealed class FontProvider {
      * @param ascent The vertical shift of the bitmap. **The ascent can not be bigger than the height**. Defaults to 7.
      * @param chars A list of characters for this bitmap to be used.
      */
-    @Serializable
     public data class Bitmap(
-        @SerialName("file")
         public var key: Key = Key("minecraft", "default"),
         public var height: Double = 8.0,
         public var ascent: Double = 7.0,
         public var chars: List<String> = listOf(),
-        public val type: String = "bitmap",
-    ) : FontProvider() {
+    ) : FontProvider {
         init {
             if (ascent > height) {
                 throw IllegalArgumentException("Ascent $ascent can not be higher than the height of $height.")
             }
         }
+
+        public companion object {
+            public val CODEC: MapCodec<Bitmap> = RecordCodecBuilder.mapCodec { instance ->
+                instance.group(
+                    Key.CODEC
+                        .fieldOf("key")
+                        .forGetter(Bitmap::key),
+                    Codec.DOUBLE
+                        .fieldOf("height")
+                        .forGetter(Bitmap::height),
+                    Codec.DOUBLE
+                        .fieldOf("ascent")
+                        .forGetter(Bitmap::ascent),
+                    Codec.STRING
+                        .listOf()
+                        .fieldOf("chars")
+                        .forGetter(Bitmap::chars)
+                ).apply(instance, ::Bitmap)
+            }
+        }
+
+        override val providerCodec: MapCodec<out FontProvider> = CODEC
     }
 
     /**
      * Defines the width of a character's glyph.
      * @param advances The advances of each character.
      */
-    @Serializable
     public data class Space(
-        public var advances: MutableMap<Char, Double> = mutableMapOf(),
-        public val type: String = "space",
-    ) : FontProvider()
+        public var advances: Map<String, Double> = mapOf(),
+    ) : FontProvider {
+        public companion object {
+            public val CODEC: MapCodec<Space> = RecordCodecBuilder.mapCodec {  instance ->
+                instance.group(
+                    Codec.unboundedMap(Codec.STRING, Codec.DOUBLE)
+                        .fieldOf("advances")
+                        .forGetter(Space::advances)
+                ).apply(instance, ::Space)
+            }
+        }
+
+        override val providerCodec: MapCodec<out FontProvider> = CODEC
+    }
 
     /**
-     * A truetype font provider. Allows you to use a pre-forged truetype font.
+     * A truetype font provider. Allows you to use a precompiled truetype font.
+     *
+     * For shifting a font upwards, use e.g. `[0.0, 10.0]`. For shifting downwards, use e.g. `[0.0, -10.0]`.
+     *
+     * For shifting a font to the left, use e.g. `[10.0, 0.0]`. For shifting to the right, use e.g. `[-10.0, 0.0]`.
+     *
      * @param key The name of the font. E.g. `example:custom_font.ttf`. Needs to end with `.ttf`.
      * @param shift Allows you to control the movement of the font horizontally and vertically (in that order).
-     *              For shifting a font upwards, use e.g. `[0.0, 10.0]`. For shifting downwards, use e.g. `[0.0, -10.0]`.
-     *              For shifting a font to the left, use e.g. `[10.0, 0.0]`. For shifting to the right, use e.g. `[-10.0, 0.0]`.
      * @param size The scale of the font.
      * @param oversample Resolution to render the font at.
      * @see net.radstevee.packed.core.font.FontProvider.Bitmap.height
      */
-    @Serializable
     public data class Truetype(
-        @SerialName("file")
         public var key: Key = Key("minecraft", "default"),
         public var shift: List<Double> = listOf(),
         public var size: Double = 0.0,
         public var oversample: Double = 0.0,
-        public val type: String = "ttf",
-    ) : FontProvider()
+    ) : FontProvider {
+        public companion object {
+            public val CODEC: MapCodec<Truetype> = RecordCodecBuilder.mapCodec { instance ->
+                instance.group(
+                    Key.CODEC
+                        .fieldOf("file")
+                        .forGetter(Truetype::key),
+                    Codec.DOUBLE
+                        .listOf()
+                        .fieldOf("shift")
+                        .forGetter(Truetype::shift),
+                    Codec.DOUBLE
+                        .fieldOf("size")
+                        .forGetter(Truetype::size),
+                    Codec.DOUBLE
+                        .fieldOf("oversample")
+                        .forGetter(Truetype::oversample)
+                ).apply(instance, ::Truetype)
+            }
+        }
+
+        override val providerCodec: MapCodec<out FontProvider> = CODEC
+    }
 
     /**
      * A reference font provider.
@@ -71,10 +123,20 @@ public sealed class FontProvider {
      * [See the Minecraft wiki](https://minecraft.wiki/w/Font#Reference_provider)
      * @param provider The font provider.
      */
-    @Serializable
     public data class Reference(
-        @SerialName("id")
         public var provider: Key = Key("minecraft", "default"),
         public val type: String = "reference",
-    ) : FontProvider()
+    ) : FontProvider {
+        public companion object {
+            public val CODEC: MapCodec<Reference> = RecordCodecBuilder.mapCodec { instance ->
+                instance.group(
+                    Key.CODEC
+                        .fieldOf("id")
+                        .forGetter(Reference::provider),
+                ).apply(instance, ::Reference)
+            }
+        }
+
+        override val providerCodec: MapCodec<out FontProvider> = CODEC
+    }
 }

@@ -1,8 +1,5 @@
 package net.radstevee.packed.core
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.ClassDiscriminatorMode
-import kotlinx.serialization.json.Json
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -19,13 +16,3 @@ public fun changeLogger(newLogger: Logger) {
  * The packed logger.
  */
 internal var PACKED_LOGGER: Logger = LoggerFactory.getLogger("packed")
-
-@Deprecated("Switch to DFU")
-@OptIn(ExperimentalSerializationApi::class)
-internal val JSON: Json = Json {
-    prettyPrint = true
-
-    explicitNulls = false
-    classDiscriminatorMode = ClassDiscriminatorMode.NONE
-    encodeDefaults = true
-}

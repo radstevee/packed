@@ -52,7 +52,7 @@ class FontTest {
             }
         """.trimIndent()
         println(font.json())
-        assertEquals(expected, font.json().trimIndent())
+        assertEquals(expected, font.json()?.trimIndent())
     }
 
     @Test

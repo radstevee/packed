@@ -12,7 +12,7 @@ plugins {
 
 allprojects {
     group = "net.radstevee.packed"
-    version = "1.0.0-SNAPSHOT.3"
+    version = "1.0.0-SNAPSHOT.4"
 
     apply(plugin = "kotlin")
     apply(plugin = "maven-publish")

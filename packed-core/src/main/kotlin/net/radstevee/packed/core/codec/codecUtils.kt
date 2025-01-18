@@ -7,6 +7,8 @@ import com.mojang.serialization.DataResult
 import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.Encoder
 import com.mojang.serialization.JsonOps
+import com.mojang.serialization.MapCodec
+import java.util.Optional
 import kotlin.math.floor
 
 internal fun <I, E> idResolverCodec(idCodec: Codec<I>, idToValue: (I) -> E, valueToId: (E) -> I): Codec<E> {
@@ -64,4 +66,11 @@ private val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
 
 internal fun <A> Encoder<A>.encodeJson(input: A): String? {
     return encodeQuick(JsonOps.INSTANCE, input)?.let(GSON::toJson)
+}
+
+internal fun <A : Any> Codec<A>.nullableFieldOf(name: String): MapCodec<A?> {
+    return optionalFieldOf(name).xmap(
+        { it.orElse(null) },
+        { Optional.ofNullable(it) }
+    ).orElse(null)
 }

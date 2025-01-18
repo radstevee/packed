@@ -2,7 +2,6 @@ package net.radstevee.packed.core.key
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
-import kotlinx.serialization.Serializable
 import net.radstevee.packed.core.pack.ResourcePack
 import java.io.File
 
@@ -11,7 +10,6 @@ import java.io.File
  * @param namespace The namespace. This can be minecraft, but can also be a custom one.
  * @param value The key. For example, `default` for the default font.
  */
-@Serializable(with = KeySerializer::class)
 public data class Key(
     val namespace: String,
     val value: String,
