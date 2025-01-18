@@ -3,7 +3,7 @@ package net.radstevee.packed.core.item.definition
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.radstevee.packed.core.item.definition.tint.Tint
-import net.radstevee.packed.core.item.definition.tint.TintIdMapper
+import net.radstevee.packed.core.item.definition.tint.Tints
 import net.radstevee.packed.core.key.Key
 
 public class BasicItem(
@@ -14,7 +14,7 @@ public class BasicItem(
         public val CODEC: MapCodec<BasicItem> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Key.CODEC.fieldOf("model").forGetter(BasicItem::model),
-                TintIdMapper.CODEC.listOf().optionalFieldOf("tints", emptyList()).forGetter(BasicItem::tints)
+                Tints.CODEC.listOf().optionalFieldOf("tints", emptyList()).forGetter(BasicItem::tints)
             ).apply(instance, ::BasicItem)
         }
     }

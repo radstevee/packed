@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec
 import net.radstevee.packed.core.codec.IdMapper
 import net.radstevee.packed.core.key.Key
 
-public object TintIdMapper {
+public object Tints {
     private val ID_MAPPER: IdMapper<Key, MapCodec<out Tint>> = IdMapper()
     public val CODEC: Codec<Tint> = ID_MAPPER.codec(Key.CODEC).dispatch(Tint::codec) { it }
 

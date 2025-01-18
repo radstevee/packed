@@ -2,6 +2,7 @@ import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import org.jetbrains.dokka.gradle.DokkaPlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 
 plugins {
     alias(libs.plugins.spotless)
@@ -12,10 +13,10 @@ plugins {
 
 allprojects {
     group = "net.radstevee.packed"
-    version = "1.0.0-SNAPSHOT.4"
+    version = "1.0.0-SNAPSHOT.5"
 
     apply(plugin = "kotlin")
-    apply(plugin = "maven-publish")
+    apply<MavenPublishPlugin>()
     apply<SpotlessPlugin>()
     apply<DokkaPlugin>()
 
