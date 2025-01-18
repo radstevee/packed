@@ -1,14 +1,14 @@
 package net.radstevee.packed.core.pack
 
-import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
 import net.radstevee.packed.core.font.Font
-import net.radstevee.packed.core.key.Key
-import net.radstevee.packed.core.item.ItemModel
 import net.radstevee.packed.core.hook.PackedHook
+import net.radstevee.packed.core.item.ItemModel
 import net.radstevee.packed.core.item.definition.ItemDefinition
 import net.radstevee.packed.core.item.itemModel
+import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.lang.Language
+import net.radstevee.packed.core.packedLogger
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 
@@ -98,11 +98,16 @@ public class ResourcePack(
      * @param value The translation value.
      * @return The modified language.
      */
-    public fun addTranslation(languageKey: Key, key: String, value: String): Language {
-        val language = elements
-            .filterIsInstance<Language>()
-            .find { lang -> lang.key == languageKey }
-            ?: Language(languageKey, mapOf(key to value)).also(::addLanguage)
+    public fun addTranslation(
+        languageKey: Key,
+        key: String,
+        value: String,
+    ): Language {
+        val language =
+            elements
+                .filterIsInstance<Language>()
+                .find { lang -> lang.key == languageKey }
+                ?: Language(languageKey, mapOf(key to value)).also(::addLanguage)
 
         if (key !in language.translations) {
             language.translations = language.translations.plus(key to value)
@@ -117,9 +122,10 @@ public class ResourcePack(
      * @param value The translation value.
      * @return The modified languages.
      */
-    public fun addGlobalTranslation(key: String, value: String): List<Language> {
-        return Language.LANGUAGE_LIST.map { lang -> addTranslation(lang, key, value) }
-    }
+    public fun addGlobalTranslation(
+        key: String,
+        value: String,
+    ): List<Language> = Language.LANGUAGE_LIST.map { lang -> addTranslation(lang, key, value) }
 
     /**
      * Saves the resource pack meta.
@@ -136,7 +142,7 @@ public class ResourcePack(
      * @param deleteOld Whether it should delete all old files.
      */
     public fun save(deleteOld: Boolean = false) {
-        PACKED_LOGGER.info("Building resource pack...")
+        packedLogger.info("Building resource pack...")
         if (deleteOld) {
             outputDir.deleteRecursively()
         }
@@ -151,7 +157,7 @@ public class ResourcePack(
             if (exception != null) {
                 // Non-critical warnings
                 if (exception.errorMessage == null && exception.warnMessage != null) {
-                    exception.warnMessage.lines().forEach(PACKED_LOGGER::warn)
+                    exception.warnMessage.lines().forEach(packedLogger::warn)
                     element.save(this)
 
                     return@forEach
@@ -159,8 +165,8 @@ public class ResourcePack(
 
                 // Critical error message and potentially non-critical warnings
                 if (exception.errorMessage != null) {
-                    exception.errorMessage.lines().forEach(PACKED_LOGGER::error)
-                    exception.warnMessage?.lines()?.forEach(PACKED_LOGGER::warn)
+                    exception.errorMessage.lines().forEach(packedLogger::error)
+                    exception.warnMessage?.lines()?.forEach(packedLogger::warn)
                 }
             } else {
                 element.save(this)
@@ -168,7 +174,7 @@ public class ResourcePack(
         }
 
         _hooks.forEach { hook -> hook.afterSave(this) }
-        PACKED_LOGGER.info("Resource pack saved!")
+        packedLogger.info("Resource pack saved!")
     }
 
     /**
@@ -177,7 +183,7 @@ public class ResourcePack(
      */
     public fun createZip(outputFile: File) {
         ZipUtil.pack(outputDir, outputFile)
-        PACKED_LOGGER.info("Pack successfully zipped to $outputFile!")
+        packedLogger.info("Pack successfully zipped to $outputFile!")
     }
 
     /**

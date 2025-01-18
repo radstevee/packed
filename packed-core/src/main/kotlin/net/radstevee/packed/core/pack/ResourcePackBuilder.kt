@@ -50,12 +50,13 @@ public class ResourcePackBuilder {
     /**
      * Initialises a resource pack from meta.
      */
-    public fun create(): ResourcePack = ResourcePack(
-        ResourcePackMeta.create(meta.format, meta.description),
-        meta.outputDir,
-        assetResolutionStrategy,
-        _hooks = hooks,
-    )
+    public fun create(): ResourcePack =
+        ResourcePack(
+            ResourcePackMeta.create(meta.format, meta.description),
+            meta.outputDir,
+            assetResolutionStrategy,
+            _hooks = hooks,
+        )
 
     /**
      * The strategy to resolve assets.

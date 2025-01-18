@@ -10,12 +10,13 @@ public data class Vec3i(
     val z: Int,
 ) {
     public companion object {
-        public val CODEC: Codec<Vec3i> = Codec.INT.listOf().comapFlatMap(
-            { ints ->
-                fixedSize(ints, 3).map { list -> Vec3i(list[0], list[1], list[2]) }
-            },
-            { vec -> listOf(vec.x, vec.y, vec.z) }
-        )
+        public val CODEC: Codec<Vec3i> =
+            Codec.INT.listOf().comapFlatMap(
+                { ints ->
+                    fixedSize(ints, 3).map { list -> Vec3i(list[0], list[1], list[2]) }
+                },
+                { vec -> listOf(vec.x, vec.y, vec.z) },
+            )
     }
 }
 
@@ -25,27 +26,29 @@ public data class Vec3d(
     val z: Double,
 ) {
     public companion object {
-        public val CODEC: Codec<Vec3d> = Codec.DOUBLE.listOf().comapFlatMap(
-            { doubles ->
-                fixedSize(doubles, 3).map { list -> Vec3d(list[0], list[1], list[2]) }
-            },
-            { vec -> listOf(vec.x, vec.y, vec.z) }
-        )
+        public val CODEC: Codec<Vec3d> =
+            Codec.DOUBLE.listOf().comapFlatMap(
+                { doubles ->
+                    fixedSize(doubles, 3).map { list -> Vec3d(list[0], list[1], list[2]) }
+                },
+                { vec -> listOf(vec.x, vec.y, vec.z) },
+            )
     }
 }
 
 public data class Vec3f(
     public val x: Float,
     public val y: Float,
-    public val z: Float
+    public val z: Float,
 ) {
     public companion object {
-        public val CODEC: Codec<Vec3f> = Codec.FLOAT.listOf().comapFlatMap(
-            { floats ->
-                fixedSize(floats, 3).map { floats -> Vec3f(floats[0], floats[1], floats[2]) }
-            },
-            { vec -> listOf(vec.x, vec.y, vec.z) }
-        )
+        public val CODEC: Codec<Vec3f> =
+            Codec.FLOAT.listOf().comapFlatMap(
+                { floats ->
+                    fixedSize(floats, 3).map { floats -> Vec3f(floats[0], floats[1], floats[2]) }
+                },
+                { vec -> listOf(vec.x, vec.y, vec.z) },
+            )
     }
 }
 
@@ -56,14 +59,16 @@ public data class Mat2x2i(
     val y2: Int,
 ) {
     public companion object {
-        public val CODEC: Codec<Mat2x2i> = RecordCodecBuilder.create { instance ->
-            instance.group(
-                Codec.INT.fieldOf("x1").forGetter(Mat2x2i::x1),
-                Codec.INT.fieldOf("y1").forGetter(Mat2x2i::y1),
-                Codec.INT.fieldOf("x2").forGetter(Mat2x2i::x2),
-                Codec.INT.fieldOf("y2").forGetter(Mat2x2i::y2),
-            ).apply(instance, ::Mat2x2i)
-        }
+        public val CODEC: Codec<Mat2x2i> =
+            RecordCodecBuilder.create { instance ->
+                instance
+                    .group(
+                        Codec.INT.fieldOf("x1").forGetter(Mat2x2i::x1),
+                        Codec.INT.fieldOf("y1").forGetter(Mat2x2i::y1),
+                        Codec.INT.fieldOf("x2").forGetter(Mat2x2i::x2),
+                        Codec.INT.fieldOf("y2").forGetter(Mat2x2i::y2),
+                    ).apply(instance, ::Mat2x2i)
+            }
     }
 }
 
@@ -91,7 +96,7 @@ public fun vec(
 public fun vec(
     x: Float,
     y: Float,
-    z: Float
+    z: Float,
 ): Vec3f = Vec3f(x, y, z)
 
 /**

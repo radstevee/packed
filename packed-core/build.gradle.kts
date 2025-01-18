@@ -1,5 +1,3 @@
-apply(plugin = "org.jetbrains.dokka")
-
 dependencies {
     testImplementation(libs.kotlin.test)
     api(libs.kgit)

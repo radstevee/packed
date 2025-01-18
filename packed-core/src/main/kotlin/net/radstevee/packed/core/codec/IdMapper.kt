@@ -13,7 +13,10 @@ internal class IdMapper<I, V> {
         return idResolverCodec(idCodec, idToValue::getValue, valueToId::getValue)
     }
 
-    internal operator fun set(id: I, value: V) {
+    internal operator fun set(
+        id: I,
+        value: V,
+    ) {
         idToValue[id] = value
     }
 }

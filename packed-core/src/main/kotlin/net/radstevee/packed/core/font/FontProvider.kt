@@ -12,6 +12,7 @@ import net.radstevee.packed.core.key.Key
  */
 public interface FontProvider {
     public val providerCodec: MapCodec<out FontProvider>
+
     /**
      * A bitmap font provider. Allows you to add a coloured image to a font.
      * @param key The key to the bitmap in the textures. E.g. `example:custom/foo.png` would correspond to `assets/example/textures/custom/foo.png`. Needs to end with `.png`.
@@ -32,23 +33,25 @@ public interface FontProvider {
         }
 
         public companion object {
-            public val CODEC: MapCodec<Bitmap> = RecordCodecBuilder.mapCodec { instance ->
-                instance.group(
-                    Key.CODEC
-                        .fieldOf("key")
-                        .forGetter(Bitmap::key),
-                    Codec.DOUBLE
-                        .fieldOf("height")
-                        .forGetter(Bitmap::height),
-                    Codec.DOUBLE
-                        .fieldOf("ascent")
-                        .forGetter(Bitmap::ascent),
-                    Codec.STRING
-                        .listOf()
-                        .fieldOf("chars")
-                        .forGetter(Bitmap::chars)
-                ).apply(instance, ::Bitmap)
-            }
+            public val CODEC: MapCodec<Bitmap> =
+                RecordCodecBuilder.mapCodec { instance ->
+                    instance
+                        .group(
+                            Key.CODEC
+                                .fieldOf("key")
+                                .forGetter(Bitmap::key),
+                            Codec.DOUBLE
+                                .fieldOf("height")
+                                .forGetter(Bitmap::height),
+                            Codec.DOUBLE
+                                .fieldOf("ascent")
+                                .forGetter(Bitmap::ascent),
+                            Codec.STRING
+                                .listOf()
+                                .fieldOf("chars")
+                                .forGetter(Bitmap::chars),
+                        ).apply(instance, ::Bitmap)
+                }
         }
 
         override val providerCodec: MapCodec<out FontProvider> = CODEC
@@ -62,13 +65,16 @@ public interface FontProvider {
         public var advances: Map<String, Double> = mapOf(),
     ) : FontProvider {
         public companion object {
-            public val CODEC: MapCodec<Space> = RecordCodecBuilder.mapCodec {  instance ->
-                instance.group(
-                    Codec.unboundedMap(Codec.STRING, Codec.DOUBLE)
-                        .fieldOf("advances")
-                        .forGetter(Space::advances)
-                ).apply(instance, ::Space)
-            }
+            public val CODEC: MapCodec<Space> =
+                RecordCodecBuilder.mapCodec { instance ->
+                    instance
+                        .group(
+                            Codec
+                                .unboundedMap(Codec.STRING, Codec.DOUBLE)
+                                .fieldOf("advances")
+                                .forGetter(Space::advances),
+                        ).apply(instance, ::Space)
+                }
         }
 
         override val providerCodec: MapCodec<out FontProvider> = CODEC
@@ -94,23 +100,25 @@ public interface FontProvider {
         public var oversample: Double = 0.0,
     ) : FontProvider {
         public companion object {
-            public val CODEC: MapCodec<Truetype> = RecordCodecBuilder.mapCodec { instance ->
-                instance.group(
-                    Key.CODEC
-                        .fieldOf("file")
-                        .forGetter(Truetype::key),
-                    Codec.DOUBLE
-                        .listOf()
-                        .fieldOf("shift")
-                        .forGetter(Truetype::shift),
-                    Codec.DOUBLE
-                        .fieldOf("size")
-                        .forGetter(Truetype::size),
-                    Codec.DOUBLE
-                        .fieldOf("oversample")
-                        .forGetter(Truetype::oversample)
-                ).apply(instance, ::Truetype)
-            }
+            public val CODEC: MapCodec<Truetype> =
+                RecordCodecBuilder.mapCodec { instance ->
+                    instance
+                        .group(
+                            Key.CODEC
+                                .fieldOf("file")
+                                .forGetter(Truetype::key),
+                            Codec.DOUBLE
+                                .listOf()
+                                .fieldOf("shift")
+                                .forGetter(Truetype::shift),
+                            Codec.DOUBLE
+                                .fieldOf("size")
+                                .forGetter(Truetype::size),
+                            Codec.DOUBLE
+                                .fieldOf("oversample")
+                                .forGetter(Truetype::oversample),
+                        ).apply(instance, ::Truetype)
+                }
         }
 
         override val providerCodec: MapCodec<out FontProvider> = CODEC
@@ -128,13 +136,15 @@ public interface FontProvider {
         public val type: String = "reference",
     ) : FontProvider {
         public companion object {
-            public val CODEC: MapCodec<Reference> = RecordCodecBuilder.mapCodec { instance ->
-                instance.group(
-                    Key.CODEC
-                        .fieldOf("id")
-                        .forGetter(Reference::provider),
-                ).apply(instance, ::Reference)
-            }
+            public val CODEC: MapCodec<Reference> =
+                RecordCodecBuilder.mapCodec { instance ->
+                    instance
+                        .group(
+                            Key.CODEC
+                                .fieldOf("id")
+                                .forGetter(Reference::provider),
+                        ).apply(instance, ::Reference)
+                }
         }
 
         override val providerCodec: MapCodec<out FontProvider> = CODEC

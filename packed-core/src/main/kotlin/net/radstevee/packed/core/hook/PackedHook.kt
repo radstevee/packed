@@ -20,5 +20,8 @@ public interface PackedHook {
     /**
      * Called after a resource pack element has been added into the pack
      */
-    public fun onAddElement(pack: ResourcePack, element: ResourcePackElement) {}
+    public fun onAddElement(
+        pack: ResourcePack,
+        element: ResourcePackElement,
+    ) {}
 }

@@ -26,15 +26,12 @@ public data class Key(
             return Key(namespace, key)
         }
 
-        public fun minecraft(value: String): Key {
-            return Key("minecraft", value)
-        }
+        public fun minecraft(value: String): Key = Key("minecraft", value)
 
-        internal fun read(string: String): DataResult<Key> {
-            return runCatching {
+        internal fun read(string: String): DataResult<Key> =
+            runCatching {
                 DataResult.success(of(string))
             }.getOrElse { exception -> DataResult.error { "not a valid key: $string: ${exception.message}" } }
-        }
 
         public val CODEC: Codec<Key> = Codec.STRING.comapFlatMap(::read, Key::toString).stable()
     }

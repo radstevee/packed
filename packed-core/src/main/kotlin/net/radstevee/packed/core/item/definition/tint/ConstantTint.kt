@@ -4,13 +4,17 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.radstevee.packed.core.codec.Codecs
 
-public class ConstantTint(public val value: Int) : Tint {
+public class ConstantTint(
+    public val value: Int,
+) : Tint {
     public companion object {
-        public val CODEC: MapCodec<ConstantTint> = RecordCodecBuilder.mapCodec { instance ->
-            instance.group(
-                Codecs.RGB_COLOR.fieldOf("value").forGetter(ConstantTint::value)
-            ).apply(instance, ::ConstantTint)
-        }
+        public val CODEC: MapCodec<ConstantTint> =
+            RecordCodecBuilder.mapCodec { instance ->
+                instance
+                    .group(
+                        Codecs.RGB_COLOR.fieldOf("value").forGetter(ConstantTint::value),
+                    ).apply(instance, ::ConstantTint)
+            }
     }
 
     override val codec: MapCodec<out Tint> = CODEC

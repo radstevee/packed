@@ -11,8 +11,12 @@ import com.mojang.serialization.MapCodec
 import java.util.Optional
 import kotlin.math.floor
 
-internal fun <I, E> idResolverCodec(idCodec: Codec<I>, idToValue: (I) -> E, valueToId: (E) -> I): Codec<E> {
-    return idCodec.flatXmap({ id ->
+internal fun <I, E> idResolverCodec(
+    idCodec: Codec<I>,
+    idToValue: (I) -> E,
+    valueToId: (E) -> I,
+): Codec<E> =
+    idCodec.flatXmap({ id ->
         val value = idToValue(id)
         if (value == null) {
             DataResult.error { "unknown element with id: $id" }
@@ -27,9 +31,11 @@ internal fun <I, E> idResolverCodec(idCodec: Codec<I>, idToValue: (I) -> E, valu
             DataResult.success(id)
         }
     }
-}
 
-internal fun <T> fixedSize(list: List<T>, size: Int): DataResult<List<T>> {
+internal fun <T> fixedSize(
+    list: List<T>,
+    size: Int,
+): DataResult<List<T>> {
     return if (list.size != size) {
         val err = { "list $list is not $size elements large" }
 
@@ -43,11 +49,14 @@ internal fun <T> fixedSize(list: List<T>, size: Int): DataResult<List<T>> {
     }
 }
 
-internal fun as8BitChannel(value: Float): Int {
-    return floor(value * 255f).toInt()
-}
+internal fun as8BitChannel(value: Float): Int = floor(value * 255f).toInt()
 
-internal fun colorFromFloat(a: Float, r: Float, g: Float, b: Float): Int {
+internal fun colorFromFloat(
+    a: Float,
+    r: Float,
+    g: Float,
+    b: Float,
+): Int {
     val a = as8BitChannel(a)
     val r = as8BitChannel(r)
     val g = as8BitChannel(g)
@@ -56,21 +65,21 @@ internal fun colorFromFloat(a: Float, r: Float, g: Float, b: Float): Int {
     return a shl 24 or r shl 16 or g shl 8 or b
 }
 
-internal fun <A, T> Encoder<A>.encodeQuick(ops: DynamicOps<T>, input: A): T? {
-    return encodeStart(ops, input)
+internal fun <A, T> Encoder<A>.encodeQuick(
+    ops: DynamicOps<T>,
+    input: A,
+): T? =
+    encodeStart(ops, input)
         .result()
         .orElse(null)
-}
 
 private val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
 
-internal fun <A> Encoder<A>.encodeJson(input: A): String? {
-    return encodeQuick(JsonOps.INSTANCE, input)?.let(GSON::toJson)
-}
+internal fun <A> Encoder<A>.encodeJson(input: A): String? = encodeQuick(JsonOps.INSTANCE, input)?.let(GSON::toJson)
 
-internal fun <A : Any> Codec<A>.nullableFieldOf(name: String): MapCodec<A?> {
-    return optionalFieldOf(name).xmap(
-        { it.orElse(null) },
-        { Optional.ofNullable(it) }
-    ).orElse(null)
-}
+internal fun <A : Any> Codec<A>.nullableFieldOf(name: String): MapCodec<A?> =
+    optionalFieldOf(name)
+        .xmap(
+            { it.orElse(null) },
+            { Optional.ofNullable(it) },
+        ).orElse(null)

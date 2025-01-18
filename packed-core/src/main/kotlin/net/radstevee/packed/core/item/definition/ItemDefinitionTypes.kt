@@ -9,7 +9,10 @@ public object ItemDefinitionTypes {
     private val ID_MAPPER: IdMapper<Key, MapCodec<out ItemDefinitionType>> = IdMapper()
     public val ITEM_DEF_CODEC: Codec<ItemDefinitionType> = ID_MAPPER.codec(Key.CODEC).dispatch(ItemDefinitionType::typeCodec) { it }
 
-    private fun add(key: String, codec: MapCodec<out ItemDefinitionType>) {
+    private fun add(
+        key: String,
+        codec: MapCodec<out ItemDefinitionType>,
+    ) {
         ID_MAPPER[Key.minecraft(key)] = codec
     }
 

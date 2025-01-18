@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory
  * @param newLogger The new logger.
  */
 public fun changeLogger(newLogger: Logger) {
-    PACKED_LOGGER = newLogger
+    packedLogger = newLogger
 }
 
 /**
  * The packed logger.
  */
-internal var PACKED_LOGGER: Logger = LoggerFactory.getLogger("packed")
+internal var packedLogger: Logger = LoggerFactory.getLogger("packed")

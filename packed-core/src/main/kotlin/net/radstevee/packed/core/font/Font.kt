@@ -2,11 +2,11 @@ package net.radstevee.packed.core.font
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.radstevee.packed.core.PACKED_LOGGER
 import net.radstevee.packed.core.codec.encodeJson
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackElement
+import net.radstevee.packed.core.packedLogger
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.copyTo
@@ -131,7 +131,7 @@ public class Font private constructor(
         file.parentFile.mkdirs()
         file.createNewFile()
         file.writeText(json() ?: error("failed encoding font"))
-        PACKED_LOGGER.info("Font $key saved!")
+        packedLogger.info("Font $key saved!")
     }
 
     /**
@@ -163,14 +163,16 @@ public class Font private constructor(
     }
 
     public companion object {
-        public val CODEC: Codec<Font> = RecordCodecBuilder.create { instance ->
-            instance.group(
-                FontProviders.PROVIDER_CODEC
-                    .listOf()
-                    .fieldOf("providers")
-                    .forGetter(Font::_providers)
-            ).apply(instance, ::Font)
-        }
+        public val CODEC: Codec<Font> =
+            RecordCodecBuilder.create { instance ->
+                instance
+                    .group(
+                        FontProviders.PROVIDER_CODEC
+                            .listOf()
+                            .fieldOf("providers")
+                            .forGetter(Font::_providers),
+                    ).apply(instance, ::Font)
+            }
 
         /**
          * Builds a font and returns it.

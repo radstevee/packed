@@ -12,17 +12,18 @@ import net.radstevee.packed.core.pack.ResourcePack
  */
 public class NegativeSpaces(
     public val fontKey: Key = Key("minecraft", "default"),
-    public val range: IntRange = -8192 .. 8192,
-    public val startUnicode: Int = 0xCE000
+    public val range: IntRange = -8192..8192,
+    public val startUnicode: Int = 0xCE000,
 ) : PackedHook {
     /**
      * The space advances.
      */
-    public val advances: Map<Char, Double> = buildMap {
-        range.forEachIndexed { idx, width ->
-            put((startUnicode + idx).toChar(), width.toDouble())
+    public val advances: Map<Char, Double> =
+        buildMap {
+            range.forEachIndexed { idx, width ->
+                put((startUnicode + idx).toChar(), width.toDouble())
+            }
         }
-    }
 
     override fun beforeSave(pack: ResourcePack) {
         pack.addFont {

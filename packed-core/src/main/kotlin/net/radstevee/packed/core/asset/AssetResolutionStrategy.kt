@@ -28,8 +28,9 @@ public interface AssetResolutionStrategy {
      * @param key The font key.
      * @return The font, if found.
      */
-    public fun getFont(key: Key): File? = getAsset(Path("assets/${key.namespace}/font/${key.value}"))
-        ?: getAsset(Path("assets/${key.namespace}/font/${key.value}.json"))
+    public fun getFont(key: Key): File? =
+        getAsset(Path("assets/${key.namespace}/font/${key.value}"))
+            ?: getAsset(Path("assets/${key.namespace}/font/${key.value}.json"))
 
     /**
      * Copies asset files to a target directory.

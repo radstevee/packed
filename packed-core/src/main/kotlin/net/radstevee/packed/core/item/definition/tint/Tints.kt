@@ -9,7 +9,10 @@ public object Tints {
     private val ID_MAPPER: IdMapper<Key, MapCodec<out Tint>> = IdMapper()
     public val CODEC: Codec<Tint> = ID_MAPPER.codec(Key.CODEC).dispatch(Tint::codec) { it }
 
-    private fun add(key: String, codec: MapCodec<out Tint>) {
+    private fun add(
+        key: String,
+        codec: MapCodec<out Tint>,
+    ) {
         ID_MAPPER[Key.minecraft(key)] = codec
     }
 

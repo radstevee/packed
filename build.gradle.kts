@@ -1,8 +1,8 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import org.jetbrains.dokka.gradle.DokkaPlugin
+import org.jetbrains.dokka.gradle.tasks.DokkaGeneratePublicationTask
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 
 plugins {
     alias(libs.plugins.spotless)
@@ -13,9 +13,10 @@ plugins {
 
 allprojects {
     group = "net.radstevee.packed"
-    version = "1.0.0-SNAPSHOT.5"
+    version = "1.0.0-SNAPSHOT.6"
 
     apply(plugin = "kotlin")
+    apply<DokkaPlugin>()
     apply<MavenPublishPlugin>()
     apply<SpotlessPlugin>()
     apply<DokkaPlugin>()
@@ -39,6 +40,11 @@ allprojects {
         from(sourceSets.main.get().allSource)
         archiveClassifier.set("sources")
     }
+    val dokkaJar = tasks.register<Jar>("dokkaHtmlJar") {
+        dependsOn(tasks.dokkaGeneratePublicationHtml)
+        from(tasks.dokkaGeneratePublicationHtml.flatMap(DokkaGeneratePublicationTask::outputDirectory))
+        archiveClassifier.set("javadoc")
+    }
 
     configure<PublishingExtension> {
         publications {
@@ -47,6 +53,10 @@ allprojects {
 
                 artifact(sourcesJar) {
                     classifier = "sources"
+                }
+
+                artifact(dokkaJar) {
+                    classifier = "javadoc"
                 }
             }
         }
@@ -65,12 +75,9 @@ allprojects {
     }
 }
 
-kotlin {
-    jvmToolchain(21)
-}
-
 tasks.register("publishAll") {
     childProjects.filterKeys { name -> name != "example" }.forEach { (_, project) ->
+        dependsOn(project.tasks.getByPath("spotlessCheck"))
         dependsOn(project.tasks.getByPath("publish"))
     }
 }
