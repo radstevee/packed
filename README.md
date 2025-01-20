@@ -24,7 +24,7 @@ Packed is a library for compiling Minecraft resource packs using Kotlin.
 
 **All Pull requests and Issues are welcome!**
 
-Packed is extensible by using/creating Packed plugins, which can hook into resource pack saving (and after).
+Packed is extensible by using/creating Packed hook, which can hook into resource pack saving (and after) and adding of elements.
 For an example, check out [negative spaces](https://github.com/radstevee/packed/blob/v1/packed-negative-spaces/).
 
 ## Examples

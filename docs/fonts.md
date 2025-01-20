@@ -3,6 +3,7 @@
 Vanilla has 5 font providers, which packed only supports 4 of:
 
 ## Bitmaps
+
 The Bitmap provider is very straight-forward:
 It takes in a Bitmap, a height, ascent and characters argument.
 
@@ -15,6 +16,7 @@ See [the Minecraft wiki](https://minecraft.wiki/w/Font#Bitmap_provider).
 
 ::: info
 Bitmap Providers are supported in packed:
+
 ```kt{4-9}
 pack.addFont {
     key = ...
@@ -27,11 +29,14 @@ pack.addFont {
     }
 }
 ```
+
 :::
 
 ## Spaces
+
 The space provider defines a character's (or its glyph's) width.
 It takes in a map of a character to its width like such:
+
 ```json
 {
     "type": "space",
@@ -45,6 +50,7 @@ See [the Minecraft wiki](https://minecraft.wiki/w/Font#Space_provider).
 
 ::: info
 Space providers are supported in packed:
+
 ```kt{4-9}
 pack.addFont {
     key = ...
@@ -57,9 +63,11 @@ pack.addFont {
     }
 }
 ```
+
 :::
 
 ## TTFs
+
 The TTF provider loads a compiled TrueType/OpenType font.
 
 It takes in a resource location to the file, a `shift` array for horizontal and vertical offsets,
@@ -68,6 +76,7 @@ to render the font at, and a `skip` array of characters to ignore with this font
 
 :::info
 TTF providers are supported in packed:
+
 ```kt{4-9}
 pack.addFont {
     key = ...
@@ -80,24 +89,29 @@ pack.addFont {
     }
 }
 ```
+
 :::
 
 See [the Minecraft wiki](https://minecraft.wiki/w/Font#TTF_provider).
 
 ## Unihex
-The Unihex provider loads a zip file containing [GNU Unifont `.hex` files](https://en.wikipedia.org/wiki/GNU_Unifont#.hex_format).
+
+The Unihex provider loads a zip file containing [GNU Unifont
+`.hex` files](https://en.wikipedia.org/wiki/GNU_Unifont#.hex_format).
 
 ::: info
 Unihex providers are NOT supported in packed.
 :::
 
 ## References
+
 The reference provider includes another provider once. Can include other providers from fonts or resource packs.
 
 Takes in an `id` field to the other font file.
 
 ::: info
 Reference providers are supported in packed.
+
 ```kt{4-6}
 pack.addFont {
     key = ...
@@ -107,4 +121,5 @@ pack.addFont {
     }
 }
 ```
+
 :::

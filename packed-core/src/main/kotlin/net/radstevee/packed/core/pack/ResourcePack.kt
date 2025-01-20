@@ -45,6 +45,7 @@ public class ResourcePack(
      */
     public fun <T : ResourcePackElement> addElement(element: T): T {
         _elements.add(element)
+        hooks.forEach { hook -> hook.onAddElement(this, element) }
         return element
     }
 

@@ -1,6 +1,7 @@
 # Getting started
 
 ## Setup
+
 ::: code-group
 
 ```kts [build.gradle.kts]
@@ -10,8 +11,7 @@ repositories {
 
 dependencies {
     implementation("net.radstevee.packed:packed-core:VERSION")
-
-    // If you would like to get the negative spaces plugin:
+    // If you would like to use negative spaces:
     implementation("net.radstevee.packed:packed-negative-spaces:VERSION")
 }
 ```
@@ -26,12 +26,13 @@ repositories {
 dependencies {
     implementation 'net.radstevee.packed:packed-core:VERSION'
 
-    // If you would like to get the negative spaces plugin:
+    // If you would like to use negative spaces:
     implementation 'net.radstevee.packed:packed-negative-spaces:VERSION'
 }
 ```
 
 ```xml [pom.xml]
+
 <repositories>
     <repository>
         <id>rad-public</id>
@@ -40,30 +41,31 @@ dependencies {
 </repositories>
 
 <dependencies>
-    <dependency>
-        <groupId>net.radstevee.packed</groupId>
-        <artifactId>packed-core</groupId>
-        <version>VERSION</version>
-    </dependency>
-    <!-- If you would like to use the negative spaces plugin: -->
-    <dependency>
-        <groupId>net.radstevee.packed</groupId>
-        <artifactId>packed-negative-spaces</groupId>
-        <version>VERSION</version>
-    </dependency>
+<dependency>
+    <groupId>net.radstevee.packed</groupId>
+    <artifactId>packed-core</groupId>
+    <version>VERSION</version>
+</dependency>
+<!-- If you would like to use negative spaces: -->
+<dependency>
+    <groupId>net.radstevee.packed</groupId>
+    <artifactId>packed-negative-spaces</groupId>
+    <version>VERSION</version>
+</dependency>
 </dependencies>
 ```
 
 :::
 
-Replace `VERSION` with your desired version of packed. You can view the latest version [here](https://github.com/radstevee/packed/releases/latest).
+Replace `VERSION` with your desired version of packed. You can view the latest
+version [here](https://github.com/radstevee/packed/releases/latest).
 
 ## Creating a resource pack
 
 You can create a resource pack for Minecraft 1.20.4 with the `resourcePack` builder DSL like this:
+
 ```kt
 val negativeSpaces = NegativeSpaces(fontKey = Key("packed", "negative-spaces"))
-
 val pack = resourcePack {
     meta {
         description = "Awesome Packed resource pack!" // Pack description which will appear in the resource pack screen
@@ -71,9 +73,9 @@ val pack = resourcePack {
         outputDir = File("...") // Where the pack will be generated
     }
 
-    assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java) // Will resolve assets from the resources of this JAR file
-
-    // If you would like to use the negative spaces plugin:
+    assetResolutionStrategy =
+        ResourceAssetResolutionStrategy(this::class.java) // Will resolve assets from the resources of this JAR file
+    // If you would like to use negative spaces:
     install(negativeSpaces)
 }
 ```
@@ -81,11 +83,11 @@ val pack = resourcePack {
 ## Adding a font
 
 You can add fonts using the `ResourcePack#addFont` DSL like this:
+
 ```kt
 // Generates a font to `assets/packed/font/my_awesome_font.json`
 pack.addFont {
     key = Key("packed", "my_awesome_font")
-
     // Adds a bitmap provider to this font
     bitmap {
         key = Key("packed", "sprites/my_awesome_bitmap") // Uses `assets/packed/textures/sprites/my_awesome_bitmap.png`
@@ -97,6 +99,7 @@ pack.addFont {
 ```
 
 The resulting output of this would be:
+
 ```json
 // assets/packed/font/my_awesome_font.json
 {
@@ -126,3 +129,5 @@ pack.save(deleteOld = true) // Removes the directory and recreates it
 :::info
 If you would like to get a zip file, you can use the `ResourcePack#createZip(File)` function.
 :::
+
+For more info, see the 🔗 **[Example](https://github.com/radstevee/packed/blob/v1/example/)**
