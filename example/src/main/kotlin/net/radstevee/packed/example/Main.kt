@@ -8,6 +8,8 @@ import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.PackFormat
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackBuilder.Companion.resourcePack
+import net.radstevee.packed.core.sound.SoundEvent
+import net.radstevee.packed.core.sound.SoundList
 import net.radstevee.packed.negativespaces.NegativeSpaces
 import java.io.File
 
@@ -90,6 +92,22 @@ public fun main() {
     create2dItem(pack, Key("packed", "item/bitmap2.png"))
 
     pack.addGlobalTranslation("poop", "fart")
+
+    pack.addSounds(
+        SoundList(
+            "packed_1",
+            listOf(
+                SoundEvent(
+                    Key("packed_1", "some_sound"),
+                    soundSet = listOf(
+                        Key("packed_1", "some_sound"),
+                        Key("packed_1", "some_other_sound")
+                    )
+                )
+            )
+        )
+    )
+    pack.addBasicSound(Key("packed", "some_sound"))
 
     pack.save(true)
     pack.createZip(File(pack.outputDir, "pack.zip"))

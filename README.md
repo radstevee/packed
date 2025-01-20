@@ -1,6 +1,8 @@
 # packed
 Packed is a library for compiling Minecraft resource packs using Kotlin.
 
+🔗 **[Documentation](https://packed.radsteve.net/)**
+
 ## TODO
 
 - [x] Copy asset files from resources
@@ -11,7 +13,7 @@ Packed is a library for compiling Minecraft resource packs using Kotlin.
 - [x] Generation of Item definitions
 - [x] Fallback assets
 - [ ] Generation of (Block) Models
-- [ ] Generation of sounds
+- [x] Generation of sounds
 - [x] Generation of Translatables/Languages
 - [ ] Generation of Block states
 - [ ] Generation of Core shader JSON files
@@ -23,7 +25,7 @@ Packed is a library for compiling Minecraft resource packs using Kotlin.
 **All Pull requests and Issues are welcome!**
 
 Packed is extensible by using/creating Packed plugins, which can hook into resource pack saving (and after).
-For an example, check out [negative spaces](https://github.com/radstevee/packed/blob/master/packed-negative-spaces/).
+For an example, check out [negative spaces](https://github.com/radstevee/packed/blob/v1/packed-negative-spaces/).
 
 ## Examples
 

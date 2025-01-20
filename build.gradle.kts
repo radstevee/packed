@@ -13,7 +13,7 @@ plugins {
 
 allprojects {
     group = "net.radstevee.packed"
-    version = "1.0.0-SNAPSHOT.6"
+    version = "1.0.0-SNAPSHOT.7"
 
     apply(plugin = "kotlin")
     apply<DokkaPlugin>()

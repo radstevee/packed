@@ -9,6 +9,8 @@ import net.radstevee.packed.core.item.itemModel
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.lang.Language
 import net.radstevee.packed.core.packedLogger
+import net.radstevee.packed.core.sound.SoundEvent
+import net.radstevee.packed.core.sound.SoundList
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 
@@ -126,6 +128,42 @@ public class ResourcePack(
         key: String,
         value: String,
     ): List<Language> = Language.LANGUAGE_LIST.map { lang -> addTranslation(lang, key, value) }
+
+    /**
+     * Adds the given sound list to the resource pack.
+     * @param soundList The sound list.
+     * @return The added sound list.
+     */
+    public fun addSounds(soundList: SoundList): SoundList = addElement(soundList)
+
+    /**
+     * Adds a basic sound to this pack.
+     * A basic sound will be saved to the first (or a new) sound list of the
+     * same namespace of the sound.
+     * @param soundEvent The sound.
+     * @return The modified/added sound list.
+     */
+    public fun addBasicSound(soundEvent: SoundEvent): SoundList {
+        val existingSoundLists = elements.filterIsInstance<SoundList>().filter { list -> list.namespace == soundEvent.key.namespace }
+        val soundList = existingSoundLists.firstOrNull() ?: SoundList(soundEvent.key.namespace, listOf(soundEvent))
+
+        if (soundEvent !in soundList.soundEvents) {
+            soundList.soundEvents = soundList.soundEvents + soundEvent
+        }
+
+        if (soundList !in elements) {
+            addSounds(soundList)
+        }
+
+        return soundList
+    }
+
+    /**
+     * Adds a basic sound to this pack.
+     * @param soundKey The key of the sound.
+     * @return The added sound list.
+     */
+    public fun addBasicSound(soundKey: Key): SoundList = addBasicSound(SoundEvent(soundKey))
 
     /**
      * Saves the resource pack meta.
