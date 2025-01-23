@@ -5,6 +5,7 @@ import net.radstevee.packed.core.font.FontProvider
 import net.radstevee.packed.core.item.definition.BasicItem
 import net.radstevee.packed.core.item.definition.ItemDefinition
 import net.radstevee.packed.core.key.Key
+import net.radstevee.packed.core.lang.Language
 import net.radstevee.packed.core.pack.PackFormat
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackBuilder.Companion.resourcePack
@@ -93,6 +94,13 @@ public fun main() {
     create2dItem(pack, Key("packed", "item/bitmap2.png"))
 
     pack.addGlobalTranslation("poop", "fart")
+    pack.addLanguage(Language(
+        Key("packed", "the_packed_language"),
+        buildMap {
+            this["my.cool.translation.key"] = "cool"
+        }
+    ))
+    pack.addTranslation(Key("packed", "the_packed_language"), "yes", "no")
 
     pack.addBasicSound(Key("packed", "my_sound"))
     pack.addSounds("packed_two") {
