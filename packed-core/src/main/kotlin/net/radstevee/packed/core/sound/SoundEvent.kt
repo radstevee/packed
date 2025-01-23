@@ -6,23 +6,41 @@ import net.radstevee.packed.core.codec.nullableFieldOf
 import net.radstevee.packed.core.key.Key
 import kotlin.properties.Delegates
 
+/** A sound event represents a set of sounds that can play when a sound event is started. */
 public class SoundEvent private constructor(
+    /** Whether this sound should replace vanilla's sound. */
     public val replaceVanilla: Boolean = true,
+    /** The translation key of the subtitle that should be displayed. */
     public val subtitle: String? = null,
-    public val soundSet: List<Key> = listOf(),
+    /** The sound set of this sound event. */
+    public val soundSet: MutableList<Key> = mutableListOf(),
 ) {
     public constructor(
+        /** The key of this sound event. */
         key: Key,
+        /** Whether this sound should replace vanilla's sound. */
         replaceVanilla: Boolean = true,
+        /** The translation key of the subtitle that should be displayed. */
         subtitle: String? = null,
-        soundSet: List<Key> = listOf(key),
+        /** The sound set of this sound event. */
+        soundSet: MutableList<Key> = mutableListOf(key),
     ) : this(replaceVanilla, subtitle, soundSet) {
         this.key = key
     }
 
+    /**
+     * Adds a sound to this event's sound set.
+     * @param key The sound key.
+     */
+    public fun addSound(key: Key) {
+        soundSet.add(key)
+    }
+
+    /** The key of this sound event. */
     public var key: Key by Delegates.notNull()
 
     public companion object {
+        /** The codec of this class. */
         public val CODEC: Codec<SoundEvent> =
             RecordCodecBuilder.create { instance ->
                 instance
@@ -39,5 +57,10 @@ public class SoundEvent private constructor(
                             .forGetter(SoundEvent::soundSet),
                     ).apply(instance, ::SoundEvent)
             }
+
+        public inline fun sound(
+            key: Key,
+            block: SoundEvent.() -> Unit,
+        ): SoundEvent = SoundEvent(key).apply(block)
     }
 }

@@ -10,13 +10,21 @@ import net.radstevee.packed.core.packedLogger
 import java.io.File
 import kotlin.properties.Delegates
 
+/** An item definition, defining a model for an item. */
 public class ItemDefinition private constructor(
+    /** The definition type. */
     public val type: ItemDefinitionType,
 ) : ResourcePackElement {
-    public constructor(item: Key, type: ItemDefinitionType) : this(type) {
+    public constructor(
+        /** The key of this item. */
+        item: Key,
+        /** The definition type. */
+        type: ItemDefinitionType,
+    ) : this(type) {
         key = item
     }
 
+    /** The key of this item. */
     public var key: Key by Delegates.notNull()
 
     override fun save(pack: ResourcePack) {
@@ -29,11 +37,12 @@ public class ItemDefinition private constructor(
     }
 
     public companion object {
+        /** The codec of this class. */
         public val CODEC: Codec<ItemDefinition> =
             RecordCodecBuilder.create { instance ->
                 instance
                     .group(
-                        ItemDefinitionTypes.ITEM_DEF_CODEC
+                        ItemDefinitionTypes.CODEC
                             .fieldOf("model")
                             .forGetter(ItemDefinition::type),
                     ).apply(instance, ::ItemDefinition)

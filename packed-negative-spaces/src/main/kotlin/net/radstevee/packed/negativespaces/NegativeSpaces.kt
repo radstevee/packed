@@ -5,19 +5,17 @@ import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
 
 /**
- * Represents a font with negative width spaces, to be used for shifting things.
- * @param fontKey The font key to use for this font.
- * @param range The negative space range. Default is -8192 to 8192.
- * @param startUnicode The Unicode character that gets added to the space idx
+ * A hook to add a font with negative-width spaces, to be used for shifting things.
  */
 public class NegativeSpaces(
-    public val fontKey: Key = Key("minecraft", "default"),
+    /** The font key to use. */
+    public val fontKey: Key = Key("minecraft", "spaces"),
+    /** The negative space range. */
     public val range: IntRange = -8192..8192,
+    /** The start of the Unicode area. */
     public val startUnicode: Int = 0xCE000,
 ) : PackedHook {
-    /**
-     * The space advances.
-     */
+    /** The space advances. */
     public val advances: Map<Char, Double> =
         buildMap {
             range.forEachIndexed { idx, width ->

@@ -24,29 +24,45 @@ public inline fun itemModel(
     block: ItemModel.Builder.() -> Unit,
 ): ItemModel = ItemModel.Builder(key).apply(block).build()
 
+/** Represents an item model within a resource pack. */
 public class ItemModel private constructor(
+    /** The parent model. */
     public val parent: String?,
+    /** The display options of this model. */
     public val display: ItemModelDisplay?,
+    /** The textures of this model. */
     public val textures: Map<String, Key>?,
+    /** The lighting options of this model. */
     public val guiLight: String?,
+    /** The cubes contained in this model. */
     public val cubes: List<Cube>?,
+    /** The override cases in this model. */
     public val overrides: List<OverrideCase>?,
 ) : ResourcePackElement {
     public constructor(
+        /** The key of this item model. */
         key: Key,
+        /** The parent model. */
         parent: String?,
+        /** The display options of this model. */
         display: ItemModelDisplay?,
+        /** The textures of this model. */
         textures: Map<String, Key>?,
+        /** The lighting options of this model. */
         guiLight: String?,
+        /** The cubes contained in this model. */
         cubes: List<Cube>?,
+        /** The override cases in this model. */
         overrides: List<OverrideCase>?,
     ) : this(parent, display, textures, guiLight, cubes, overrides) {
         this.key = key
     }
 
+    /** The key of this item model. */
     public var key: Key by Delegates.notNull()
 
     public companion object {
+        /** The codec of this class. */
         public val CODEC: Codec<ItemModel> =
             RecordCodecBuilder.create { instance ->
                 instance
@@ -76,14 +92,12 @@ public class ItemModel private constructor(
             }
     }
 
-    public fun json(): String? = CODEC.encodeJson(this)
-
     override fun save(pack: ResourcePack) {
         key.createNamespace(pack)
         val file = File(pack.outputDir, "assets/${key.namespace}/models/${key.value}.json")
         file.parentFile.mkdirs()
         file.createNewFile()
-        file.writeText(json() ?: error("failed encoding item model"))
+        file.writeText(CODEC.encodeJson(this) ?: error("failed encoding item model"))
         packedLogger.info("Item model $key saved!")
     }
 
@@ -123,6 +137,10 @@ public class ItemModel private constructor(
                 textures = mutableMapOf()
             }
             textures!!["layer$layer"] = texture
+        }
+
+        public fun primaryTexture(texture: Key) {
+            layerTexture(0, texture)
         }
 
         public fun cubeTexture(

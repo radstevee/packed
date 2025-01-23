@@ -4,15 +4,19 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.radstevee.packed.core.codec.Codecs
 
+/** A tint that is based on the average value of a firework explosion component. */
 public class FireworkTint(
-    public val defaultColor: Int = -7697782,
+    /** The default color. */
+    public val defaultColor: Int,
 ) : Tint {
     public companion object {
         public val CODEC: MapCodec<FireworkTint> =
             RecordCodecBuilder.mapCodec { instance ->
                 instance
                     .group(
-                        Codecs.RGB_COLOR.fieldOf("default").forGetter(FireworkTint::defaultColor),
+                        Codecs.RGB_COLOR
+                            .fieldOf("default")
+                            .forGetter(FireworkTint::defaultColor),
                     ).apply(instance, ::FireworkTint)
             }
     }

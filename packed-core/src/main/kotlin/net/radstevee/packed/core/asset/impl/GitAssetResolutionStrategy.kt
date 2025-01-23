@@ -5,11 +5,9 @@ import net.radstevee.packed.core.asset.AssetResolutionStrategy
 import java.io.File
 import java.nio.file.Path
 
-/**
- * A resolution strategy for git repositories.
- * @param repo The KGit repo.
- */
+/** A resolution strategy for git repositories. */
 public class GitAssetResolutionStrategy(
+    /** The KGit repo. */
     public val repo: KGit,
 ) : AssetResolutionStrategy {
     /**

@@ -5,9 +5,13 @@ import com.mojang.serialization.MapCodec
 import net.radstevee.packed.core.codec.IdMapper
 import net.radstevee.packed.core.key.Key
 
+/** ID mapper for item definition types. */
 public object ItemDefinitionTypes {
+    /** The ID mapper. */
     private val ID_MAPPER: IdMapper<Key, MapCodec<out ItemDefinitionType>> = IdMapper()
-    public val ITEM_DEF_CODEC: Codec<ItemDefinitionType> = ID_MAPPER.codec(Key.CODEC).dispatch(ItemDefinitionType::typeCodec) { it }
+
+    /** The codec for a dispatched item definition type. */
+    public val CODEC: Codec<ItemDefinitionType> = ID_MAPPER.codec(Key.CODEC).dispatch(ItemDefinitionType::typeCodec) { it }
 
     private fun add(
         key: String,

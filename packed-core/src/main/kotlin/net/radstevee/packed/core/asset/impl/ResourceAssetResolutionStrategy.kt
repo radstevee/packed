@@ -9,6 +9,7 @@ import java.nio.file.Path
  * Asset resolution strategy for resources.
  */
 public class ResourceAssetResolutionStrategy(
+    /** The class that should be used for resolving resources. */
     public val clazz: Class<*>,
 ) : AssetResolutionStrategy {
     override fun getAsset(relativePath: Path): File? = clazz.getResource(relativePath.toString())?.file?.let(::File)

@@ -8,4 +8,5 @@ public object Codecs {
         Codec.withAlternative(Codec.INT, Vec3f.CODEC) { color ->
             colorFromFloat(1f, color.x, color.y, color.z)
         }
+    public val INT_LIST: Codec<List<Int>> = Codec.withAlternative(Codec.INT.listOf(), Codec.INT, ::listOf)
 }

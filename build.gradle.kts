@@ -11,9 +11,11 @@ plugins {
     `maven-publish`
 }
 
+val packedVersion: String by project
+
 allprojects {
     group = "net.radstevee.packed"
-    version = "1.0.0-SNAPSHOT.7"
+    version = packedVersion
 
     apply(plugin = "kotlin")
     apply<DokkaPlugin>()
@@ -34,12 +36,15 @@ allprojects {
     configure<SpotlessExtension> {
         kotlin {
             ktlint("1.5.0")
+                .setEditorConfigPath(rootProject.projectDir.resolve(".editorconfig"))
         }
     }
+
     val sourcesJar = tasks.register<Jar>("sourcesJar") {
         from(sourceSets.main.get().allSource)
         archiveClassifier.set("sources")
     }
+
     val dokkaJar = tasks.register<Jar>("dokkaHtmlJar") {
         dependsOn(tasks.dokkaGeneratePublicationHtml)
         from(tasks.dokkaGeneratePublicationHtml.flatMap(DokkaGeneratePublicationTask::outputDirectory))

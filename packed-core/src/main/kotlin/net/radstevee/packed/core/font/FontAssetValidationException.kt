@@ -5,12 +5,13 @@ import java.nio.file.Path
 
 /**
  * An exception when validating Font assets (Assets not found).
- * @param font The font.
- * @param unresolvedAssets The assets which couldn't be resolved.
  */
 public class FontAssetValidationException(
+    /** The font. */
     public val font: Font,
+    /** The assets that could not be resolved. */
     public val unresolvedAssets: List<Path>,
+    /** The assets that were fallen back to. */
     public val fallbackAssets: List<Pair<Path, Path>>,
 ) : ResourcePackValidationException(
         if (unresolvedAssets.isNotEmpty()) {

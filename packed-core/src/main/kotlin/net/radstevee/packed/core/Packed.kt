@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
  * and not wanting it to use the default logger, but rather your mods/plugins.
  * @param newLogger The new logger.
  */
-public fun changeLogger(newLogger: Logger) {
+public fun changePackedLogger(newLogger: Logger) {
     packedLogger = newLogger
 }
 

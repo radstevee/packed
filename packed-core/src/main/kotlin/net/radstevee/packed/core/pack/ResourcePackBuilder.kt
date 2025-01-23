@@ -3,8 +3,11 @@ package net.radstevee.packed.core.pack
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
 import net.radstevee.packed.core.hook.PackedHook
 import java.io.File
+import kotlin.properties.Delegates
 
+/** A builder for resource packs. */
 public class ResourcePackBuilder {
+    /** A builder for resource pack meta. */
     public inner class Meta {
         /**
          * Description of a resource pack. Comes up in the selection screen.
@@ -12,7 +15,7 @@ public class ResourcePackBuilder {
         public var description: String? = null
 
         /**
-         * Pack format/version.
+         * The format of this pack.
          */
         public var format: PackFormat = PackFormat.LATEST
 
@@ -23,9 +26,9 @@ public class ResourcePackBuilder {
     }
 
     /**
-     * The Metadata for this resourcepack. Gets set by [meta]
+     * The Metadata for this resource pack.
      */
-    public lateinit var meta: Meta
+    public var meta: Meta by Delegates.notNull()
 
     /**
      * The list of hooks installed in the pack.
@@ -33,7 +36,7 @@ public class ResourcePackBuilder {
     public val hooks: MutableList<PackedHook> = mutableListOf<PackedHook>()
 
     /**
-     * Metadata builder for this resourcepack.
+     * Metadata builder for this resource pack.
      * @param block The builder.
      */
     public inline fun meta(block: Meta.() -> Unit) {
@@ -48,7 +51,7 @@ public class ResourcePackBuilder {
     }
 
     /**
-     * Initialises a resource pack from meta.
+     * Creates this resource pack.
      */
     public fun create(): ResourcePack =
         ResourcePack(
@@ -61,7 +64,7 @@ public class ResourcePackBuilder {
     /**
      * The strategy to resolve assets.
      */
-    public lateinit var assetResolutionStrategy: AssetResolutionStrategy
+    public var assetResolutionStrategy: AssetResolutionStrategy by Delegates.notNull()
 
     public companion object {
         /**

@@ -7,6 +7,7 @@ import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackElement
 import net.radstevee.packed.core.packedLogger
+import org.jetbrains.annotations.UnmodifiableView
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.copyTo
@@ -16,13 +17,16 @@ import kotlin.properties.Delegates
  * Represents a font inside of a resource pack, consisting of multiple font providers.
  */
 public class Font private constructor(
+    /** Mutable list of font providers. */
     private val _providers: MutableList<FontProvider>,
 ) : ResourcePackElement {
     /**
      * Creates a font with the given key.
-     * @param key The key.
      */
-    public constructor(key: Key) : this(mutableListOf()) {
+    public constructor(
+        /** The key of this font. */
+        key: Key,
+    ) : this(mutableListOf()) {
         this.key = key
     }
 
@@ -31,6 +35,7 @@ public class Font private constructor(
      */
     public constructor() : this(Key.minecraft("default"))
 
+    /** The key of this font. */
     public var key: Key by Delegates.notNull()
 
     /**
@@ -49,12 +54,11 @@ public class Font private constructor(
     /**
      * All font providers.
      */
-    public val providersList: List<FontProvider> = _providers.toList()
+    public val providersList: @UnmodifiableView List<FontProvider> = _providers.toList()
 
     /**
      * Adds a new font provider.
      * @param provider The font provider.
-     * @see net.radstevee.packed.core.font.FontProvider
      */
     public fun <P : FontProvider> addProvider(provider: P) {
         _providers.add(provider)
@@ -163,6 +167,7 @@ public class Font private constructor(
     }
 
     public companion object {
+        /** The codec of this class. */
         public val CODEC: Codec<Font> =
             RecordCodecBuilder.create { instance ->
                 instance
@@ -175,7 +180,8 @@ public class Font private constructor(
             }
 
         /**
-         * Builds a font and returns it.
+         * Builds a font.
+         * @return The built font.
          */
         public inline fun font(block: Font.() -> Unit): Font = Font().apply(block)
     }

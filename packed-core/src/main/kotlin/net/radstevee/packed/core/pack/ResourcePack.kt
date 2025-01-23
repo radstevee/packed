@@ -11,32 +11,34 @@ import net.radstevee.packed.core.lang.Language
 import net.radstevee.packed.core.packedLogger
 import net.radstevee.packed.core.sound.SoundEvent
 import net.radstevee.packed.core.sound.SoundList
+import org.jetbrains.annotations.UnmodifiableView
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 
 /**
- * A resource pack.
- * @param meta The resource pack meta.
- * @param outputDir Output directory of the resource pack. This is where it will be saved.
- * @param _elements Mutable list of elements in this resource pack.
- * @param _hooks Mutable list of packed hooks.
+ * A resource pack, containing several [ResourcePackElement]s.
  */
 public class ResourcePack(
-    public val meta: ResourcePackMeta,
-    public val outputDir: File,
-    public val assetResolutionStrategy: AssetResolutionStrategy,
+    /** The resource pack metadata. */
+    public var meta: ResourcePackMeta,
+    /** The output directory of the resource pack, it will be saved here. */
+    public var outputDir: File,
+    /** The strategy used to resolve assets. */
+    public var assetResolutionStrategy: AssetResolutionStrategy,
+    /** Mutable list of resource pack elements in this pack. */
     private val _elements: MutableList<ResourcePackElement> = mutableListOf(),
+    /** Mutable list of hooks in this pack. */
     private val _hooks: MutableList<PackedHook> = mutableListOf(),
 ) {
     /**
      * The fonts in the pack.
      */
-    public val elements: List<ResourcePackElement> get() = _elements.toList()
+    public val elements: @UnmodifiableView List<ResourcePackElement> get() = _elements.toList()
 
     /**
      * The hooks in the pack.
      */
-    public val hooks: List<PackedHook> get() = _hooks.toList()
+    public val hooks: @UnmodifiableView List<PackedHook> get() = _hooks.toList()
 
     /**
      * Adds a resource pack element to this pack.
@@ -71,7 +73,7 @@ public class ResourcePack(
     public fun addItemModel(model: ItemModel): ItemModel = addElement(model)
 
     /**
-     * Adds an item model to this resouce pack.
+     * Adds an item model to this resource pack.
      * @param key The model key.
      * @return The added model.
      */
@@ -138,7 +140,17 @@ public class ResourcePack(
     public fun addSounds(soundList: SoundList): SoundList = addElement(soundList)
 
     /**
-     * Adds a basic sound to this pack.
+     * Builds a sound list from the given namespace and adds it to the resource pack.
+     * @param namespace The namespace.
+     * @return The added sound list.
+     */
+    public fun addSounds(
+        namespace: String,
+        block: SoundList.() -> Unit,
+    ): SoundList = addSounds(SoundList(namespace).apply(block))
+
+    /**
+     * Adds a basic sound to this resource pack.
      * A basic sound will be saved to the first (or a new) sound list of the
      * same namespace of the sound.
      * @param soundEvent The sound.
@@ -146,10 +158,10 @@ public class ResourcePack(
      */
     public fun addBasicSound(soundEvent: SoundEvent): SoundList {
         val existingSoundLists = elements.filterIsInstance<SoundList>().filter { list -> list.namespace == soundEvent.key.namespace }
-        val soundList = existingSoundLists.firstOrNull() ?: SoundList(soundEvent.key.namespace, listOf(soundEvent))
+        val soundList = existingSoundLists.firstOrNull() ?: SoundList(soundEvent.key.namespace, mutableListOf(soundEvent))
 
         if (soundEvent !in soundList.soundEvents) {
-            soundList.soundEvents = soundList.soundEvents + soundEvent
+            soundList.add(soundEvent)
         }
 
         if (soundList !in elements) {
@@ -158,6 +170,16 @@ public class ResourcePack(
 
         return soundList
     }
+
+    /**
+     * Builds and adds a basic sound to this resource pack.
+     * @param key The sound key.
+     * @return The added sound list.
+     */
+    public fun addBasicSound(
+        key: Key,
+        block: SoundEvent.() -> Unit,
+    ): SoundList = addSounds(SoundList(key.namespace, mutableListOf(SoundEvent.sound(key, block))))
 
     /**
      * Adds a basic sound to this pack.
@@ -201,7 +223,6 @@ public class ResourcePack(
 
                     return@forEach
                 }
-
                 // Critical error message and potentially non-critical warnings
                 if (exception.errorMessage != null) {
                     exception.errorMessage.lines().forEach(packedLogger::error)

@@ -7,8 +7,11 @@ import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackElement
 import java.io.File
 
+/** A resource pack language. */
 public class Language(
+    /** The key of the language. */
     public val key: Key,
+    /** The translations in this language. */
     public var translations: Map<String, String>,
 ) : ResourcePackElement {
     override fun save(pack: ResourcePack) {
@@ -20,7 +23,10 @@ public class Language(
     }
 
     public companion object {
+        /** The codec of this class. */
         public val TRANSLATIONS_CODEC: Codec<Map<String, String>> = Codec.unboundedMap(Codec.STRING, Codec.STRING)
+
+        /** The default Minecraft languages. */
         public val LANGUAGE_LIST: List<Key> =
             setOf(
                 "af_za",

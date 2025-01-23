@@ -2,6 +2,7 @@ package net.radstevee.packed.core.pack
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.radstevee.packed.core.codec.Codecs
 import net.radstevee.packed.core.codec.encodeJson
 import net.radstevee.packed.core.codec.nullableFieldOf
 
@@ -49,7 +50,7 @@ public data class SupportedFormats(
     val maxInclusive: Int,
 ) {
     public companion object {
-        public val CODEC: Codec<SupportedFormats> =
+        public val FORMATS_CODEC: Codec<SupportedFormats> =
             RecordCodecBuilder.create { instance ->
                 instance
                     .group(
@@ -60,6 +61,14 @@ public data class SupportedFormats(
                             .fieldOf("max_inclusive")
                             .forGetter(SupportedFormats::maxInclusive),
                     ).apply(instance, ::SupportedFormats)
+            }
+
+        public val CODEC: Codec<SupportedFormats> =
+            Codec.withAlternative(FORMATS_CODEC, Codecs.INT_LIST) { formats ->
+                val min = formats.min()
+                val max = formats.max()
+
+                SupportedFormats(min, max)
             }
     }
 }

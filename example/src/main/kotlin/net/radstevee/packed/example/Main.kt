@@ -8,8 +8,6 @@ import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.PackFormat
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackBuilder.Companion.resourcePack
-import net.radstevee.packed.core.sound.SoundEvent
-import net.radstevee.packed.core.sound.SoundList
 import net.radstevee.packed.negativespaces.NegativeSpaces
 import java.io.File
 
@@ -21,7 +19,7 @@ public fun create2dItem(
 
     pack.addItemModel(key) {
         parent = "item/generated"
-        layerTexture(0, texture)
+        primaryTexture(texture)
     }
     pack.addItemDefinition(ItemDefinition(key, BasicItem(key)))
 }
@@ -34,42 +32,45 @@ public fun main() {
             outputDir = File("/tmp/packed-example")
         }
 
-        assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java)
+        assetResolutionStrategy = ResourceAssetResolutionStrategy(javaClass)
         val spaces = NegativeSpaces(fontKey = Key("packed", "space"))
         install(spaces)
-        // clones the repo to /tmp/packed-test/resourcepacks with credentials and uses the subdirectory "global" as asset source
+        // clones the repo to a directory with credentials and uses the subdirectory "example" as asset source
         /* assetResolutionStrategy = GitAssetResolutionStrategy(KGit.cloneRepository {
-            setURI("https://github.com/me/my-packs")
+            setURI("...")
 
             val username = System.getenv("GH_USER")
             val token = System.getenv("GH_TOKEN")
             setCredentialsProvider(UsernamePasswordCredentialsProvider(username, token))
 
-            val output = File("/tmp/packed-test/resourcepacks")
+            val output = File("...")
             output.deleteRecursively()
             setDirectory(output)
-        }).subDirectory(Path("global")) */
+        }).subDirectory(Path("example")) */
     }
 
     pack.addFont {
-        fallback { provider ->
-            if (provider is FontProvider.Bitmap) {
-                if (!provider.key.value.contains("invalid")) {
-                    return@fallback null
-                }
-                return@fallback Key("packed", "font/fallback_bitmap.png")
-            }
+        key = Key("packed", "fallback_example")
 
-            null
+        fallback { fontProvider ->
+            if (fontProvider is FontProvider.Bitmap) {
+                if (!fontProvider.key.value.contains("invalid")) {
+                    null
+                }
+
+                Key("packed", "font/fallback_bitmap.png")
+            } else {
+                null
+            }
         }
 
-        key = Key("packed", "fallback_example")
         bitmap {
             key = Key("packed", "font/invalid_bitmap.png") // logs a warning and falls back to fallback_bitmap.png!
             height = 8.0
             ascent = 7.0
             chars = listOf("\uE000")
         }
+
         bitmap {
             key = Key("packed", "font/bitmap.png")
             height = 8.0
@@ -93,21 +94,13 @@ public fun main() {
 
     pack.addGlobalTranslation("poop", "fart")
 
-    pack.addSounds(
-        SoundList(
-            "packed_1",
-            listOf(
-                SoundEvent(
-                    Key("packed_1", "some_sound"),
-                    soundSet = listOf(
-                        Key("packed_1", "some_sound"),
-                        Key("packed_1", "some_other_sound")
-                    )
-                )
-            )
-        )
-    )
-    pack.addBasicSound(Key("packed", "some_sound"))
+    pack.addBasicSound(Key("packed", "my_sound"))
+    pack.addSounds("packed_two") {
+        add(Key("packed_two", "my_cool_sound_event")) {
+            addSound(Key("packed_two", "some_sound"))
+            addSound(Key("packed_1", "some_other_sound"))
+        }
+    }
 
     pack.save(true)
     pack.createZip(File(pack.outputDir, "pack.zip"))

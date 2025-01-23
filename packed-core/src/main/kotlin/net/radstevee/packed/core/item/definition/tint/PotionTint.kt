@@ -4,15 +4,20 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.radstevee.packed.core.codec.Codecs
 
+/** A tint that is based on a potion. */
 public class PotionTint(
+    /** The default color. */
     public val defaultColor: Int,
 ) : Tint {
     public companion object {
+        /** The codec of this class. */
         public val CODEC: MapCodec<PotionTint> =
             RecordCodecBuilder.mapCodec { instance ->
                 instance
                     .group(
-                        Codecs.RGB_COLOR.fieldOf("default").forGetter(PotionTint::defaultColor),
+                        Codecs.RGB_COLOR
+                            .fieldOf("default")
+                            .forGetter(PotionTint::defaultColor),
                     ).apply(instance, ::PotionTint)
             }
     }
