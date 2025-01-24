@@ -21,7 +21,6 @@ allprojects {
     apply<DokkaPlugin>()
     apply<MavenPublishPlugin>()
     apply<SpotlessPlugin>()
-    apply<DokkaPlugin>()
 
     repositories {
         mavenCentral()
