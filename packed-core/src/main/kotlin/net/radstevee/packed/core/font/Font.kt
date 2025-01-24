@@ -60,9 +60,7 @@ public class Font private constructor(
      * Adds a new font provider.
      * @param provider The font provider.
      */
-    public fun <P : FontProvider> addProvider(provider: P) {
-        _providers.add(provider)
-    }
+    public fun <P : FontProvider> addProvider(provider: P): P = provider.also(_providers::add)
 
     /**
      * Serializes the font down to JSON, ready to export to a font file.
@@ -140,31 +138,27 @@ public class Font private constructor(
 
     /**
      * Builds a bitmap font provider and adds it.
+     * @return The added bitmap font provider.
      */
-    public inline fun bitmap(block: FontProvider.Bitmap.() -> Unit) {
-        addProvider(FontProvider.Bitmap().apply(block))
-    }
+    public inline fun bitmap(block: FontProvider.Bitmap.() -> Unit): FontProvider.Bitmap = addProvider(FontProvider.bitmap(block))
 
     /**
-     * Builds a truetype font provider and adds it.
+     * Builds a TTF font provider and adds it.
+     * @return The added TTF font provider.
      */
-    public inline fun ttf(block: FontProvider.Truetype.() -> Unit) {
-        addProvider(FontProvider.Truetype().apply(block))
-    }
+    public inline fun ttf(block: FontProvider.Truetype.() -> Unit): FontProvider.Truetype = addProvider(FontProvider.ttf(block))
 
     /**
      * Builds a reference font provider and adds it.
+     * @return The added reference font provider.
      */
-    public inline fun reference(block: FontProvider.Reference.() -> Unit) {
-        addProvider(FontProvider.Reference().apply(block))
-    }
+    public inline fun reference(block: FontProvider.Reference.() -> Unit): FontProvider.Reference = addProvider(FontProvider.reference(block))
 
     /**
      * Builds a space font provider and adds it.
+     * @return The added space font provider.
      */
-    public inline fun space(block: FontProvider.Space.() -> Unit) {
-        addProvider(FontProvider.Space().apply(block))
-    }
+    public inline fun space(block: FontProvider.Space.() -> Unit): FontProvider.Space = addProvider(FontProvider.space(block))
 
     public companion object {
         /** The codec of this class. */

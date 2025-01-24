@@ -141,13 +141,13 @@ public class ResourcePack(
 
     /**
      * Builds a sound list from the given namespace and adds it to the resource pack.
-     * @param namespace The namespace.
+     * @param namespace The namespace. Can be null if you would like to set it in the builder.
      * @return The added sound list.
      */
     public fun addSounds(
-        namespace: String,
+        namespace: String? = null,
         block: SoundList.() -> Unit,
-    ): SoundList = addSounds(SoundList(namespace).apply(block))
+    ): SoundList = addSounds(SoundList(namespace ?: "").apply(block))
 
     /**
      * Adds a basic sound to this resource pack.

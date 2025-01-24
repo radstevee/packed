@@ -7,13 +7,13 @@ import net.radstevee.packed.core.key.Key
 import kotlin.properties.Delegates
 
 /** A sound event represents a set of sounds that can play when a sound event is started. */
-public class SoundEvent private constructor(
+public class SoundEvent(
     /** Whether this sound should replace vanilla's sound. */
-    public val replaceVanilla: Boolean = true,
+    public var replaceVanilla: Boolean = true,
     /** The translation key of the subtitle that should be displayed. */
-    public val subtitle: String? = null,
+    public var subtitle: String? = null,
     /** The sound set of this sound event. */
-    public val soundSet: MutableList<Key> = mutableListOf(),
+    public var soundSet: MutableList<Key> = mutableListOf(),
 ) {
     public constructor(
         /** The key of this sound event. */

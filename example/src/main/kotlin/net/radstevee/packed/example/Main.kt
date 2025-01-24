@@ -82,6 +82,7 @@ public fun main() {
 
     pack.addFont {
         key = Key("packed", "example")
+
         bitmap {
             key = Key("packed", "font/bitmap.png")
             height = 8.0
@@ -94,17 +95,23 @@ public fun main() {
     create2dItem(pack, Key("packed", "item/bitmap2.png"))
 
     pack.addGlobalTranslation("poop", "fart")
-    pack.addLanguage(Language(
-        Key("packed", "the_packed_language"),
-        buildMap {
-            this["my.cool.translation.key"] = "cool"
-        }
-    ))
+    pack.addLanguage(
+        Language(
+            Key("packed", "the_packed_language"),
+            buildMap {
+                this["my.cool.translation.key"] = "cool"
+            }
+        )
+    )
     pack.addTranslation(Key("packed", "the_packed_language"), "yes", "no")
 
     pack.addBasicSound(Key("packed", "my_sound"))
     pack.addSounds("packed_two") {
-        add(Key("packed_two", "my_cool_sound_event")) {
+        namespace = "packed_two"
+
+        add {
+            key = Key("packed_two", "my_cool_sound_event")
+
             addSound(Key("packed_two", "some_sound"))
             addSound(Key("packed_1", "some_other_sound"))
         }

@@ -149,4 +149,30 @@ public interface FontProvider {
 
         override val providerCodec: MapCodec<out FontProvider> = CODEC
     }
+
+    public companion object {
+        /**
+         * Builds a bitmap font provider.
+         * @return The font provider.
+         */
+        public inline fun bitmap(block: Bitmap.() -> Unit): Bitmap = Bitmap().apply(block)
+
+        /**
+         * Builds a TTF font provider.
+         * @return The font provider.
+         */
+        public inline fun ttf(block: Truetype.() -> Unit): Truetype = Truetype().apply(block)
+
+        /**
+         * Builds a space font provider.
+         * @return The font provider.
+         */
+        public inline fun space(block: Space.() -> Unit): Space = Space().apply(block)
+
+        /**
+         * Builds a reference font provider.
+         * @return The font provider.
+         */
+        public inline fun reference(block: Reference.() -> Unit): Reference = Reference().apply(block)
+    }
 }

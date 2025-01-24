@@ -11,7 +11,7 @@ import java.io.File
 import kotlin.properties.Delegates
 
 /** A list of sounds in a namespace, akin to a sounds.json. */
-public class SoundList private constructor(
+public class SoundList(
     /** The sound events in this sound list. */
     public var soundEvents: MutableList<SoundEvent>,
 ) : ResourcePackElement {
@@ -31,28 +31,22 @@ public class SoundList private constructor(
      * Adds a sound event to this sound list.
      * @param soundEvent The sound event.
      */
-    public fun add(soundEvent: SoundEvent) {
-        soundEvents.add(soundEvent)
-    }
+    public fun add(soundEvent: SoundEvent): SoundEvent = soundEvent.also(soundEvents::add)
 
     /**
      * Adds a basic sound event to this sound list.
      * @param key The key of the sound.
      */
-    public fun add(key: Key) {
-        soundEvents.add(SoundEvent(key))
-    }
+    public fun add(key: Key): SoundEvent = add(SoundEvent(key))
 
     /**
      * Builds and adds a sound event to this sound list.
-     * @param key The key of the sound.
+     * @param key The key of the sound. Can be null if you would like to set it in the builder.
      */
     public fun add(
-        key: Key,
+        key: Key? = null,
         block: SoundEvent.() -> Unit,
-    ) {
-        add(SoundEvent.sound(key, block))
-    }
+    ): SoundEvent = add(SoundEvent.sound(key ?: Key.minecraft(""), block))
 
     public companion object {
         /** The codec of this class. */
