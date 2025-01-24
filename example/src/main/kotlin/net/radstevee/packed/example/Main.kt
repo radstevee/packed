@@ -106,7 +106,7 @@ public fun main() {
     pack.addTranslation(Key("packed", "the_packed_language"), "yes", "no")
 
     pack.addBasicSound(Key("packed", "my_sound"))
-    pack.addSounds("packed_two") {
+    pack.addSounds {
         namespace = "packed_two"
 
         add {
