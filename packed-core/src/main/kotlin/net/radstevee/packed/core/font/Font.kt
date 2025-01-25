@@ -54,7 +54,7 @@ public class Font private constructor(
     /**
      * All font providers.
      */
-    public val providersList: @UnmodifiableView List<FontProvider> = _providers.toList()
+    public val providers: @UnmodifiableView List<FontProvider> get() = _providers.toList()
 
     /**
      * Adds a new font provider.
@@ -72,7 +72,7 @@ public class Font private constructor(
         val unresolvedAssets = mutableListOf<Path>()
         val fallbackAssets = mutableListOf<Pair<Path, Path>>()
 
-        providersList.forEach { provider ->
+        providers.forEach { provider ->
             when (provider) {
                 is FontProvider.Bitmap -> {
                     val assetExists = pack.assetResolutionStrategy.getTexture(provider.key)?.exists() ?: false
