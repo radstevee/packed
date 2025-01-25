@@ -38,7 +38,7 @@ public interface FontProvider {
                     instance
                         .group(
                             Key.CODEC
-                                .fieldOf("key")
+                                .fieldOf("file")
                                 .forGetter(Bitmap::key),
                             Codec.DOUBLE
                                 .fieldOf("height")
