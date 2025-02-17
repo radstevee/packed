@@ -107,7 +107,7 @@ public class ItemModel private constructor(
         public var parent: String? = null
         public var display: ItemModelDisplay? = null
         public var textures: MutableMap<String, Key>? = null
-        public val guiLight: String? = null
+        public var guiLight: String? = null
         public var cubes: MutableList<Cube>? = null
         public var overrides: MutableList<OverrideCase>? = null
 
