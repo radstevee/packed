@@ -90,7 +90,7 @@ pack.addFont {
     key = Key("packed", "my_awesome_font")
     // Adds a bitmap provider to this font
     bitmap {
-        key = Key("packed", "sprites/my_awesome_bitmap") // Uses `assets/packed/textures/sprites/my_awesome_bitmap.png`
+        key = Key("packed", "sprites/my_awesome_bitmap.png") // Uses `assets/packed/textures/sprites/my_awesome_bitmap.png`
         height = 8.0
         ascent = 7.0
         chars = listOf("\uE000")
