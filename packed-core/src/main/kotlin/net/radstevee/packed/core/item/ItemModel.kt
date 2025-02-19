@@ -254,8 +254,7 @@ public data class ItemModelDisplay(
             fixed = ItemModelDisplayPosition.Builder().apply(block).build()
         }
 
-        public fun build(): ItemModelDisplay =
-            ItemModelDisplay(thirdPersonRightHand, thirdPersonLeftHand, firstPersonRightHand, firstPersonLeftHand, gui, head, ground, fixed)
+        public fun build(): ItemModelDisplay = ItemModelDisplay(thirdPersonRightHand, thirdPersonLeftHand, firstPersonRightHand, firstPersonLeftHand, gui, head, ground, fixed)
     }
 }
 
@@ -287,12 +286,11 @@ public data class ItemModelDisplayPosition(
         public var translation: Vec3d? = null
         public var scale: Vec3d? = null
 
-        public fun build(): ItemModelDisplayPosition =
-            ItemModelDisplayPosition(
-                rotation,
-                translation,
-                scale,
-            )
+        public fun build(): ItemModelDisplayPosition = ItemModelDisplayPosition(
+            rotation,
+            translation,
+            scale,
+        )
     }
 }
 
@@ -338,8 +336,7 @@ public data class Cube(
             faces = CubeFaces.Builder().apply(block).build()
         }
 
-        public fun build(): Cube =
-            Cube(from ?: error("cube has no starting point"), to ?: error("cube has no ending point"), rotation, shade, faces)
+        public fun build(): Cube = Cube(from ?: error("cube has no starting point"), to ?: error("cube has no ending point"), rotation, shade, faces)
     }
 }
 
@@ -452,14 +449,13 @@ public data class CubeFace(
         public var rotation: Int? = null
         public var tintIndex: Int? = null
 
-        public fun build(): CubeFace =
-            CubeFace(
-                uv,
-                texture,
-                cullFace,
-                rotation,
-                tintIndex,
-            )
+        public fun build(): CubeFace = CubeFace(
+            uv,
+            texture,
+            cullFace,
+            rotation,
+            tintIndex,
+        )
     }
 }
 
@@ -496,13 +492,12 @@ public data class CubeRotation(
         public var angle: Float? = null
         public var rescale: Boolean = false
 
-        public fun build(): CubeRotation =
-            CubeRotation(
-                origin,
-                axis,
-                angle,
-                rescale,
-            )
+        public fun build(): CubeRotation = CubeRotation(
+            origin,
+            axis,
+            angle,
+            rescale,
+        )
     }
 }
 
@@ -535,10 +530,9 @@ public data class OverrideCase(
             predicate!!["custom_model_data"] = target.toDouble()
         }
 
-        public fun build(): OverrideCase =
-            OverrideCase(
-                predicate ?: error("override has no predicate"),
-                model ?: error("override has no model"),
-            )
+        public fun build(): OverrideCase = OverrideCase(
+            predicate ?: error("override has no predicate"),
+            model ?: error("override has no model"),
+        )
     }
 }

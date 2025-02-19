@@ -179,7 +179,7 @@ public class ResourcePack(
     public fun addBasicSound(
         key: Key,
         block: SoundEvent.() -> Unit,
-    ): SoundList = addSounds(SoundList(key.namespace, mutableListOf(SoundEvent.sound(key, block))))
+    ): SoundList = addBasicSound(SoundEvent.sound(key, block))
 
     /**
      * Adds a basic sound to this pack.
