@@ -18,6 +18,7 @@ allprojects {
     version = packedVersion
 
     apply(plugin = "kotlin")
+    apply(plugin = "java-library")
     apply<DokkaPlugin>()
     apply<MavenPublishPlugin>()
     apply<SpotlessPlugin>()
