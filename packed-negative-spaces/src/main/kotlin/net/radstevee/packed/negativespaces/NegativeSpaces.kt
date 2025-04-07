@@ -1,5 +1,6 @@
 package net.radstevee.packed.negativespaces
 
+import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap
 import net.radstevee.packed.core.hook.PackedHook
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
@@ -16,19 +17,20 @@ public class NegativeSpaces(
   public val startUnicode: Int = 0xCE000,
 ) : PackedHook {
   /** The space advances. */
-  public val advances: Map<Char, Double> =
-    buildMap {
-      range.forEachIndexed { idx, width ->
-        put((startUnicode + idx).toChar(), width.toDouble())
-      }
+  public val advances: Map<Char, Int> = Char2IntOpenHashMap().apply {
+    range.forEachIndexed { idx, width ->
+      put((startUnicode + idx).toChar(), width)
     }
+  }
 
   override fun beforeSave(pack: ResourcePack) {
     pack.addFont {
       key = fontKey
 
       space {
-        advances = this@NegativeSpaces.advances.mapKeys { (key) -> key.toString() }
+        advances = this@NegativeSpaces.advances
+          .map { (k, v) -> k.toString() to v.toDouble() }
+          .toMap()
       }
     }
   }
@@ -38,5 +40,5 @@ public class NegativeSpaces(
    * @param space The space width.
    * @return The character.
    */
-  public fun getChar(space: Int): Char = advances.filterValues { adv -> adv == space.toDouble() }.keys.first()
+  public fun getChar(space: Int): Char = advances.filterValues { adv -> adv == space }.keys.first()
 }
