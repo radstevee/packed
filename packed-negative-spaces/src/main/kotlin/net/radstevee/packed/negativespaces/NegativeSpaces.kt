@@ -1,9 +1,9 @@
 package net.radstevee.packed.negativespaces
 
-import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap
 import net.radstevee.packed.core.hook.PackedHook
 import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
+import kotlin.math.abs
 
 /**
  * A hook to add a font with negative-width spaces, to be used for shifting things.
@@ -16,20 +16,28 @@ public class NegativeSpaces(
   /** The start of the Unicode area. */
   public val startUnicode: Int = 0xCE000,
 ) : PackedHook {
-  /** The space advances. */
-  public val advances: Map<Char, Int> = Char2IntOpenHashMap().apply {
-    range.forEachIndexed { idx, width ->
-      put((startUnicode + idx).toChar(), width)
-    }
-  }
+  private val min = abs(range.min())
+
+  /** A mapping of character (index) to a width. */
+  public val charToWidth: IntArray = IntArray(startUnicode + range.max()) { -1 }
+
+  /** A mapping of width (index) to a character. */
+  public val widthToChar: CharArray = CharArray(range.count()) { (-1).toChar() }
 
   override fun beforeSave(pack: ResourcePack) {
+    range.forEachIndexed { idx, width ->
+      charToWidth[idx] = width
+      widthToChar[width + min] = idx.toChar()
+    }
+
     pack.addFont {
       key = fontKey
 
       space {
-        advances = this@NegativeSpaces.advances
-          .map { (k, v) -> k.toString() to v.toDouble() }
+        advances = charToWidth
+          .withIndex()
+          .filter { (_, width) -> width != -1 }
+          .associate { (idx, width) -> idx.toChar().toString() to width.toDouble() }
           .toMap()
       }
     }
@@ -40,5 +48,12 @@ public class NegativeSpaces(
    * @param space The space width.
    * @return The character.
    */
-  public fun getChar(space: Int): Char = advances.filterValues { adv -> adv == space }.keys.first()
+  public fun getChar(space: Int): Char = widthToChar[space + min]
+
+  /**
+   * Gets the width of the given space character.
+   * @param space The space character.
+   * @return The width.
+   */
+  public fun getWidth(space: Char): Int = charToWidth[space.code]
 }
