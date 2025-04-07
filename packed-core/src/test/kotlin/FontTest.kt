@@ -8,27 +8,27 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class FontTest {
-    @Test
-    fun `Font Test - includes Bitmaps and TTFs`() {
-        val font =
-            font {
-                key = Key("packed", "example")
-                bitmap {
-                    key = Key("packed", "pog.png")
-                    height = 8.0
-                    ascent = 7.0
-                    chars = listOf("\uE000")
-                }
+  @Test
+  fun `Font Test - includes Bitmaps and TTFs`() {
+    val font =
+      font {
+        key = Key("packed", "example")
+        bitmap {
+          key = Key("packed", "pog.png")
+          height = 8.0
+          ascent = 7.0
+          chars = listOf("\uE000")
+        }
 
-                ttf {
-                    key = Key("packed", "comicsans.ttf")
-                    size = 16.0
-                    oversample = 9.0
-                    shift = listOf(0.0, -3.5)
-                }
-            }
-        val expected =
-            """
+        ttf {
+          key = Key("packed", "comicsans.ttf")
+          size = 16.0
+          oversample = 9.0
+          shift = listOf(0.0, -3.5)
+        }
+      }
+    val expected =
+      """
             {
                 "providers": [
                     {
@@ -52,50 +52,50 @@ class FontTest {
                     }
                 ]
             }
-            """.trimIndent()
-        println(font.json())
-        assertEquals(expected, font.json()?.trimIndent())
-    }
+      """.trimIndent()
+    println(font.json())
+    assertEquals(expected, font.json()?.trimIndent())
+  }
 
-    @Test
-    fun `Font test, integrated into a basic resource pack`() {
-        val pack =
-            resourcePack {
-                meta {
-                    description = "Packed test resources"
-                    format = PackFormat.V1_20_2
-                    outputDir = File("/tmp/pack")
-                }
-                assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java)
-            }
-        val expectedMeta =
-            """
+  @Test
+  fun `Font test, integrated into a basic resource pack`() {
+    val pack =
+      resourcePack {
+        meta {
+          description = "Packed test resources"
+          format = PackFormat.V1_20_2
+          outputDir = File("/tmp/pack")
+        }
+        assetResolutionStrategy = ResourceAssetResolutionStrategy(this::class.java)
+      }
+    val expectedMeta =
+      """
             {
                 "pack": {
                     "pack_format": 18,
                     "description": "Packed test resources"
                 }
             }
-            """.trimIndent()
+      """.trimIndent()
 
-        pack.addFont {
-            key = Key("packed", "example")
-            bitmap {
-                key = Key("packed", "pog.png")
-                height = 8.0
-                ascent = 7.0
-                chars = listOf("\uE000")
-            }
+    pack.addFont {
+      key = Key("packed", "example")
+      bitmap {
+        key = Key("packed", "pog.png")
+        height = 8.0
+        ascent = 7.0
+        chars = listOf("\uE000")
+      }
 
-            ttf {
-                key = Key("packed", "comicsans.ttf")
-                size = 16.0
-                oversample = 9.0
-                shift = listOf(0.0, -3.5)
-            }
-        }
-        val expected =
-            """
+      ttf {
+        key = Key("packed", "comicsans.ttf")
+        size = 16.0
+        oversample = 9.0
+        shift = listOf(0.0, -3.5)
+      }
+    }
+    val expected =
+      """
             {
                 "providers": [
                     {
@@ -119,10 +119,10 @@ class FontTest {
                     }
                 ]
             }
-            """.trimIndent()
+      """.trimIndent()
 
-        pack.save()
-        assertEquals(expectedMeta, File("/tmp/pack/pack.mcmeta").readText().trimIndent())
-        assertEquals(expected, File("/tmp/pack/assets/packed/font/example.json").readText().trimIndent())
-    }
+    pack.save()
+    assertEquals(expectedMeta, File("/tmp/pack/pack.mcmeta").readText().trimIndent())
+    assertEquals(expected, File("/tmp/pack/assets/packed/font/example.json").readText().trimIndent())
+  }
 }

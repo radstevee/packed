@@ -6,20 +6,20 @@ import net.radstevee.packed.core.codec.Codecs
 
 /** A tint that is based on the average value of a firework explosion component. */
 public class FireworkTint(
-    /** The default color. */
-    public val defaultColor: Int,
+  /** The default color. */
+  public val defaultColor: Int,
 ) : Tint {
-    public companion object {
-        public val CODEC: MapCodec<FireworkTint> =
-            RecordCodecBuilder.mapCodec { instance ->
-                instance
-                    .group(
-                        Codecs.RGB_COLOR
-                            .fieldOf("default")
-                            .forGetter(FireworkTint::defaultColor),
-                    ).apply(instance, ::FireworkTint)
-            }
-    }
+  public companion object {
+    public val CODEC: MapCodec<FireworkTint> =
+      RecordCodecBuilder.mapCodec { instance ->
+        instance
+          .group(
+            Codecs.RGB_COLOR
+              .fieldOf("default")
+              .forGetter(FireworkTint::defaultColor),
+          ).apply(instance, ::FireworkTint)
+      }
+  }
 
-    override val codec: MapCodec<out Tint> = CODEC
+  override val codec: MapCodec<out Tint> = CODEC
 }

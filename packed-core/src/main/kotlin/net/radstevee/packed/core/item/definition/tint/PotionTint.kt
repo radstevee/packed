@@ -6,21 +6,21 @@ import net.radstevee.packed.core.codec.Codecs
 
 /** A tint that is based on a potion. */
 public class PotionTint(
-    /** The default color. */
-    public val defaultColor: Int,
+  /** The default color. */
+  public val defaultColor: Int,
 ) : Tint {
-    public companion object {
-        /** The codec of this class. */
-        public val CODEC: MapCodec<PotionTint> =
-            RecordCodecBuilder.mapCodec { instance ->
-                instance
-                    .group(
-                        Codecs.RGB_COLOR
-                            .fieldOf("default")
-                            .forGetter(PotionTint::defaultColor),
-                    ).apply(instance, ::PotionTint)
-            }
-    }
+  public companion object {
+    /** The codec of this class. */
+    public val CODEC: MapCodec<PotionTint> =
+      RecordCodecBuilder.mapCodec { instance ->
+        instance
+          .group(
+            Codecs.RGB_COLOR
+              .fieldOf("default")
+              .forGetter(PotionTint::defaultColor),
+          ).apply(instance, ::PotionTint)
+      }
+  }
 
-    override val codec: MapCodec<out Tint> = CODEC
+  override val codec: MapCodec<out Tint> = CODEC
 }

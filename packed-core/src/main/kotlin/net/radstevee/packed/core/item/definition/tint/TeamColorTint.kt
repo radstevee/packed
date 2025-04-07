@@ -6,21 +6,21 @@ import net.radstevee.packed.core.codec.Codecs
 
 /** A tint that is based on the entity's containing team. */
 public class TeamColorTint(
-    /** The default color. */
-    public val defaultColor: Int,
+  /** The default color. */
+  public val defaultColor: Int,
 ) : Tint {
-    public companion object {
-        /** The codec of this class. */
-        public val CODEC: MapCodec<TeamColorTint> =
-            RecordCodecBuilder.mapCodec { instance ->
-                instance
-                    .group(
-                        Codecs.RGB_COLOR
-                            .fieldOf("default")
-                            .forGetter(TeamColorTint::defaultColor),
-                    ).apply(instance, ::TeamColorTint)
-            }
-    }
+  public companion object {
+    /** The codec of this class. */
+    public val CODEC: MapCodec<TeamColorTint> =
+      RecordCodecBuilder.mapCodec { instance ->
+        instance
+          .group(
+            Codecs.RGB_COLOR
+              .fieldOf("default")
+              .forGetter(TeamColorTint::defaultColor),
+          ).apply(instance, ::TeamColorTint)
+      }
+  }
 
-    override val codec: MapCodec<out Tint> = CODEC
+  override val codec: MapCodec<out Tint> = CODEC
 }

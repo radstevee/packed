@@ -4,17 +4,17 @@ package net.radstevee.packed.core.pack
  * Represents something inside of a resource pack which can be validated and saved.
  */
 public interface ResourcePackElement {
-    /**
-     * Validates this element and returns a [Result] of type Unit, with an optional exception
-     * extending [ResourcePackValidationException]. This API will probably be improved in the future.
-     * @param pack The resource pack.
-     * @return A [Result].
-     */
-    public fun validate(pack: ResourcePack): Result<Unit> = Result.success(Unit)
+  /**
+   * Validates this element and returns a [Result] of type Unit, with an optional exception
+   * extending [ResourcePackValidationException]. This API will probably be improved in the future.
+   * @param pack The resource pack.
+   * @return A [Result].
+   */
+  public fun validate(pack: ResourcePack): Result<Unit> = Result.success(Unit)
 
-    /**
-     * Saves this element to a resource pack.
-     * @param pack The resource pack.
-     */
-    public fun save(pack: ResourcePack)
+  /**
+   * Saves this element to a resource pack.
+   * @param pack The resource pack.
+   */
+  public fun save(pack: ResourcePack)
 }

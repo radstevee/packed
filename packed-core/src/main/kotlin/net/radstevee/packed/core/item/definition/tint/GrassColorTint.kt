@@ -6,26 +6,26 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 
 /** A tint that is based on the grass color of a specific climate, based on the grass color map. */
 public class GrassColorTint(
-    /** The temperature. */
-    public val temperature: Float,
-    /** The downfall. */
-    public val downfall: Float,
+  /** The temperature. */
+  public val temperature: Float,
+  /** The downfall. */
+  public val downfall: Float,
 ) : Tint {
-    public companion object {
-        /** The codec of this class. */
-        public val CODEC: MapCodec<GrassColorTint> =
-            RecordCodecBuilder.mapCodec { instance ->
-                instance
-                    .group(
-                        Codec.FLOAT
-                            .fieldOf("temperature")
-                            .forGetter(GrassColorTint::temperature),
-                        Codec.FLOAT
-                            .fieldOf("downfall")
-                            .forGetter(GrassColorTint::downfall),
-                    ).apply(instance, ::GrassColorTint)
-            }
-    }
+  public companion object {
+    /** The codec of this class. */
+    public val CODEC: MapCodec<GrassColorTint> =
+      RecordCodecBuilder.mapCodec { instance ->
+        instance
+          .group(
+            Codec.FLOAT
+              .fieldOf("temperature")
+              .forGetter(GrassColorTint::temperature),
+            Codec.FLOAT
+              .fieldOf("downfall")
+              .forGetter(GrassColorTint::downfall),
+          ).apply(instance, ::GrassColorTint)
+      }
+  }
 
-    override val codec: MapCodec<out Tint> = CODEC
+  override val codec: MapCodec<out Tint> = CODEC
 }

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
  * @param newLogger The new logger.
  */
 public fun changePackedLogger(newLogger: Logger) {
-    packedLogger = newLogger
+  packedLogger = newLogger
 }
 
 /**

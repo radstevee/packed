@@ -9,12 +9,12 @@ import java.nio.file.Path
  * Asset resolution strategy for resources.
  */
 public class ResourceAssetResolutionStrategy(
-    /** The class that should be used for resolving resources. */
-    public val clazz: Class<*>,
+  /** The class that should be used for resolving resources. */
+  public val clazz: Class<*>,
 ) : AssetResolutionStrategy {
-    override fun getAsset(relativePath: Path): File? = clazz.getResource(relativePath.toString())?.file?.let(::File)
+  override fun getAsset(relativePath: Path): File? = clazz.getResource(relativePath.toString())?.file?.let(::File)
 
-    override fun copyAssets(targetFile: File) {
-        FileUtil.copyResourceDirectory(clazz, "/assets", "${targetFile.path}${File.separator}assets")
-    }
+  override fun copyAssets(targetFile: File) {
+    FileUtil.copyResourceDirectory(clazz, "/assets", "${targetFile.path}${File.separator}assets")
+  }
 }
