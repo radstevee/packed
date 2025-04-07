@@ -22,25 +22,23 @@ public class NegativeSpaces(
   public val charToWidth: IntArray = IntArray(range.count()) { -1 }
 
   /** A mapping of width (index) to a character. */
-  public val widthToChar: CharArray = CharArray(range.count()) { (-1).toChar() }
+  public val widthToChar: CharArray = CharArray(Char.MAX_VALUE.code) { (-1).toChar() }
 
   override fun beforeSave(pack: ResourcePack) {
     range.forEachIndexed { idx, width ->
-      charToWidth[idx] = width
-      widthToChar[width + min] = idx.toChar()
+      val target = width + min
+      val char = (startUnicode) + (width - min)
+      charToWidth[idx] = target
+      widthToChar[target] = char.toChar()
     }
 
     pack.addFont {
       key = fontKey
 
       space {
-        advances = charToWidth
-          .withIndex()
-          .filter { (_, width) -> width != -1 }
-          .associate { (idx, width) ->
-            (startUnicode + idx).toChar().toString() to width.toDouble()
-          }
-          .toMap()
+        advances = range.associate { space ->
+          getChar(space).toString() to space.toDouble()
+        }
       }
     }
   }
@@ -50,12 +48,12 @@ public class NegativeSpaces(
    * @param space The space width.
    * @return The character.
    */
-  public fun getChar(space: Int): Char = widthToChar[space + min]
+  public fun getChar(space: Int): Char = (startUnicode + (space - min)).toChar()
 
   /**
    * Gets the width of the given space character.
    * @param space The space character.
    * @return The width.
    */
-  public fun getWidth(space: Char): Int = charToWidth[space.code]
+  public fun getWidth(space: Char): Int = charToWidth[widthToChar.indexOf(space)] - min
 }

@@ -11,6 +11,7 @@ import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackBuilder.Companion.resourcePack
 import net.radstevee.packed.negativespaces.NegativeSpaces
 import java.io.File
+import kotlin.system.measureNanoTime
 
 public fun create2dItem(
   pack: ResourcePack,
@@ -26,6 +27,7 @@ public fun create2dItem(
 }
 
 public fun main() {
+  val spaces = NegativeSpaces(fontKey = Key("packed", "spaces"))
   val pack = resourcePack {
     meta {
       description = "Packed Example"
@@ -34,7 +36,6 @@ public fun main() {
     }
 
     assetResolutionStrategy = ResourceAssetResolutionStrategy(javaClass)
-    val spaces = NegativeSpaces(fontKey = Key("packed", "space"))
     install(spaces)
     // clones the repo to a directory with credentials and uses the subdirectory "example" as asset source
     /*
