@@ -19,7 +19,7 @@ public class NegativeSpaces(
   private val min = abs(range.min())
 
   /** A mapping of character (index) to a width. */
-  public val charToWidth: IntArray = IntArray(startUnicode + range.max()) { -1 }
+  public val charToWidth: IntArray = IntArray(range.count()) { -1 }
 
   /** A mapping of width (index) to a character. */
   public val widthToChar: CharArray = CharArray(range.count()) { (-1).toChar() }
@@ -37,7 +37,9 @@ public class NegativeSpaces(
         advances = charToWidth
           .withIndex()
           .filter { (_, width) -> width != -1 }
-          .associate { (idx, width) -> idx.toChar().toString() to width.toDouble() }
+          .associate { (idx, width) ->
+            (startUnicode + idx).toChar().toString() to width.toDouble()
+          }
           .toMap()
       }
     }
