@@ -162,16 +162,15 @@ public class Font private constructor(
 
   public companion object {
     /** The codec of this class. */
-    public val CODEC: Codec<Font> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            FontProviders.PROVIDER_CODEC
-              .listOf()
-              .fieldOf("providers")
-              .forGetter(Font::_providers),
-          ).apply(instance, ::Font)
-      }
+    public val CODEC: Codec<Font> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          FontProviders.PROVIDER_CODEC
+            .listOf()
+            .fieldOf("providers")
+            .forGetter(Font::_providers),
+        ).apply(instance, ::Font)
+    }
 
     /**
      * Builds a font.

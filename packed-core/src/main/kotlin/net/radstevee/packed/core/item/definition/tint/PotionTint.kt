@@ -11,15 +11,14 @@ public class PotionTint(
 ) : Tint {
   public companion object {
     /** The codec of this class. */
-    public val CODEC: MapCodec<PotionTint> =
-      RecordCodecBuilder.mapCodec { instance ->
-        instance
-          .group(
-            Codecs.RGB_COLOR
-              .fieldOf("default")
-              .forGetter(PotionTint::defaultColor),
-          ).apply(instance, ::PotionTint)
-      }
+    public val CODEC: MapCodec<PotionTint> = RecordCodecBuilder.mapCodec { instance ->
+      instance
+        .group(
+          Codecs.RGB_COLOR
+            .fieldOf("default")
+            .forGetter(PotionTint::defaultColor),
+        ).apply(instance, ::PotionTint)
+    }
   }
 
   override val codec: MapCodec<out Tint> = CODEC

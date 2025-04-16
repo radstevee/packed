@@ -11,15 +11,14 @@ public class ConstantTint(
 ) : Tint {
   public companion object {
     /** The codec of this class. */
-    public val CODEC: MapCodec<ConstantTint> =
-      RecordCodecBuilder.mapCodec { instance ->
-        instance
-          .group(
-            Codecs.RGB_COLOR
-              .fieldOf("value")
-              .forGetter(ConstantTint::value),
-          ).apply(instance, ::ConstantTint)
-      }
+    public val CODEC: MapCodec<ConstantTint> = RecordCodecBuilder.mapCodec { instance ->
+      instance
+        .group(
+          Codecs.RGB_COLOR
+            .fieldOf("value")
+            .forGetter(ConstantTint::value),
+        ).apply(instance, ::ConstantTint)
+    }
   }
 
   override val codec: MapCodec<out Tint> = CODEC

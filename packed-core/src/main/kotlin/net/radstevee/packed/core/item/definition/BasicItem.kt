@@ -15,19 +15,18 @@ public class BasicItem(
 ) : ItemDefinitionType {
   public companion object {
     /** The codec of this class. */
-    public val CODEC: MapCodec<BasicItem> =
-      RecordCodecBuilder.mapCodec { instance ->
-        instance
-          .group(
-            Key.CODEC
-              .fieldOf("model")
-              .forGetter(BasicItem::model),
-            Tints.CODEC
-              .listOf()
-              .optionalFieldOf("tints", emptyList())
-              .forGetter(BasicItem::tints),
-          ).apply(instance, ::BasicItem)
-      }
+    public val CODEC: MapCodec<BasicItem> = RecordCodecBuilder.mapCodec { instance ->
+      instance
+        .group(
+          Key.CODEC
+            .fieldOf("model")
+            .forGetter(BasicItem::model),
+          Tints.CODEC
+            .listOf()
+            .optionalFieldOf("tints", emptyList())
+            .forGetter(BasicItem::tints),
+        ).apply(instance, ::BasicItem)
+    }
   }
 
   override val typeCodec: MapCodec<out ItemDefinitionType> = CODEC

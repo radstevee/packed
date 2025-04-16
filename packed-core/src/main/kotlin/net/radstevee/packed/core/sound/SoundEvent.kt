@@ -41,22 +41,21 @@ public class SoundEvent(
 
   public companion object {
     /** The codec of this class. */
-    public val CODEC: Codec<SoundEvent> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Codec.BOOL
-              .fieldOf("replace")
-              .forGetter(SoundEvent::replaceVanilla),
-            Codec.STRING
-              .nullableFieldOf("subtitle")
-              .forGetter(SoundEvent::subtitle),
-            Key.CODEC
-              .listOf()
-              .fieldOf("sounds")
-              .forGetter(SoundEvent::soundSet),
-          ).apply(instance, ::SoundEvent)
-      }
+    public val CODEC: Codec<SoundEvent> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Codec.BOOL
+            .fieldOf("replace")
+            .forGetter(SoundEvent::replaceVanilla),
+          Codec.STRING
+            .nullableFieldOf("subtitle")
+            .forGetter(SoundEvent::subtitle),
+          Key.CODEC
+            .listOf()
+            .fieldOf("sounds")
+            .forGetter(SoundEvent::soundSet),
+        ).apply(instance, ::SoundEvent)
+    }
 
     public inline fun sound(
       key: Key,

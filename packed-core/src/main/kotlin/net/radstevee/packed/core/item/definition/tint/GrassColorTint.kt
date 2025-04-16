@@ -13,18 +13,17 @@ public class GrassColorTint(
 ) : Tint {
   public companion object {
     /** The codec of this class. */
-    public val CODEC: MapCodec<GrassColorTint> =
-      RecordCodecBuilder.mapCodec { instance ->
-        instance
-          .group(
-            Codec.FLOAT
-              .fieldOf("temperature")
-              .forGetter(GrassColorTint::temperature),
-            Codec.FLOAT
-              .fieldOf("downfall")
-              .forGetter(GrassColorTint::downfall),
-          ).apply(instance, ::GrassColorTint)
-      }
+    public val CODEC: MapCodec<GrassColorTint> = RecordCodecBuilder.mapCodec { instance ->
+      instance
+        .group(
+          Codec.FLOAT
+            .fieldOf("temperature")
+            .forGetter(GrassColorTint::temperature),
+          Codec.FLOAT
+            .fieldOf("downfall")
+            .forGetter(GrassColorTint::downfall),
+        ).apply(instance, ::GrassColorTint)
+    }
   }
 
   override val codec: MapCodec<out Tint> = CODEC

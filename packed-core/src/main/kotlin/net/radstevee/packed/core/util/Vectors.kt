@@ -59,16 +59,15 @@ public data class Mat2x2i(
   val y2: Int,
 ) {
   public companion object {
-    public val CODEC: Codec<Mat2x2i> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Codec.INT.fieldOf("x1").forGetter(Mat2x2i::x1),
-            Codec.INT.fieldOf("y1").forGetter(Mat2x2i::y1),
-            Codec.INT.fieldOf("x2").forGetter(Mat2x2i::x2),
-            Codec.INT.fieldOf("y2").forGetter(Mat2x2i::y2),
-          ).apply(instance, ::Mat2x2i)
-      }
+    public val CODEC: Codec<Mat2x2i> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Codec.INT.fieldOf("x1").forGetter(Mat2x2i::x1),
+          Codec.INT.fieldOf("y1").forGetter(Mat2x2i::y1),
+          Codec.INT.fieldOf("x2").forGetter(Mat2x2i::x2),
+          Codec.INT.fieldOf("y2").forGetter(Mat2x2i::y2),
+        ).apply(instance, ::Mat2x2i)
+    }
   }
 }
 

@@ -23,21 +23,20 @@ public data class Pack(
   val description: String?,
 ) {
   public companion object {
-    public val CODEC: Codec<Pack> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Codec.INT
-              .fieldOf("pack_format")
-              .forGetter(Pack::packFormat),
-            SupportedFormats.CODEC
-              .nullableFieldOf("supported_formats")
-              .forGetter(Pack::supportedFormats),
-            Codec.STRING
-              .nullableFieldOf("description")
-              .forGetter(Pack::description),
-          ).apply(instance, ::Pack)
-      }
+    public val CODEC: Codec<Pack> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Codec.INT
+            .fieldOf("pack_format")
+            .forGetter(Pack::packFormat),
+          SupportedFormats.CODEC
+            .nullableFieldOf("supported_formats")
+            .forGetter(Pack::supportedFormats),
+          Codec.STRING
+            .nullableFieldOf("description")
+            .forGetter(Pack::description),
+        ).apply(instance, ::Pack)
+    }
   }
 }
 
@@ -50,26 +49,23 @@ public data class SupportedFormats(
   val maxInclusive: Int,
 ) {
   public companion object {
-    public val FORMATS_CODEC: Codec<SupportedFormats> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Codec.INT
-              .fieldOf("min_inclusive")
-              .forGetter(SupportedFormats::minInclusive),
-            Codec.INT
-              .fieldOf("max_inclusive")
-              .forGetter(SupportedFormats::maxInclusive),
-          ).apply(instance, ::SupportedFormats)
-      }
+    public val FORMATS_CODEC: Codec<SupportedFormats> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Codec.INT
+            .fieldOf("min_inclusive")
+            .forGetter(SupportedFormats::minInclusive),
+          Codec.INT
+            .fieldOf("max_inclusive")
+            .forGetter(SupportedFormats::maxInclusive),
+        ).apply(instance, ::SupportedFormats)
+    }
+    public val CODEC: Codec<SupportedFormats> = Codec.withAlternative(FORMATS_CODEC, Codecs.INT_LIST) { formats ->
+      val min = formats.min()
+      val max = formats.max()
 
-    public val CODEC: Codec<SupportedFormats> =
-      Codec.withAlternative(FORMATS_CODEC, Codecs.INT_LIST) { formats ->
-        val min = formats.min()
-        val max = formats.max()
-
-        SupportedFormats(min, max)
-      }
+      SupportedFormats(min, max)
+    }
   }
 }
 
@@ -82,21 +78,20 @@ public data class PackLanguage(
   val bidirectional: Boolean,
 ) {
   public companion object {
-    public val CODEC: Codec<PackLanguage> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Codec.STRING
-              .fieldOf("name")
-              .forGetter(PackLanguage::name),
-            Codec.STRING
-              .fieldOf("region")
-              .forGetter(PackLanguage::region),
-            Codec.BOOL
-              .fieldOf("bidirectional")
-              .forGetter(PackLanguage::bidirectional),
-          ).apply(instance, ::PackLanguage)
-      }
+    public val CODEC: Codec<PackLanguage> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Codec.STRING
+            .fieldOf("name")
+            .forGetter(PackLanguage::name),
+          Codec.STRING
+            .fieldOf("region")
+            .forGetter(PackLanguage::region),
+          Codec.BOOL
+            .fieldOf("bidirectional")
+            .forGetter(PackLanguage::bidirectional),
+        ).apply(instance, ::PackLanguage)
+    }
   }
 }
 
@@ -110,14 +105,13 @@ public data class ResourcePackMeta(
   public fun json(): String? = CODEC.encodeJson(this)
 
   public companion object {
-    public val CODEC: Codec<ResourcePackMeta> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Pack.CODEC.nullableFieldOf("pack").forGetter(ResourcePackMeta::pack),
-            PackLanguage.CODEC.nullableFieldOf("language").forGetter(ResourcePackMeta::language),
-          ).apply(instance, ::ResourcePackMeta)
-      }
+    public val CODEC: Codec<ResourcePackMeta> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Pack.CODEC.nullableFieldOf("pack").forGetter(ResourcePackMeta::pack),
+          PackLanguage.CODEC.nullableFieldOf("language").forGetter(ResourcePackMeta::language),
+        ).apply(instance, ::ResourcePackMeta)
+    }
 
     /**
      * Creates a default resource pack meta from a format and description

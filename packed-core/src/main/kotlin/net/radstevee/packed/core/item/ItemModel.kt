@@ -63,33 +63,32 @@ public class ItemModel private constructor(
 
   public companion object {
     /** The codec of this class. */
-    public val CODEC: Codec<ItemModel> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Codec.STRING
-              .nullableFieldOf("parent")
-              .forGetter(ItemModel::parent),
-            ItemModelDisplay.CODEC
-              .nullableFieldOf("display")
-              .forGetter(ItemModel::display),
-            Codec
-              .unboundedMap(Codec.STRING, Key.CODEC)
-              .nullableFieldOf("textures")
-              .forGetter(ItemModel::textures),
-            Codec.STRING
-              .nullableFieldOf("gui_light")
-              .forGetter(ItemModel::guiLight),
-            Cube.CODEC
-              .listOf()
-              .nullableFieldOf("elements")
-              .forGetter(ItemModel::cubes),
-            OverrideCase.CODEC
-              .listOf()
-              .nullableFieldOf("overrides")
-              .forGetter(ItemModel::overrides),
-          ).apply(instance, ::ItemModel)
-      }
+    public val CODEC: Codec<ItemModel> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Codec.STRING
+            .nullableFieldOf("parent")
+            .forGetter(ItemModel::parent),
+          ItemModelDisplay.CODEC
+            .nullableFieldOf("display")
+            .forGetter(ItemModel::display),
+          Codec
+            .unboundedMap(Codec.STRING, Key.CODEC)
+            .nullableFieldOf("textures")
+            .forGetter(ItemModel::textures),
+          Codec.STRING
+            .nullableFieldOf("gui_light")
+            .forGetter(ItemModel::guiLight),
+          Cube.CODEC
+            .listOf()
+            .nullableFieldOf("elements")
+            .forGetter(ItemModel::cubes),
+          OverrideCase.CODEC
+            .listOf()
+            .nullableFieldOf("overrides")
+            .forGetter(ItemModel::overrides),
+        ).apply(instance, ::ItemModel)
+    }
   }
 
   override fun save(pack: ResourcePack) {
@@ -180,36 +179,35 @@ public data class ItemModelDisplay(
   public val fixed: ItemModelDisplayPosition?,
 ) {
   public companion object {
-    public val CODEC: Codec<ItemModelDisplay> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            ItemModelDisplayPosition.CODEC
-              .nullableFieldOf("thirdperson_righthand")
-              .forGetter(ItemModelDisplay::thirdPersonRightHand),
-            ItemModelDisplayPosition.CODEC
-              .nullableFieldOf("thirdperson_lefthand")
-              .forGetter(ItemModelDisplay::thirdPersonLeftHand),
-            ItemModelDisplayPosition.CODEC
-              .nullableFieldOf("firstperson_righthand")
-              .forGetter(ItemModelDisplay::firstPersonRightHand),
-            ItemModelDisplayPosition.CODEC
-              .nullableFieldOf("firstperson_lefthand")
-              .forGetter(ItemModelDisplay::firstPersonLeftHand),
-            ItemModelDisplayPosition.CODEC
-              .nullableFieldOf("gui")
-              .forGetter(ItemModelDisplay::gui),
-            ItemModelDisplayPosition.CODEC
-              .nullableFieldOf("head")
-              .forGetter(ItemModelDisplay::head),
-            ItemModelDisplayPosition.CODEC
-              .nullableFieldOf("ground")
-              .forGetter(ItemModelDisplay::ground),
-            ItemModelDisplayPosition.CODEC
-              .nullableFieldOf("fixed")
-              .forGetter(ItemModelDisplay::fixed),
-          ).apply(instance, ::ItemModelDisplay)
-      }
+    public val CODEC: Codec<ItemModelDisplay> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          ItemModelDisplayPosition.CODEC
+            .nullableFieldOf("thirdperson_righthand")
+            .forGetter(ItemModelDisplay::thirdPersonRightHand),
+          ItemModelDisplayPosition.CODEC
+            .nullableFieldOf("thirdperson_lefthand")
+            .forGetter(ItemModelDisplay::thirdPersonLeftHand),
+          ItemModelDisplayPosition.CODEC
+            .nullableFieldOf("firstperson_righthand")
+            .forGetter(ItemModelDisplay::firstPersonRightHand),
+          ItemModelDisplayPosition.CODEC
+            .nullableFieldOf("firstperson_lefthand")
+            .forGetter(ItemModelDisplay::firstPersonLeftHand),
+          ItemModelDisplayPosition.CODEC
+            .nullableFieldOf("gui")
+            .forGetter(ItemModelDisplay::gui),
+          ItemModelDisplayPosition.CODEC
+            .nullableFieldOf("head")
+            .forGetter(ItemModelDisplay::head),
+          ItemModelDisplayPosition.CODEC
+            .nullableFieldOf("ground")
+            .forGetter(ItemModelDisplay::ground),
+          ItemModelDisplayPosition.CODEC
+            .nullableFieldOf("fixed")
+            .forGetter(ItemModelDisplay::fixed),
+        ).apply(instance, ::ItemModelDisplay)
+    }
   }
 
   public class Builder {
@@ -264,21 +262,20 @@ public data class ItemModelDisplayPosition(
   public val scale: Vec3d?,
 ) {
   public companion object {
-    public val CODEC: Codec<ItemModelDisplayPosition> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Vec3d.CODEC
-              .nullableFieldOf("rotation")
-              .forGetter(ItemModelDisplayPosition::rotation),
-            Vec3d.CODEC
-              .nullableFieldOf("translation")
-              .forGetter(ItemModelDisplayPosition::translation),
-            Vec3d.CODEC
-              .nullableFieldOf("scale")
-              .forGetter(ItemModelDisplayPosition::scale),
-          ).apply(instance, ::ItemModelDisplayPosition)
-      }
+    public val CODEC: Codec<ItemModelDisplayPosition> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Vec3d.CODEC
+            .nullableFieldOf("rotation")
+            .forGetter(ItemModelDisplayPosition::rotation),
+          Vec3d.CODEC
+            .nullableFieldOf("translation")
+            .forGetter(ItemModelDisplayPosition::translation),
+          Vec3d.CODEC
+            .nullableFieldOf("scale")
+            .forGetter(ItemModelDisplayPosition::scale),
+        ).apply(instance, ::ItemModelDisplayPosition)
+    }
   }
 
   public class Builder {
@@ -302,27 +299,26 @@ public data class Cube(
   public val faces: CubeFaces?,
 ) {
   public companion object {
-    public val CODEC: Codec<Cube> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Vec3i.CODEC
-              .fieldOf("from")
-              .forGetter(Cube::from),
-            Vec3i.CODEC
-              .fieldOf("to")
-              .forGetter(Cube::to),
-            CubeRotation.CODEC
-              .nullableFieldOf("rotation")
-              .forGetter(Cube::rotation),
-            Codec.BOOL
-              .fieldOf("shade")
-              .forGetter(Cube::shade),
-            CubeFaces.CODEC
-              .nullableFieldOf("faces")
-              .forGetter(Cube::faces),
-          ).apply(instance, ::Cube)
-      }
+    public val CODEC: Codec<Cube> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Vec3i.CODEC
+            .fieldOf("from")
+            .forGetter(Cube::from),
+          Vec3i.CODEC
+            .fieldOf("to")
+            .forGetter(Cube::to),
+          CubeRotation.CODEC
+            .nullableFieldOf("rotation")
+            .forGetter(Cube::rotation),
+          Codec.BOOL
+            .fieldOf("shade")
+            .forGetter(Cube::shade),
+          CubeFaces.CODEC
+            .nullableFieldOf("faces")
+            .forGetter(Cube::faces),
+        ).apply(instance, ::Cube)
+    }
   }
 
   public class Builder {
@@ -349,30 +345,29 @@ public data class CubeFaces(
   public val west: CubeFace?,
 ) {
   public companion object {
-    public val CODEC: Codec<CubeFaces> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            CubeFace.CODEC
-              .nullableFieldOf("down")
-              .forGetter(CubeFaces::down),
-            CubeFace.CODEC
-              .nullableFieldOf("up")
-              .forGetter(CubeFaces::up),
-            CubeFace.CODEC
-              .nullableFieldOf("north")
-              .forGetter(CubeFaces::north),
-            CubeFace.CODEC
-              .nullableFieldOf("south")
-              .forGetter(CubeFaces::south),
-            CubeFace.CODEC
-              .nullableFieldOf("east")
-              .forGetter(CubeFaces::east),
-            CubeFace.CODEC
-              .nullableFieldOf("west")
-              .forGetter(CubeFaces::west),
-          ).apply(instance, ::CubeFaces)
-      }
+    public val CODEC: Codec<CubeFaces> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          CubeFace.CODEC
+            .nullableFieldOf("down")
+            .forGetter(CubeFaces::down),
+          CubeFace.CODEC
+            .nullableFieldOf("up")
+            .forGetter(CubeFaces::up),
+          CubeFace.CODEC
+            .nullableFieldOf("north")
+            .forGetter(CubeFaces::north),
+          CubeFace.CODEC
+            .nullableFieldOf("south")
+            .forGetter(CubeFaces::south),
+          CubeFace.CODEC
+            .nullableFieldOf("east")
+            .forGetter(CubeFaces::east),
+          CubeFace.CODEC
+            .nullableFieldOf("west")
+            .forGetter(CubeFaces::west),
+        ).apply(instance, ::CubeFaces)
+    }
   }
 
   public class Builder {
@@ -419,27 +414,26 @@ public data class CubeFace(
   public val tintIndex: Int?,
 ) {
   public companion object {
-    public val CODEC: Codec<CubeFace> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Mat2x2i.CODEC
-              .nullableFieldOf("uv")
-              .forGetter(CubeFace::uv),
-            Codec.STRING
-              .nullableFieldOf("texture")
-              .forGetter(CubeFace::texture),
-            Codec.STRING
-              .nullableFieldOf("cullface")
-              .forGetter(CubeFace::cullFace),
-            Codec.INT
-              .nullableFieldOf("rotation")
-              .forGetter(CubeFace::rotation),
-            Codec.INT
-              .nullableFieldOf("tintindex")
-              .forGetter(CubeFace::tintIndex),
-          ).apply(instance, ::CubeFace)
-      }
+    public val CODEC: Codec<CubeFace> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Mat2x2i.CODEC
+            .nullableFieldOf("uv")
+            .forGetter(CubeFace::uv),
+          Codec.STRING
+            .nullableFieldOf("texture")
+            .forGetter(CubeFace::texture),
+          Codec.STRING
+            .nullableFieldOf("cullface")
+            .forGetter(CubeFace::cullFace),
+          Codec.INT
+            .nullableFieldOf("rotation")
+            .forGetter(CubeFace::rotation),
+          Codec.INT
+            .nullableFieldOf("tintindex")
+            .forGetter(CubeFace::tintIndex),
+        ).apply(instance, ::CubeFace)
+    }
   }
 
   public class Builder {
@@ -466,24 +460,23 @@ public data class CubeRotation(
   public val rescale: Boolean?,
 ) {
   public companion object {
-    public val CODEC: Codec<CubeRotation> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Vec3d.CODEC
-              .nullableFieldOf("origin")
-              .forGetter(CubeRotation::origin),
-            Codec.STRING
-              .nullableFieldOf("axis")
-              .forGetter(CubeRotation::axis),
-            Codec.FLOAT
-              .nullableFieldOf("angle")
-              .forGetter(CubeRotation::angle),
-            Codec.BOOL
-              .nullableFieldOf("rescale")
-              .forGetter(CubeRotation::rescale),
-          ).apply(instance, ::CubeRotation)
-      }
+    public val CODEC: Codec<CubeRotation> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Vec3d.CODEC
+            .nullableFieldOf("origin")
+            .forGetter(CubeRotation::origin),
+          Codec.STRING
+            .nullableFieldOf("axis")
+            .forGetter(CubeRotation::axis),
+          Codec.FLOAT
+            .nullableFieldOf("angle")
+            .forGetter(CubeRotation::angle),
+          Codec.BOOL
+            .nullableFieldOf("rescale")
+            .forGetter(CubeRotation::rescale),
+        ).apply(instance, ::CubeRotation)
+    }
   }
 
   public class Builder {
@@ -506,19 +499,18 @@ public data class OverrideCase(
   public val model: Key,
 ) {
   public companion object {
-    public val CODEC: Codec<OverrideCase> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            Codec
-              .unboundedMap(Codec.STRING, Codec.DOUBLE)
-              .fieldOf("predicate")
-              .forGetter(OverrideCase::predicate),
-            Key.CODEC
-              .fieldOf("model")
-              .forGetter(OverrideCase::model),
-          ).apply(instance, ::OverrideCase)
-      }
+    public val CODEC: Codec<OverrideCase> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Codec
+            .unboundedMap(Codec.STRING, Codec.DOUBLE)
+            .fieldOf("predicate")
+            .forGetter(OverrideCase::predicate),
+          Key.CODEC
+            .fieldOf("model")
+            .forGetter(OverrideCase::model),
+        ).apply(instance, ::OverrideCase)
+    }
   }
 
   public class Builder {

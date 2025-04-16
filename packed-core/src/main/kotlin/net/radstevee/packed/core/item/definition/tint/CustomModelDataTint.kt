@@ -15,18 +15,17 @@ public class CustomModelDataTint(
 ) : Tint {
   public companion object {
     /** The codec of this class. */
-    public val CODEC: MapCodec<CustomModelDataTint> =
-      RecordCodecBuilder.mapCodec { instance ->
-        instance
-          .group(
-            Codec.INT
-              .nullableFieldOf("index")
-              .forGetter(CustomModelDataTint::idx),
-            Codecs.RGB_COLOR
-              .fieldOf("default")
-              .forGetter(CustomModelDataTint::defaultColor),
-          ).apply(instance, ::CustomModelDataTint)
-      }
+    public val CODEC: MapCodec<CustomModelDataTint> = RecordCodecBuilder.mapCodec { instance ->
+      instance
+        .group(
+          Codec.INT
+            .nullableFieldOf("index")
+            .forGetter(CustomModelDataTint::idx),
+          Codecs.RGB_COLOR
+            .fieldOf("default")
+            .forGetter(CustomModelDataTint::defaultColor),
+        ).apply(instance, ::CustomModelDataTint)
+    }
   }
 
   override val codec: MapCodec<out Tint> = CODEC

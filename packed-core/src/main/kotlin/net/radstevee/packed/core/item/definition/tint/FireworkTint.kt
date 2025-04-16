@@ -10,15 +10,14 @@ public class FireworkTint(
   public val defaultColor: Int,
 ) : Tint {
   public companion object {
-    public val CODEC: MapCodec<FireworkTint> =
-      RecordCodecBuilder.mapCodec { instance ->
-        instance
-          .group(
-            Codecs.RGB_COLOR
-              .fieldOf("default")
-              .forGetter(FireworkTint::defaultColor),
-          ).apply(instance, ::FireworkTint)
-      }
+    public val CODEC: MapCodec<FireworkTint> = RecordCodecBuilder.mapCodec { instance ->
+      instance
+        .group(
+          Codecs.RGB_COLOR
+            .fieldOf("default")
+            .forGetter(FireworkTint::defaultColor),
+        ).apply(instance, ::FireworkTint)
+    }
   }
 
   override val codec: MapCodec<out Tint> = CODEC

@@ -38,14 +38,13 @@ public class ItemDefinition private constructor(
 
   public companion object {
     /** The codec of this class. */
-    public val CODEC: Codec<ItemDefinition> =
-      RecordCodecBuilder.create { instance ->
-        instance
-          .group(
-            ItemDefinitionTypes.CODEC
-              .fieldOf("model")
-              .forGetter(ItemDefinition::type),
-          ).apply(instance, ::ItemDefinition)
-      }
+    public val CODEC: Codec<ItemDefinition> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          ItemDefinitionTypes.CODEC
+            .fieldOf("model")
+            .forGetter(ItemDefinition::type),
+        ).apply(instance, ::ItemDefinition)
+    }
   }
 }
