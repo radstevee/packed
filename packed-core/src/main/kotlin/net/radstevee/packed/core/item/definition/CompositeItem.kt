@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 /** An item model that can render multiple models. */
 public class CompositeItem(
   /** The models */
-  public val models: List<ItemDefinition>
+  public val models: List<ItemDefinition>,
 ) : ItemDefinitionType {
   public companion object {
     /** The codec of this class. */
@@ -15,7 +15,7 @@ public class CompositeItem(
         ItemDefinition.CODEC
           .listOf()
           .fieldOf("models")
-          .forGetter(CompositeItem::models)
+          .forGetter(CompositeItem::models),
       ).apply(instance, ::CompositeItem)
     }
   }
