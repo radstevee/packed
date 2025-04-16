@@ -23,6 +23,7 @@ public object ItemDefinitionTypes {
   init {
     add("empty", EmptyItem.CODEC)
     add("model", BasicItem.CODEC)
+    add("composite", CompositeItem.CODEC)
     // TODO: more :)
   }
 }
