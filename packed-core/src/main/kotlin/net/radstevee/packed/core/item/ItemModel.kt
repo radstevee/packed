@@ -8,9 +8,8 @@ import net.radstevee.packed.core.key.Key
 import net.radstevee.packed.core.pack.ResourcePack
 import net.radstevee.packed.core.pack.ResourcePackElement
 import net.radstevee.packed.core.packedLogger
-import net.radstevee.packed.core.util.Mat2x2i
+import net.radstevee.packed.core.util.Mat2x2d
 import net.radstevee.packed.core.util.Vec3d
-import net.radstevee.packed.core.util.Vec3i
 import java.io.File
 import kotlin.properties.Delegates
 
@@ -292,8 +291,8 @@ public data class ItemModelDisplayPosition(
 }
 
 public data class Cube(
-  public val from: Vec3i,
-  public val to: Vec3i,
+  public val from: Vec3d,
+  public val to: Vec3d,
   public val rotation: CubeRotation?,
   public val shade: Boolean,
   public val faces: CubeFaces?,
@@ -302,10 +301,10 @@ public data class Cube(
     public val CODEC: Codec<Cube> = RecordCodecBuilder.create { instance ->
       instance
         .group(
-          Vec3i.CODEC
+          Vec3d.CODEC
             .fieldOf("from")
             .forGetter(Cube::from),
-          Vec3i.CODEC
+          Vec3d.CODEC
             .fieldOf("to")
             .forGetter(Cube::to),
           CubeRotation.CODEC
@@ -322,8 +321,8 @@ public data class Cube(
   }
 
   public class Builder {
-    public var from: Vec3i? = null
-    public var to: Vec3i? = null
+    public var from: Vec3d? = null
+    public var to: Vec3d? = null
     public var rotation: CubeRotation? = null
     public var shade: Boolean = true
     public var faces: CubeFaces? = null
@@ -407,7 +406,7 @@ public data class CubeFaces(
 }
 
 public data class CubeFace(
-  public val uv: Mat2x2i?,
+  public val uv: Mat2x2d?,
   public val texture: String?,
   public val cullFace: String?,
   public val rotation: Int?,
@@ -417,7 +416,7 @@ public data class CubeFace(
     public val CODEC: Codec<CubeFace> = RecordCodecBuilder.create { instance ->
       instance
         .group(
-          Mat2x2i.CODEC
+          Mat2x2d.CODEC
             .nullableFieldOf("uv")
             .forGetter(CubeFace::uv),
           Codec.STRING
@@ -437,7 +436,7 @@ public data class CubeFace(
   }
 
   public class Builder {
-    public var uv: Mat2x2i? = null
+    public var uv: Mat2x2d? = null
     public var texture: String? = null
     public var cullFace: String? = null
     public var rotation: Int? = null

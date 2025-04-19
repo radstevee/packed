@@ -70,6 +70,24 @@ public data class Mat2x2i(
     }
   }
 }
+public data class Mat2x2d(
+  val x1: Double,
+  val y1: Double,
+  val x2: Double,
+  val y2: Double,
+) {
+  public companion object {
+    public val CODEC: Codec<Mat2x2d> = RecordCodecBuilder.create { instance ->
+      instance
+        .group(
+          Codec.DOUBLE.fieldOf("x1").forGetter(Mat2x2d::x1),
+          Codec.DOUBLE.fieldOf("y1").forGetter(Mat2x2d::y1),
+          Codec.DOUBLE.fieldOf("x2").forGetter(Mat2x2d::x2),
+          Codec.DOUBLE.fieldOf("y2").forGetter(Mat2x2d::y2),
+        ).apply(instance, ::Mat2x2d)
+    }
+  }
+}
 
 /**
  * Constructs a 3-dimensional integer vector.
