@@ -76,6 +76,9 @@ public data class Mat2x2d(
   val x2: Double,
   val y2: Double,
 ) {
+
+  public constructor(x1: Number, y1: Number, x2: Number, y2: Number) : this(x1.toDouble(), y1.toDouble(), x2.toDouble(), y2.toDouble())
+
   public companion object {
     public val CODEC: Codec<Mat2x2d> = RecordCodecBuilder.create { instance ->
       instance
