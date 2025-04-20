@@ -124,5 +124,5 @@ public fun mat(
   x1: Double,
   y1: Double,
   x2: Double,
-  y2: Double
+  y2: Double,
 ): Mat2x2d = Mat2x2d(x1, y1, x2, y2)
