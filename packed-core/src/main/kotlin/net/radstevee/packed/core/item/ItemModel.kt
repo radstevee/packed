@@ -331,6 +331,10 @@ public data class Cube(
       faces = CubeFaces.Builder().apply(block).build()
     }
 
+    public inline fun rotation(block: CubeRotation.Builder.() -> Unit) {
+      rotation = CubeRotation.Builder().apply(block).build()
+    }
+
     public fun build(): Cube = Cube(from ?: error("cube has no starting point"), to ?: error("cube has no ending point"), rotation, shade, faces)
   }
 }

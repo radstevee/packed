@@ -70,15 +70,13 @@ public data class Mat2x2i(
     }
   }
 }
+
 public data class Mat2x2d(
   val x1: Double,
   val y1: Double,
   val x2: Double,
   val y2: Double,
 ) {
-
-  public constructor(x1: Number, y1: Number, x2: Number, y2: Number) : this(x1.toDouble(), y1.toDouble(), x2.toDouble(), y2.toDouble())
-
   public companion object {
     public val CODEC: Codec<Mat2x2d> = RecordCodecBuilder.create { instance ->
       instance
@@ -92,39 +90,39 @@ public data class Mat2x2d(
   }
 }
 
-/**
- * Constructs a 3-dimensional integer vector.
- */
+/** Constructs a 3-dimensional integer vector. */
 public fun vec(
   x: Int,
   y: Int,
   z: Int,
 ): Vec3i = Vec3i(x, y, z)
 
-/**
- * Constructs a 3-dimensional double vector.
- */
+/** Constructs a 3-dimensional double vector. */
 public fun vec(
   x: Double,
   y: Double,
   z: Double,
 ): Vec3d = Vec3d(x, y, z)
 
-/**
- * Constructs a 3-dimensional float vector.
- */
+/** Constructs a 3-dimensional float vector. */
 public fun vec(
   x: Float,
   y: Float,
   z: Float,
 ): Vec3f = Vec3f(x, y, z)
 
-/**
- * Constructs a 2x2-dimensional integer matrix.
- */
+/** Constructs a 2x2-dimensional integer matrix. */
 public fun mat(
   x1: Int,
   y1: Int,
   x2: Int,
   y2: Int,
 ): Mat2x2i = Mat2x2i(x1, y1, x2, y2)
+
+/** Constructs a 2x2-dimensional double matrix. */
+public fun mat(
+  x1: Double,
+  y1: Double,
+  x2: Double,
+  y2: Double
+): Mat2x2d = Mat2x2d(x1, y1, x2, y2)
