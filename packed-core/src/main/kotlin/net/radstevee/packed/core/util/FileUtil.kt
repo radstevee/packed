@@ -1,15 +1,16 @@
 package net.radstevee.packed.core.util
 
-import java.nio.file.FileVisitResult
-import java.nio.file.Files
+import java.nio.file.FileSystems
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.SimpleFileVisitor
-import java.nio.file.attribute.BasicFileAttributes
-import kotlin.io.path.Path
-import kotlin.io.path.copyTo
+import kotlin.io.path.ExperimentalPathApi
+import kotlin.io.path.PathWalkOption
 import kotlin.io.path.createDirectories
-import kotlin.io.path.notExists
+import kotlin.io.path.createParentDirectories
+import kotlin.io.path.inputStream
+import kotlin.io.path.isDirectory
+import kotlin.io.path.outputStream
+import kotlin.io.path.walk
 
 internal object FileUtil {
   /**
@@ -18,38 +19,37 @@ internal object FileUtil {
    * @param sourceDir The relative path within the `resources` directory.
    * @param targetDir Full path to the target location.
    */
+  @OptIn(ExperimentalPathApi::class)
   fun copyResourceDirectory(
     clazz: Class<*>,
     sourceDir: String,
-    targetDir: String,
+    targetDir: Path,
   ) {
-    val resourceUrl = clazz.getResource(sourceDir) ?: error("Resource not found: $sourceDir")
-    val resourcePath = Paths.get(resourceUrl.toURI())
-    val outputDir = Path(targetDir)
+    val jar = Paths.get(clazz.protectionDomain.codeSource.location.toURI())
 
-    Files.walkFileTree(
-      resourcePath,
-      object : SimpleFileVisitor<Path>() {
-        override fun visitFile(
-          file: Path,
-          attrs: BasicFileAttributes,
-        ): FileVisitResult {
-          val targetPath = outputDir.resolve(resourcePath.relativize(file).toString())
-          file.copyTo(targetPath, overwrite = true)
-          return FileVisitResult.CONTINUE
-        }
+    targetDir.createParentDirectories()
+    FileSystems.newFileSystem(jar).use { fs ->
+      val rootPath = fs.getPath(sourceDir)
+      rootPath.walk(PathWalkOption.INCLUDE_DIRECTORIES).forEach { path ->
+        walkRecursively(path, rootPath, targetDir)
+      }
+    }
+  }
 
-        override fun preVisitDirectory(
-          dir: Path,
-          attrs: BasicFileAttributes,
-        ): FileVisitResult {
-          val targetPath = outputDir.resolve(resourcePath.relativize(dir).toString())
-          if (targetPath.notExists()) {
-            targetPath.createDirectories()
-          }
-          return FileVisitResult.CONTINUE
-        }
-      },
-    )
+  private fun walkRecursively(path: Path, rootPath: Path, targetDir: Path) {
+    val relativePath = rootPath.relativize(path)
+    val target = targetDir.resolve(relativePath.toString())
+
+    if (path.isDirectory()) {
+      target.createDirectories()
+      return
+    }
+
+    path.inputStream().use { input ->
+      target.createParentDirectories()
+      target.outputStream().use { output ->
+        input.copyTo(output)
+      }
+    }
   }
 }

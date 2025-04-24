@@ -1,6 +1,7 @@
 package net.radstevee.packed.core.pack
 
 import net.radstevee.packed.core.asset.AssetResolutionStrategy
+import net.radstevee.packed.core.bootstrap
 import net.radstevee.packed.core.font.Font
 import net.radstevee.packed.core.hook.PackedHook
 import net.radstevee.packed.core.item.ItemModel
@@ -39,6 +40,10 @@ public class ResourcePack(
    * The hooks in the pack.
    */
   public val hooks: @UnmodifiableView List<PackedHook> get() = _hooks.toList()
+
+  init {
+    bootstrap()
+  }
 
   /**
    * Adds a resource pack element to this pack.

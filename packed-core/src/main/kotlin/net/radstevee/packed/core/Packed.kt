@@ -1,5 +1,8 @@
 package net.radstevee.packed.core
 
+import net.radstevee.packed.core.font.FontProviders
+import net.radstevee.packed.core.item.definition.ItemDefinitionTypes
+import net.radstevee.packed.core.item.definition.tint.Tints
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -16,3 +19,17 @@ public fun changePackedLogger(newLogger: Logger) {
  * The packed logger.
  */
 internal var packedLogger: Logger = LoggerFactory.getLogger("packed")
+
+internal var bootstrapped = false
+
+internal fun bootstrap() {
+  if (bootstrapped) {
+    return
+  }
+
+  Tints.bootstrap()
+  ItemDefinitionTypes.bootstrap()
+  FontProviders.bootstrap()
+
+  bootstrapped = true
+}

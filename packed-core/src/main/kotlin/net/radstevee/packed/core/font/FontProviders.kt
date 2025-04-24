@@ -12,7 +12,7 @@ public object FontProviders {
   /** The codec of a dispatched font provider. */
   public val PROVIDER_CODEC: Codec<FontProvider> = ID_MAPPER.codec(Codec.STRING).dispatch(FontProvider::providerCodec) { it }
 
-  init {
+  internal fun bootstrap() {
     ID_MAPPER["bitmap"] = FontProvider.Bitmap.CODEC
     ID_MAPPER["space"] = FontProvider.Space.CODEC
     ID_MAPPER["ttf"] = FontProvider.Truetype.CODEC

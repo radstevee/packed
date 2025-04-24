@@ -20,7 +20,7 @@ public object ItemDefinitionTypes {
     ID_MAPPER[Key.minecraft(key)] = codec
   }
 
-  init {
+  internal fun bootstrap() {
     add("empty", EmptyItem.CODEC)
     add("model", BasicItem.CODEC)
     add("composite", CompositeItem.CODEC)

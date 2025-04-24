@@ -20,7 +20,7 @@ public object Tints {
     ID_MAPPER[Key.minecraft(key)] = codec
   }
 
-  init {
+  internal fun bootstrap() {
     add("custom_model_data", CustomModelDataTint.CODEC)
     add("constant", ConstantTint.CODEC)
     add("dye", DyeTint.CODEC)
