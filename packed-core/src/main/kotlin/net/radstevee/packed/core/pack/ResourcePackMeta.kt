@@ -117,10 +117,10 @@ public data class ResourcePackMeta(
      * Creates a default resource pack meta from a format and description
      */
     public fun create(
-      format: PackFormat,
+      format: Int,
       description: String?,
     ): ResourcePackMeta = ResourcePackMeta(
-      Pack(format.rev, null, description),
+      Pack(format, null, description),
       null,
     )
   }

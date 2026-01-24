@@ -8,7 +8,7 @@ import kotlin.properties.Delegates
 /** A builder for resource packs. */
 public class ResourcePackBuilder {
   /** A builder for resource pack meta. */
-  public inner class Meta {
+  public class Meta {
     /**
      * Description of a resource pack. Comes up in the selection screen.
      */
@@ -17,7 +17,7 @@ public class ResourcePackBuilder {
     /**
      * The format of this pack.
      */
-    public var format: PackFormat = PackFormat.LATEST
+    public var format: Int = PackFormat.LATEST
 
     /**
      * Output directory of the Resource pack. This is where it will be saved.
@@ -33,7 +33,7 @@ public class ResourcePackBuilder {
   /**
    * The list of hooks installed in the pack.
    */
-  public val hooks: MutableList<PackedHook> = mutableListOf<PackedHook>()
+  public val hooks: MutableList<PackedHook> = mutableListOf()
 
   /**
    * Metadata builder for this resource pack.

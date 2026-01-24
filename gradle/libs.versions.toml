@@ -18,7 +18,6 @@ kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kgit = { group = "com.github.sya-ri", name = "kgit", version.ref = "kgit" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
 slf4j-log4j = { group = "org.slf4j", name = "slf4j-reload4j", version.ref = "slf4j-reload4j" }
-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test" }
 zip = { group = "org.zeroturnaround", name = "zt-zip", version.ref = "zip" }
 dfu = { group = "com.mojang", name = "datafixerupper", version.ref = "dfu" }
 jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
