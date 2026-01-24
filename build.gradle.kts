@@ -67,7 +67,7 @@ allprojects {
     repositories {
       maven {
         name = "rad-public"
-        url = uri("https://maven.radsteve.net/public")
+        url = uri("https://maven.rad.vg/public")
 
         credentials {
           username = System.getenv("RAD_MAVEN_USER")
