@@ -19,6 +19,8 @@ import net.radstevee.packed.core.codec.nullableFieldOf
  */
 public data class Pack(
   val packFormat: Int,
+  val minFormat: Int?,
+  val maxFormat: Int?,
   val supportedFormats: SupportedFormats?,
   val description: String?,
 ) {
@@ -29,6 +31,12 @@ public data class Pack(
           Codec.INT
             .fieldOf("pack_format")
             .forGetter(Pack::packFormat),
+          Codec.INT
+            .nullableFieldOf("min_format")
+            .forGetter(Pack::minFormat),
+          Codec.INT
+            .nullableFieldOf("max_format")
+            .forGetter(Pack::maxFormat),
           SupportedFormats.CODEC
             .nullableFieldOf("supported_formats")
             .forGetter(Pack::supportedFormats),
@@ -119,9 +127,12 @@ public data class ResourcePackMeta(
     public fun create(
       format: Int,
       description: String?,
-    ): ResourcePackMeta = ResourcePackMeta(
-      Pack(format, null, description),
-      null,
-    )
+    ): ResourcePackMeta {
+      val minMax = if (format >= PackFormat.V1_21_9_TO_1_21_10) format else null
+      return ResourcePackMeta(
+        Pack(format, minMax, minMax, null, description),
+        null,
+      )
+    }
   }
 }
